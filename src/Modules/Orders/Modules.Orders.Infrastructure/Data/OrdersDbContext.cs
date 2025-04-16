@@ -19,6 +19,7 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
     public DbSet<ProductItemOptions> ProductItemOptions { get; set; }
     public DbSet<Specification> Specifications { get; set; }
     public DbSet<SpecificationOption> SpecificationOptions { get; set; }
+    public DbSet<CategorySpec> CategorySpecs { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Orders);

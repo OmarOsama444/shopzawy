@@ -70,19 +70,21 @@ public class CategoryEndpoints : IEndpoint
         ///  you can't add color options as it is handled by the system
         /// </summary>
 
-        group.MapPost("{name}/specs/{specname}", async (
+        group.MapPost("{name}/specs/{id}", async (
             [FromRoute] string name,
-            [FromRoute] string specname,
+            [FromRoute] Guid id,
             [FromBody] CreateCategorySpecOptionRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateCategorySpecOptionCommand(name, specname, request.value));
+            var result = await sender.Send(new CreateCategorySpecOptionCommand(name, id, request.value));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("{name}/specs/{specname}/options", async () =>
+        group.MapGet("specs/{id}", async (
+            [FromRoute] Guid id,
+            [FromServices] ISender sender) =>
         {
-
+            var result = await sender.Send(null);
         });
 
     }
