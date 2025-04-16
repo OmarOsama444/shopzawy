@@ -1,15 +1,12 @@
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases;
 using Modules.Orders.Application.UseCases.CreateCategory;
-using Modules.Orders.Application.UseCases.CreateCategorySpecOption;
 using Modules.Orders.Application.UseCases.GetCategory;
 using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
@@ -53,10 +50,6 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
-        /// <summary>
-        ///  allowed data types : string booleon color number
-        /// </summary>
-
         group.MapPost("{name}/specs", async (
             [FromRoute] string name,
             [FromBody] CreateCategorySpecRequestDto request,
@@ -66,29 +59,7 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        /// <summary>
-        ///  you can't add color options as it is handled by the system
-        /// </summary>
-
-        group.MapPost("{name}/specs/{id}", async (
-            [FromRoute] string name,
-            [FromRoute] Guid id,
-            [FromBody] CreateCategorySpecOptionRequestDto request,
-            [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(new CreateCategorySpecOptionCommand(name, id, request.value));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
-
-        group.MapGet("specs/{id}", async (
-            [FromRoute] Guid id,
-            [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(null);
-        });
-
     }
-    public record CreateCategorySpecOptionRequestDto(string value);
     public record CreateCategorySpecRequestDto(string name, string dataType);
     public record UpdateCategoryRequestDto(string? Description, int? Order, string? ImageUrl);
 

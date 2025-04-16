@@ -4,10 +4,15 @@ using Modules.Users.Application.Abstractions;
 
 namespace Modules.Users.Infrastructure.Repositories;
 
-public abstract class Repository<TEntity, TDbContext>(TDbContext context) : IRepository<TEntity>
+public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity>
     where TEntity : Entity
     where TDbContext : DbContext
 {
+    public TDbContext context { get; set; }
+    public Repository(TDbContext dbContext)
+    {
+        this.context = dbContext;
+    }
     public void Add(TEntity entity)
     {
         context.Set<TEntity>().Add(entity);

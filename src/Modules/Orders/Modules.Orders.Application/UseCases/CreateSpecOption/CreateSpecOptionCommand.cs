@@ -6,24 +6,19 @@ using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
 
-namespace Modules.Orders.Application.UseCases.CreateCategorySpecOption;
+namespace Modules.Orders.Application.UseCases.CreateSpecOption;
 
-public record CreateCategorySpecOptionCommand(string categoryName, Guid specId, string value) : ICommand<Guid>;
+public record CreateSpecOptionCommand(Guid specId, string value) : ICommand<Guid>;
 
 public sealed class CreateCategorySpecOptionCommandHandler(
     ISpecRepository SpecRepository,
     ISpecOptionRepository SpecOptionRepository,
-    ICategorySpecRepository categorySpecRepository,
     IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateCategorySpecOptionCommand, Guid>
+    : ICommandHandler<CreateSpecOptionCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(CreateCategorySpecOptionCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateSpecOptionCommand request, CancellationToken cancellationToken)
     {
         Specification? Specification = await SpecRepository.GetByIdAsync(request.specId);
-
-        if (categorySpecRepository.GetByCategoryNameAndSpecId(request.categoryName, request.specId) is null)
-            return new NotFoundException("Category.Spec.Notfound", $"Category {request.categoryName} isn't linked to spec {request.specId}");
-
         if (Specification is null)
             return new NotFoundException("Spec.Notfound", $"Category spec with id {request.specId} not found");
 
@@ -49,11 +44,10 @@ public sealed class CreateCategorySpecOptionCommandHandler(
     }
 }
 
-internal class CreateCategorySpecOptionCommandValidator : AbstractValidator<CreateCategorySpecOptionCommand>
+internal class CreateCategorySpecOptionCommandValidator : AbstractValidator<CreateSpecOptionCommand>
 {
     public CreateCategorySpecOptionCommandValidator()
     {
-        RuleFor(x => x.categoryName).NotEmpty();
         RuleFor(x => x.specId).NotEmpty();
         RuleFor(x => x.value).NotEmpty();
     }
