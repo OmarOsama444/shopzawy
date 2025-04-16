@@ -22,7 +22,12 @@ public class CategoryRepository(
         string Query =
         $"""
         SELECT 
-        *
+            category_name as {nameof(Category.CategoryName)}, 
+            description as {nameof(Category.Description)},
+            image_url as {nameof(Category.ImageUrl)},
+            category_path as {nameof(Category.CategoryPath)},
+            parent_category as {nameof(Category.ParentCategory)},
+            order as {nameof(Category.Order)}
         FROM 
         {Schemas.Orders}.Category
         WHERE
@@ -106,5 +111,10 @@ public class CategoryRepository(
             (@filter IS NULL OR C.Category_Name ILIKE '%' || @filter || '%')
         """;
         return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter });
+    }
+
+    public Task<ICollection<Category>> TotalChildren(string CategoryName)
+    {
+        throw new NotImplementedException();
     }
 }
