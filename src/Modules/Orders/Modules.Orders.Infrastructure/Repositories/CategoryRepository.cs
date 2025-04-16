@@ -40,6 +40,7 @@ public class CategoryRepository(
             .Include(x => x.ParentCategory)
             .Include(x => x.CategorySpecs)
             .ThenInclude(x => x.Spec)
+            .ThenInclude(c => c.SpecificationOptions)
             .FirstOrDefaultAsync(x => x.CategoryName == categoryName);
     }
 

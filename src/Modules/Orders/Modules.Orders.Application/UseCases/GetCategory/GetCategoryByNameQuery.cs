@@ -52,7 +52,8 @@ public class GetCategoryRespone
         {
             name = x.Name,
             id = x.Id,
-            dataType = x.DataType
+            dataType = x.DataType,
+            options = x.SpecificationOptions.Select(so => new SpecOptionResponse(so.Id, so.SpecificationId, so.Value)).ToList()
         }).ToList();
 
         this.children = category.ChilrenCategories.Select(x => new OrphanCategory
@@ -85,5 +86,7 @@ public class GetCategoryRespone
         public Guid id { get; set; }
         public string name { get; set; } = string.Empty;
         public string dataType { get; set; } = string.Empty;
+        public ICollection<SpecOptionResponse> options { get; set; } = [];
     }
+    public record SpecOptionResponse(Guid Id, Guid SpecificationId, string Value);
 }
