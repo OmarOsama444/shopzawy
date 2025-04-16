@@ -3,11 +3,13 @@ using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateCategorySpec;
 
 public class ColorSpecCreatedDomainEventHandler(
-    ISpecOptionRepository categorySpecificationOptionRepository,
+    ISpecOptionRepository specOptionRepository,
+    ISpecRepository specRepository,
     IColorRepository colorRepository,
     IUnitOfWork unitOfWork) :
     IDomainEventHandler<SpecCreatedDomainEvent>
@@ -15,11 +17,15 @@ public class ColorSpecCreatedDomainEventHandler(
     public async Task Handle(SpecCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
         var colors = await colorRepository.GetAllAsync();
-        foreach (Color color in colors)
+        var spec = await specRepository.GetByIdAsync(notification.SpecId);
+        if (spec is not null && spec.DataType == SpecDataType.Color)
         {
-            var x = SpecificationOption.Create(color.Name, notification.SpecId);
-            categorySpecificationOptionRepository.Add(x);
+            foreach (Color color in colors)
+            {
+                var x = SpecificationOption.Create(color.Name, notification.SpecId);
+                specOptionRepository.Add(x);
+            }
+            await unitOfWork.SaveChangesAsync();
         }
-        await unitOfWork.SaveChangesAsync();
     }
 }
