@@ -35,7 +35,7 @@ public class CategoryRepository(
     {
         string categoryName = id as string ?? "";
 
-        return await ordersDbContext.Categories
+        return await context.Categories
             .Include(x => x.ChilrenCategories)
             .Include(x => x.ParentCategory)
             .Include(x => x.CategorySpecs)

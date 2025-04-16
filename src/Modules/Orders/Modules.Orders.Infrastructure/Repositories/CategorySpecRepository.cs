@@ -10,7 +10,7 @@ public class CategorySpecRepository(OrdersDbContext ordersDbContext) : Repositor
 {
     public async Task<CategorySpec?> GetByCategoryNameAndSpecId(string categoryName, Guid specId)
     {
-        return await ordersDbContext.CategorySpecs.FirstOrDefaultAsync(c => c.CategoryName == categoryName && c.SpecId == specId);
+        return await context.CategorySpecs.FirstOrDefaultAsync(c => c.CategoryName == categoryName && c.SpecId == specId);
     }
 
 }

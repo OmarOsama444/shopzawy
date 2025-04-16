@@ -14,7 +14,7 @@ public class SpecsEndpoints : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/specs");
+        var group = app.MapGroup("api/specs").WithTags("Specifications");
 
         group.MapPost("{id}", async (
             [FromRoute] Guid id,

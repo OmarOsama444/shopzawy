@@ -14,12 +14,12 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
 {
     public async Task<Vendor?> GetVendorByEmail(string Email)
     {
-        return await ordersDbContext.Vendors.FirstOrDefaultAsync(v => v.Email == Email);
+        return await context.Vendors.FirstOrDefaultAsync(v => v.Email == Email);
     }
 
     public async Task<Vendor?> GetVendorByPhone(string Phone)
     {
-        return await ordersDbContext.Vendors.FirstOrDefaultAsync(v => v.PhoneNumber == Phone);
+        return await context.Vendors.FirstOrDefaultAsync(v => v.PhoneNumber == Phone);
     }
 
     public async Task<ICollection<VendorResponse>> Paginate(int pageNumber, int pageSize, string? namefilter)

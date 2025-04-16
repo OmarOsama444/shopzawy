@@ -12,7 +12,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext) :
 {
     public async Task<Specification?> GetByNameAndCategoryName(string name, string categoryName)
     {
-        var spec = await ordersDbContext.Specifications
+        var spec = await context.Specifications
         .Include(s => s.CategorySpecs)
         .FirstOrDefaultAsync(x => x.Name == name);
 
