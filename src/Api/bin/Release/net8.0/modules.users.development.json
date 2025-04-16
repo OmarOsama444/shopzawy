@@ -1,0 +1,28 @@
+{
+    "Users": {
+        "ConnectionStrings": {
+            "UsersDb": "Server=.\\SQLEXPRESS;Database=SkillHiveUsersDb;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;",
+            "QuadrantGrpc": "https://localhost:6333",
+            "FaceNetApi": "http://127.0.0.1:5000"
+        },
+        "GmailConfig": {
+            "SmtpServer": "smtp.gmail.com",
+            "Port": 587,
+            "SSL": true,
+            "AppName": "SkillHive",
+            "SenderEmail": "omarosos912@gmail.com",
+            "SenderPassword": "ehzk tazz zuyp rlql"
+        },
+        "EmailTemplates": {
+            "VerificationMail": {
+                "subject": "Activate Your Account",
+                "body": "Dear [FirstName],\n\nThank you for signing up! To complete your registration, please activate your account by clicking the link below:\n\n[Activate My Account]([URL])\n\nIf you did not sign up for this account, please ignore this email.\n\nBest regards,\n"
+            }
+        },
+
+        "OutboxOptions": {
+            "BatchSize": 50,
+            "TimeSpanInSeconds": 5
+        }
+    }
+}

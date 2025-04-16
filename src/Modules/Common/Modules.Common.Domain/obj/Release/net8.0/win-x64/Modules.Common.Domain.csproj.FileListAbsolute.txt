@@ -1,0 +1,13 @@
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\bin\Release\net8.0\win-x64\Modules.Common.Domain.deps.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\bin\Release\net8.0\win-x64\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\bin\Release\net8.0\win-x64\Modules.Common.Domain.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.csproj.AssemblyReference.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.AssemblyInfoInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.AssemblyInfo.cs
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.csproj.CoreCompileInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.sourcelink.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\refint\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\Modules.Common.Domain.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Domain\obj\Release\net8.0\win-x64\ref\Modules.Common.Domain.dll

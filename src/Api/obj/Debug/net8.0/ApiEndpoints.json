@@ -1,0 +1,522 @@
+[
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.VerifyEmailEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/auth/emial/{token}",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.LoginUserEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/auth/login",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Users.Application.UseCases.LoginUser.LoginUserCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.LoginWithRefreshEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/auth/refresh",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Users.Application.UseCases.LoginWithRefresh.LoginWithRefreshCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.RegisterUserEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/auth/register",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Users.Application.UseCases.CreateUnverifiedUser.CreateUnverifiedUserCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.BrandEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/brands/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.CreateBrand.CreateBrandCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Brands"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.BrandEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "api/brands/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "nameField",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Brands"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.BrandEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_2",
+    "RelativePath": "api/brands/",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.UpdateBrand.UpdateBrandCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Brands"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.CategoryEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/categories/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.CreateCategory.CreateCategoryCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Categories"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.CategoryEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_2",
+    "RelativePath": "api/categories/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "nameFilter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Categories"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.CategoryEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "api/categories/main",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Categories"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.ColorEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "api/colors/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.CreateColor.CreateColorCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Colors"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.ColorEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/colors/all",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Colors"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Users.UsersEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "api/users/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Users"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Users.UsersEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_2",
+    "RelativePath": "api/users/",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Users.Presentation.Endpoints.Users.UsersEndpoints\u002BUpdateUserRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Users"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Users.UsersEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/users/id/{id}",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Users"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.VendorEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "api/vendors/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.CreateVendor.CreateVendorCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Vendors"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.VendorEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "api/vendors/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "namefilter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Vendors"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Orders.Presentation.Endpoints.VendorEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_2",
+    "RelativePath": "api/vendors/",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Modules.Orders.Application.UseCases.UpdateVendor.UpdateVendorCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "Tags": [
+      "Vendors"
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.GoogleAuthEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_2",
+    "RelativePath": "auth/external-callback",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.GoogleAuthEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_1",
+    "RelativePath": "auth/facebook",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Modules.Users.Presentation.Endpoints.Auth.GoogleAuthEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapEndpoint\u003Eb__0_0",
+    "RelativePath": "auth/google",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Program\u002B\u003C\u003Ec",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_1",
+    "RelativePath": "upload",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  }
+]

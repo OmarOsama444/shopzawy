@@ -1,0 +1,16 @@
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\bin\Release\net8.0\win-x64\Modules.Common.Application.deps.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\bin\Release\net8.0\win-x64\Modules.Common.Application.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\bin\Release\net8.0\win-x64\Modules.Common.Application.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\bin\Release\net8.0\win-x64\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\bin\Release\net8.0\win-x64\Modules.Common.Domain.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.csproj.AssemblyReference.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.AssemblyInfoInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.AssemblyInfo.cs
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.csproj.CoreCompileInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.sourcelink.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules..C0AD7DF4.Up2Date
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\refint\Modules.Common.Application.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\Modules.Common.Application.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Application\obj\Release\net8.0\win-x64\ref\Modules.Common.Application.dll

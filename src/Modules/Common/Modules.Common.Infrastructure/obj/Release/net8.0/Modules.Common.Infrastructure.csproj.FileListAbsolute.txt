@@ -1,0 +1,13 @@
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\bin\Release\net8.0\Modules.Common.Infrastructure.deps.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\bin\Release\net8.0\Modules.Common.Infrastructure.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\bin\Release\net8.0\Modules.Common.Application.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\bin\Release\net8.0\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.AssemblyInfo.cs
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules..863D1CD5.Up2Date
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\Modules.Common.Infrastructure.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\refint\Modules.Common.Infrastructure.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Common\Modules.Common.Infrastructure\obj\Release\net8.0\ref\Modules.Common.Infrastructure.dll

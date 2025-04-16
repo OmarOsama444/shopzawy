@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "H6UWFA9KweKpQ9Z1wulqqGOIfjJr82e3V2OleF/6JaE=",
+  "Source": "shopizawy.Api",
+  "BasePath": "_content/shopizawy.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "shopizawy.Api\\wwwroot",
+      "Source": "shopizawy.Api",
+      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\",
+      "BasePath": "_content/shopizawy.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\uploads\\49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg",
+      "SourceId": "shopizawy.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\",
+      "BasePath": "_content/shopizawy.Api",
+      "RelativePath": "uploads/49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg"
+    }
+  ]
+}
