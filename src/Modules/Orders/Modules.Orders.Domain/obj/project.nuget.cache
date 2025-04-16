@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ta9yh3LDEao=",
+  "dgSpecHash": "SoemL4SLKtQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Domain\\Modules.Orders.Domain.csproj",
+  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Domain\\Modules.Orders.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\omaro\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\omaro\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.3.0\\microsoft.aspnetcore.authentication.2.3.0.nupkg.sha512",

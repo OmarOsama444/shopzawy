@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "H6UWFA9KweKpQ9Z1wulqqGOIfjJr82e3V2OleF/6JaE=",
+  "Hash": "nrCx+E/L9psachKG0/M7T+vJT57C2syq6KEBQhy5j0Y=",
   "Source": "shopizawy.Api",
   "BasePath": "_content/shopizawy.Api",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "shopizawy.Api\\wwwroot",
       "Source": "shopizawy.Api",
-      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\wwwroot\\",
       "BasePath": "_content/shopizawy.Api",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\uploads\\49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg",
+      "Identity": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\wwwroot\\uploads\\49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg",
       "SourceId": "shopizawy.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\wwwroot\\",
       "BasePath": "_content/shopizawy.Api",
       "RelativePath": "uploads/49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg",
       "AssetKind": "All",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8DxmUgmx2Zo=",
+  "dgSpecHash": "ja/Vg+tw9nc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Presentation\\Modules.Orders.Presentation.csproj",
+  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Presentation\\Modules.Orders.Presentation.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\omaro\\.nuget\\packages\\dapper\\2.1.28\\dapper.2.1.28.nupkg.sha512",
     "C:\\Users\\omaro\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",

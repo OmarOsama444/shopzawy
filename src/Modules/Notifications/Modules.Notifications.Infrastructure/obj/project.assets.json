@@ -4111,11 +4111,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\Modules.Notifications.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\Modules.Notifications.Infrastructure.csproj",
       "projectName": "Modules.Notifications.Infrastructure",
-      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\Modules.Notifications.Infrastructure.csproj",
+      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\Modules.Notifications.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\omaro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Notifications\\Modules.Notifications.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\omaro\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4133,8 +4133,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj"
             }
           }
         }

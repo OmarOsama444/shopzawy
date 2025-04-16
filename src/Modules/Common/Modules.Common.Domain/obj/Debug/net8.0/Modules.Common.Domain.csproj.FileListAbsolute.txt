@@ -49,3 +49,16 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopizawy\src\Modules\Common\Modules.C
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopizawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\refint\Modules.Common.Domain.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopizawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopizawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\ref\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\bin\Debug\net8.0\Modules.Common.Domain.deps.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\bin\Debug\net8.0\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\bin\Debug\net8.0\Modules.Common.Domain.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.csproj.AssemblyReference.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.AssemblyInfoInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.AssemblyInfo.cs
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.csproj.CoreCompileInputs.cache
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.sourcelink.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\refint\Modules.Common.Domain.dll
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\Modules.Common.Domain.pdb
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Common\Modules.Common.Domain\obj\Debug\net8.0\ref\Modules.Common.Domain.dll

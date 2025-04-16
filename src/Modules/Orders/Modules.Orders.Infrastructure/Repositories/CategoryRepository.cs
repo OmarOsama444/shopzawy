@@ -49,7 +49,9 @@ public class CategoryRepository(
         string Query =
         $"""
         SELECT 
-        *
+            category_name as {nameof(Category.CategoryName)}, 
+            description as {nameof(Category.Description)},
+            image_url as {nameof(Category.ImageUrl)}
         FROM
         {Schemas.Orders}.Category
         WHERE

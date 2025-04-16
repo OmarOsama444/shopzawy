@@ -7109,11 +7109,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\shopizawy.Api.csproj",
+      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\shopizawy.Api.csproj",
       "projectName": "shopizawy.Api",
-      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\shopizawy.Api.csproj",
+      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\shopizawy.Api.csproj",
       "packagesPath": "C:\\Users\\omaro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Api\\obj\\",
+      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\omaro\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7131,26 +7131,26 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Application\\Modules.Common.Application.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Application\\Modules.Common.Application.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Application\\Modules.Common.Application.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Application\\Modules.Common.Application.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Presentation\\Modules.Common.Presentation.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Presentation\\Modules.Common.Presentation.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Presentation\\Modules.Common.Presentation.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Presentation\\Modules.Common.Presentation.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Application\\Modules.Orders.Application.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Application\\Modules.Orders.Application.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Application\\Modules.Orders.Application.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Application\\Modules.Orders.Application.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Infrastructure\\Modules.Orders.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Orders\\Modules.Orders.Infrastructure\\Modules.Orders.Infrastructure.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Infrastructure\\Modules.Orders.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Orders\\Modules.Orders.Infrastructure\\Modules.Orders.Infrastructure.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Users\\Modules.Users.Application\\Modules.Users.Application.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Users\\Modules.Users.Application\\Modules.Users.Application.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Users\\Modules.Users.Application\\Modules.Users.Application.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Users\\Modules.Users.Application\\Modules.Users.Application.csproj"
             },
-            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Users\\Modules.Users.Infrastructure\\Modules.Users.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Users\\Modules.Users.Infrastructure\\Modules.Users.Infrastructure.csproj"
+            "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Users\\Modules.Users.Infrastructure\\Modules.Users.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Users\\Modules.Users.Infrastructure\\Modules.Users.Infrastructure.csproj"
             }
           }
         }

@@ -1751,11 +1751,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Domain\\Modules.Common.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Domain\\Modules.Common.Domain.csproj",
       "projectName": "Modules.Common.Domain",
-      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Domain\\Modules.Common.Domain.csproj",
+      "projectPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Domain\\Modules.Common.Domain.csproj",
       "packagesPath": "C:\\Users\\omaro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Domain\\obj\\",
+      "outputPath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\omaro\\AppData\\Roaming\\NuGet\\NuGet.Config",

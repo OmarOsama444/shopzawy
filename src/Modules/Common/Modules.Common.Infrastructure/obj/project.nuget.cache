@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "97eNRwRx2HQ=",
+  "dgSpecHash": "CsJQlgZ7RWo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopizawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Modules\\Common\\Modules.Common.Infrastructure\\Modules.Common.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\omaro\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\omaro\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
