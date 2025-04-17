@@ -1,7 +1,6 @@
 using System.Data.Common;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
@@ -21,19 +20,33 @@ public class CategoryRepository(
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
-        SELECT 
-            category_name as {nameof(Category.CategoryName)}, 
-            description as {nameof(Category.Description)},
-            image_url as {nameof(Category.ImageUrl)},
-            category_path as {nameof(Category.CategoryPath)},
-            parent_category as {nameof(Category.ParentCategory)},
-            order as {nameof(Category.Order)}
-        FROM 
-        {Schemas.Orders}.Category
-        WHERE
-        Parent_Category_Name = @ParentName
+        WITH RECURSIVE category_hierarchy AS (
+            SELECT 
+                category_name as {nameof(Category.CategoryName)}, 
+                description as {nameof(Category.Description)},
+                image_url as {nameof(Category.ImageUrl)},
+                category_path as {nameof(Category.CategoryPath)},
+                parent_category_name as {nameof(Category.ParentCategory)},
+                "order" as {nameof(Category.Order)}
+            FROM orders.category 
+            WHERE parent_category_name = @CategoryName
+
+            UNION ALL
+
+            SELECT
+                c.category_name as {nameof(Category.CategoryName)}, 
+                c.description as {nameof(Category.Description)},
+                c.image_url as {nameof(Category.ImageUrl)},
+                c.category_path as {nameof(Category.CategoryPath)},
+                c.parent_category as {nameof(Category.ParentCategory)},
+                c.order as {nameof(Category.Order)}
+            FROM orders.category c
+            INNER JOIN category_hierarchy ch ON c.parent_category_name = ch.category_name
+        )
+
+        SELECT * FROM category_hierarchy;
         """;
-        IEnumerable<Category> categories = await dbConnection.QueryAsync<Category>(Query, new { ParentName = CategoryName });
+        IEnumerable<Category> categories = await dbConnection.QueryAsync<Category>(Query, new { CategoryName });
         return categories.ToList();
     }
     public override async Task<Category?> GetByIdAsync(object id)

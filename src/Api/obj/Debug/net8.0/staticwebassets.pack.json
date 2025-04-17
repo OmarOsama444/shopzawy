@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\uploads\\49cc74f9-a5e4-4f7e-b7f4-72e9feb6cc69.jpg"
     },
     {
+      "Id": "C:\\Users\\omaro\\OneDrive\\Desktop\\SkillHive\\shopzawy\\src\\Api\\wwwroot\\uploads\\5c2459a7-4c75-4ccb-afda-348f9a06633b.jpg",
+      "PackagePath": "staticwebassets\\uploads\\5c2459a7-4c75-4ccb-afda-348f9a06633b.jpg"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.shopizawy.Api.props",
       "PackagePath": "build\\shopizawy.Api.props"
     },

@@ -6,4 +6,5 @@ namespace Modules.Orders.Domain.Repositories;
 public interface ISpecRepository : IRepository<Specification>
 {
     public Task<Specification?> GetByNameAndCategoryName(string name, string categoryName);
+    public Task<ICollection<Specification>> GetByDataType(string dataTypeName);
 }

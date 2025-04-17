@@ -14,25 +14,41 @@ namespace Modules.Orders.Application.UseCases;
 public record CreateCategorySpecCommand(string categoryName, string specName, string dataType) : ICommand<Guid>;
 
 public sealed class CreateCategorySpecCommandHandler(
-    ISpecRepository SpecRepository,
+    ISpecRepository specRepository,
     ICategorySpecRepository categorySpecRepository,
     ICategoryRepository categoryRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateCategorySpecCommand, Guid>
+    IUnitOfWork unitOfWork
+) : ICommandHandler<CreateCategorySpecCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateCategorySpecCommand request, CancellationToken cancellationToken)
     {
-        if (await categoryRepository.GetByIdAsync(request.categoryName) is null)
+        var category = await categoryRepository.GetByIdAsync(request.categoryName);
+        if (category is null)
             return new CategoryNotFoundException(request.categoryName);
-        if (await SpecRepository.GetByNameAndCategoryName(request.specName, request.categoryName) is not null)
-            return new ConflictException("Conflict.Category.Spec", $"a spec with this name : {request.categoryName} already exists for this category");
+
+        var existingSpec = await specRepository.GetByNameAndCategoryName(request.specName, request.categoryName);
+        if (existingSpec is not null)
+            return new ConflictException("Conflict.Category.Spec",
+                $"A spec with this name: {request.specName} already exists for this category.");
+
         var spec = Specification.Create(request.specName, request.dataType, request.categoryName);
-        SpecRepository.Add(spec);
+        specRepository.Add(spec);
+
         var categorySpec = CategorySpec.Create(spec.Id, request.categoryName);
         categorySpecRepository.Add(categorySpec);
+
+        var childCategories = await categoryRepository.Children(request.categoryName);
+        foreach (var child in childCategories)
+        {
+            var childSpec = CategorySpec.Create(spec.Id, child.CategoryName);
+            categorySpecRepository.Add(childSpec);
+        }
+
         await unitOfWork.SaveChangesAsync();
         return spec.Id;
     }
 }
+
 
 internal class CreateCategorySpecCommandValidator : AbstractValidator<CreateCategorySpecCommand>
 {

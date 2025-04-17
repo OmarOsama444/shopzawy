@@ -10,6 +10,12 @@ public class SpecRepository(OrdersDbContext ordersDbContext) :
     Repository<Specification, OrdersDbContext>(ordersDbContext),
     ISpecRepository
 {
+    public async Task<ICollection<Specification>> GetByDataType(string dataTypeName)
+    {
+        return await context.Specifications.Where(s => s.DataType == dataTypeName).ToListAsync();
+    }
+
+
     public async Task<Specification?> GetByNameAndCategoryName(string name, string categoryName)
     {
         var spec = await context.Specifications
