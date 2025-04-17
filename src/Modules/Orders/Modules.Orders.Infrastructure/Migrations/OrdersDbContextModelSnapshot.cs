@@ -214,24 +214,24 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("category_name");
 
-                    b.Property<string>("Description")
+                    b.Property<bool>("InStock")
+                        .HasColumnType("boolean")
+                        .HasColumnName("in_stock");
+
+                    b.Property<string>("LongDescription")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("LDescription")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("l_description");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("real")
-                        .HasColumnName("price");
+                        .HasColumnName("long_description");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("product_name");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("short_description");
 
                     b.Property<Guid>("VendorId")
                         .HasColumnType("uuid")
@@ -245,9 +245,6 @@ namespace Modules.Orders.Infrastructure.Migrations
 
                     b.HasIndex("CategoryName")
                         .HasDatabaseName("ix_product_category_name");
-
-                    b.HasIndex("Price")
-                        .HasDatabaseName("ix_product_price");
 
                     b.HasIndex("VendorId")
                         .HasDatabaseName("ix_product_vendor_id");
@@ -404,9 +401,26 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool?>("BoolValue")
+                        .HasColumnType("boolean")
+                        .HasColumnName("bool_value");
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data_type");
+
+                    b.Property<double?>("NumberValue")
+                        .HasColumnType("double precision")
+                        .HasColumnName("number_value");
+
                     b.Property<Guid>("SpecificationId")
                         .HasColumnType("uuid")
                         .HasColumnName("specification_id");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("text")
+                        .HasColumnName("string_value");
 
                     b.Property<string>("Value")
                         .IsRequired()

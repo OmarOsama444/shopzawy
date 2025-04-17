@@ -43,7 +43,7 @@ public sealed class CreateCategorySpecOptionCommandHandler(
                 { "Invalid.data.type", new[] { $"couldn't parse {value} to a booleon" } }
             });
 
-            var catspecoption = SpecificationOption.Create(value, Specification.Id);
+            var catspecoption = SpecificationOption.Create(Specification.DataType, value, Specification.Id);
             SpecOptionRepository.Add(catspecoption);
             specOptionIds.Add(catspecoption.Id);
         }

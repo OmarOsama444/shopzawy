@@ -12,10 +12,6 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
     {
         builder
             .HasKey(p => p.Id);
-
-        builder
-            .HasIndex(p => p.Price);
-
         builder
             .HasMany(p => p.ProductCategories)
             .WithOne(pc => pc.Product)
