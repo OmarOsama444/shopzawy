@@ -6,10 +6,14 @@ namespace Modules.Orders.Domain.Entities;
 public class Product : Entity
 {
     public Guid Id { get; private set; }
+
     public string ProductName { get; private set; } = string.Empty;
     public string LongDescription { get; private set; } = string.Empty;
     public string ShortDescription { get; private set; } = string.Empty;
     public bool InStock { get; private set; } = false;
+    public bool Featured { get; private set; } = false;
+    public bool Active { get; private set; } = false;
+    public bool NewArrival { get; private set; } = false;
     public DateTime CreatedOn { get; set; }
     public WeightUnit weightUnit { get; set; }
     public float weight { get; set; }
