@@ -108,7 +108,7 @@ public class CategoryRepository(
         LEFT JOIN 
             {Schemas.Orders}.Product AS P ON P.Category_Name = C.Category_Name
         WHERE 
-            (@nameFilter IS NULL OR C.Category_Name ILIKE '%' || @nameFilter || '%')
+            (@nameFilter IS NULL OR C.Category_Name ILIKE @nameFilter || '%')
         GROUP BY 
             C.Category_Name, C.Order, C.Parent_Category_Name
         ORDER BY 
@@ -128,7 +128,7 @@ public class CategoryRepository(
         FROM 
             {Schemas.Orders}.Category AS C
         WHERE 
-            (@filter IS NULL OR C.Category_Name ILIKE '%' || @filter || '%')
+            (@filter IS NULL OR C.Category_Name ILIKE @filter || '%')
         """;
         return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter });
     }

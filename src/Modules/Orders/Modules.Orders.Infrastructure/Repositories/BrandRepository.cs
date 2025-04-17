@@ -30,7 +30,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
             Orders.Product AS P
         ON P.Brand_Name = B.Brand_Name
         WHERE
-            (@nameField IS NULL OR B.Brand_Name ILIKE '%' || @nameField || '%')
+            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField || '%')
         GROUP BY
             B.Brand_Name, B.Logo_Url, B.Description, B.Featured, B.Active
         ORDER BY
@@ -51,7 +51,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
         FROM 
             {Schemas.Orders}.Brand as B
         WHERE 
-            (@nameField IS NULL OR B.Brand_Name ILIKE '%' || @nameField || '%')
+            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField || '%')
         """;
         return await sqlConnection.ExecuteScalarAsync<int>(countQuery, new { nameField = nameField });
     }

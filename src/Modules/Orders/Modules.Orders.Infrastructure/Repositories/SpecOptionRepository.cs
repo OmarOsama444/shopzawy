@@ -14,4 +14,8 @@ public class SpecOptionRepository : Repository<SpecificationOption, OrdersDbCont
         return await context.SpecificationOptions.Where(x => x.SpecificationId == id).ToListAsync();
     }
 
+    public async Task<SpecificationOption?> GetBySpecIdAndValue(Guid id, string value)
+    {
+        return await context.SpecificationOptions.Where(x => x.SpecificationId == id && x.Value == value).FirstOrDefaultAsync();
+    }
 }

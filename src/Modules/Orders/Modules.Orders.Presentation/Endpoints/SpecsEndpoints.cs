@@ -21,7 +21,7 @@ public class SpecsEndpoints : IEndpoint
             [FromBody] CreateCategorySpecOptionRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateSpecOptionCommand(id, request.value));
+            var result = await sender.Send(new CreateSpecOptionsCommand(id, request.values));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
@@ -33,6 +33,6 @@ public class SpecsEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
     }
-    public record CreateCategorySpecOptionRequestDto(string value);
+    public record CreateCategorySpecOptionRequestDto(ICollection<string> values);
 
 }

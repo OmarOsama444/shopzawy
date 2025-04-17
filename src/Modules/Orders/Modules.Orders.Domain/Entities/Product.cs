@@ -6,9 +6,9 @@ public class Product : Entity
 {
     public Guid Id { get; private set; }
     public string ProductName { get; private set; } = string.Empty;
-    public string LDescription { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
-    public float Price { get; private set; }
+    public string LongDescription { get; private set; } = string.Empty;
+    public string ShortDescription { get; private set; } = string.Empty;
+    public bool InStock { get; private set; } = false;
     public Guid VendorId { get; private set; }
     public string BrandName { get; set; } = string.Empty;
     public string CategoryName { get; set; } = string.Empty;

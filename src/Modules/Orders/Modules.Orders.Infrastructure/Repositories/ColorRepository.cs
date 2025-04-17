@@ -40,13 +40,13 @@ public class ColorRepository : Repository<Color, OrdersDbContext>, IColorReposit
     public async Task<ICollection<ColorResponse>> Paginate(int pageSize, int pageNumber, string? name)
     {
         int offset = (pageNumber - 1) * pageSize;
-        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.Contains(name));
+        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.StartsWith(name));
         return await colors.Skip(offset).Take(pageSize).Select(c => new ColorResponse(c.Name, c.Code)).ToListAsync();
     }
 
     public async Task<int> TotalColors(string? name)
     {
-        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.Contains(name));
+        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.StartsWith(name));
         return await colors.CountAsync();
     }
 }

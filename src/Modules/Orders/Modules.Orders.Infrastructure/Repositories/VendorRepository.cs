@@ -47,7 +47,7 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
         ON 
             P.Vendor_Id = V.Id
         WHERE 
-            (@namefilter IS NULL OR V.Vendor_Name ILIKE '%' || @namefilter || '%')
+            (@namefilter IS NULL OR V.Vendor_Name ILIKE @namefilter || '%')
         GROUP BY 
             V.Id, V.Vendor_Name, V.Description, V.Email, V.Phone_Number, V.Address, V.Logo_Url, v.Shiping_Zone_Name
         ORDER BY 
@@ -78,7 +78,7 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
         FROM 
         {Schemas.Orders}.Vendor as V
         WHERE 
-        (@namefilter IS NULL OR V.Vendor_Name ILIKE '%' || @namefilter || '%')
+        (@namefilter IS NULL OR V.Vendor_Name ILIKE @namefilter || '%')
         """;
         return await sqlConnection.ExecuteScalarAsync<int>(Query, new { namefilter });
     }
