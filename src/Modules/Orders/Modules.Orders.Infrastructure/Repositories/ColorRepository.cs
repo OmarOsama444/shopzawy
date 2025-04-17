@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.Common;
 using Dapper;
 using MassTransit.SagaStateMachine;
+using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
@@ -11,8 +12,15 @@ using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure.Repositories;
 
-public class ColorRepository(OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) : Repository<Color, OrdersDbContext>(ordersDbContext), IColorRepository
+public class ColorRepository : Repository<Color, OrdersDbContext>, IColorRepository
 {
+    public OrdersDbContext ordersDbContext { get; init; }
+    public IDbConnectionFactory dbConnectionFactory { get; init; }
+    public ColorRepository(OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) : base(ordersDbContext)
+    {
+        this.ordersDbContext = ordersDbContext;
+        this.dbConnectionFactory = dbConnectionFactory;
+    }
     public async Task<Color?> GetByName(string name)
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
@@ -27,5 +35,18 @@ public class ColorRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
         {nameof(Color.Name)} = @name
         """;
         return connection.QueryFirstOrDefault<Color>(Query, new { name });
+    }
+
+    public async Task<ICollection<ColorResponse>> Paginate(int pageSize, int pageNumber, string? name)
+    {
+        int offset = (pageNumber - 1) * pageSize;
+        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.Contains(name));
+        return await colors.Skip(offset).Take(pageSize).Select(c => new ColorResponse(c.Name, c.Code)).ToListAsync();
+    }
+
+    public async Task<int> TotalColors(string? name)
+    {
+        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.Contains(name));
+        return await colors.CountAsync();
     }
 }

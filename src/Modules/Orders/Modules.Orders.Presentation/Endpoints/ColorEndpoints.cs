@@ -15,11 +15,14 @@ public class ColorEndpoints : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/colors").WithTags("Colors");
-        group.MapGet("all", async ([FromServices] ISender sender) =>
+
+        group.MapGet("", async (int? pageNumber, int? pageSize, string? colorName, [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new GetColorsQuery());
+            var result = await sender.Send(new PaginateColorsQuery(pageNumber ?? 1, pageSize ?? 50, colorName));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
+
+
         group.MapPost("", async ([FromBody] CreateColorCommand request, ISender sender) =>
         {
             var result = await sender.Send(request);

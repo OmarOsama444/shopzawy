@@ -21,30 +21,37 @@ public class CategoryRepository(
         string Query =
         $"""
         WITH RECURSIVE category_hierarchy AS (
-            SELECT 
-                category_name as {nameof(Category.CategoryName)}, 
-                description as {nameof(Category.Description)},
-                image_url as {nameof(Category.ImageUrl)},
-                category_path as {nameof(Category.CategoryPath)},
-                parent_category_name as {nameof(Category.ParentCategory)},
-                "order" as {nameof(Category.Order)}
-            FROM orders.category 
-            WHERE parent_category_name = @CategoryName
+        SELECT 
+            category_name ,
+            description ,
+            image_url ,
+            category_path,
+            parent_category_name ,
+            "order" 
+        FROM orders.category 
+        WHERE parent_category_name = @CategoryName
 
-            UNION ALL
+        UNION ALL
 
-            SELECT
-                c.category_name as {nameof(Category.CategoryName)}, 
-                c.description as {nameof(Category.Description)},
-                c.image_url as {nameof(Category.ImageUrl)},
-                c.category_path as {nameof(Category.CategoryPath)},
-                c.parent_category as {nameof(Category.ParentCategory)},
-                c.order as {nameof(Category.Order)}
-            FROM orders.category c
-            INNER JOIN category_hierarchy ch ON c.parent_category_name = ch.category_name
+        SELECT
+            c.category_name,
+            c.description ,
+            c.image_url,
+            c.category_path,
+            c.parent_category_name,
+            c.order
+        FROM orders.category c
+        INNER JOIN category_hierarchy ch ON c.parent_category_name = ch.category_name
         )
 
-        SELECT * FROM category_hierarchy;
+        SELECT 
+            category_name as {nameof(Category.CategoryName)}, 
+            description as {nameof(Category.Description)},
+            image_url as {nameof(Category.ImageUrl)},
+            category_path as {nameof(Category.CategoryPath)},
+            parent_category_name as {nameof(Category.ParentCategoryName)},
+            "order" as {nameof(Category.Order)}
+        FROM category_hierarchy;
         """;
         IEnumerable<Category> categories = await dbConnection.QueryAsync<Category>(Query, new { CategoryName });
         return categories.ToList();
