@@ -1625,6 +1625,7 @@
       },
       "Modules.Common.Presentation/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.OpenApi": "8.0.8",
           "Modules.Common.Application": "1.0.0"
         },
         "runtime": {

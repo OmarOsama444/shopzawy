@@ -9,6 +9,7 @@ public class Brand : Entity
     public string Description { get; set; } = string.Empty;
     public bool Featured { get; set; } = false;
     public bool Active { get; set; } = false;
+    public DateTime CreatedOn { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
     public static Brand Create(string brandName, string logoUrl, string description, bool? featured, bool? active)
     {
@@ -18,7 +19,8 @@ public class Brand : Entity
             LogoUrl = logoUrl,
             Description = description,
             Featured = featured ?? false,
-            Active = active ?? true
+            Active = active ?? true,
+            CreatedOn = DateTime.UtcNow
         };
     }
 

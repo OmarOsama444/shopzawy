@@ -41,7 +41,7 @@ public class ColorRepository : Repository<Color, OrdersDbContext>, IColorReposit
     {
         int offset = (pageNumber - 1) * pageSize;
         IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.StartsWith(name));
-        return await colors.Skip(offset).Take(pageSize).Select(c => new ColorResponse(c.Name, c.Code)).ToListAsync();
+        return await colors.Skip(offset).Take(pageSize).Select(c => new ColorResponse(c.Name, c.Code)).OrderBy(c => c.name).ToListAsync();
     }
 
     public async Task<int> TotalColors(string? name)

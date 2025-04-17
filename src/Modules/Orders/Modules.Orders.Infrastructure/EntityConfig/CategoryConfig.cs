@@ -25,7 +25,7 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
 
 
         builder.HasMany(c => c.Products)
-        .WithOne(p => p.MainCategory)
+        .WithOne(p => p.Category)
         .HasForeignKey(p => p.CategoryName);
 
         builder.HasMany(s => s.ProductCategories)

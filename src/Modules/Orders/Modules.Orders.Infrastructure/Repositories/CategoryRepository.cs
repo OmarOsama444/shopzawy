@@ -82,6 +82,8 @@ public class CategoryRepository(
         {Schemas.Orders}.Category
         WHERE
         Parent_Category_Name is NULL
+        ORDER BY 
+            C.Order
         """;
         IEnumerable<Category> categories = await dbConnection.QueryAsync<Category>(Query);
         return categories.ToList();

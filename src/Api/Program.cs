@@ -5,9 +5,15 @@ using Shopizawy.Api.Extensions;
 using Modules.Users.Infrastructure;
 using Modules.Orders.Infrastructure;
 using Shopizawy.Api.Middleware;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 builder.Services.AddCors(option =>
 {
     option.AddDefaultPolicy(policy =>

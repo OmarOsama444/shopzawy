@@ -62,6 +62,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("active");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
@@ -93,6 +97,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("category_path");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -154,6 +162,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("code");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -214,14 +226,35 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("category_name");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real")
+                        .HasColumnName("height");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("image_url");
+
                     b.Property<bool>("InStock")
                         .HasColumnType("boolean")
                         .HasColumnName("in_stock");
+
+                    b.Property<float>("Length")
+                        .HasColumnType("real")
+                        .HasColumnName("length");
 
                     b.Property<string>("LongDescription")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("long_description");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real")
+                        .HasColumnName("price");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -233,9 +266,30 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("short_description");
 
+                    b.Property<string>("Tags")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Tags");
+
                     b.Property<Guid>("VendorId")
                         .HasColumnType("uuid")
                         .HasColumnName("vendor_id");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real")
+                        .HasColumnName("width");
+
+                    b.Property<int>("dimensionUnit")
+                        .HasColumnType("integer")
+                        .HasColumnName("dimension_unit");
+
+                    b.Property<float>("weight")
+                        .HasColumnType("real")
+                        .HasColumnName("weight");
+
+                    b.Property<int>("weightUnit")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight_unit");
 
                     b.HasKey("Id")
                         .HasName("pk_product");
@@ -245,6 +299,9 @@ namespace Modules.Orders.Infrastructure.Migrations
 
                     b.HasIndex("CategoryName")
                         .HasDatabaseName("ix_product_category_name");
+
+                    b.HasIndex("CreatedOn")
+                        .HasDatabaseName("ix_product_created_on");
 
                     b.HasIndex("VendorId")
                         .HasDatabaseName("ix_product_vendor_id");
@@ -452,6 +509,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("address");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
@@ -539,7 +600,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_product_brand_brand_name");
 
-                    b.HasOne("Modules.Orders.Domain.Entities.Category", "MainCategory")
+                    b.HasOne("Modules.Orders.Domain.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -555,7 +616,7 @@ namespace Modules.Orders.Infrastructure.Migrations
 
                     b.Navigation("Brand");
 
-                    b.Navigation("MainCategory");
+                    b.Navigation("Category");
 
                     b.Navigation("Vendor");
                 });

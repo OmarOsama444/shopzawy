@@ -10,6 +10,7 @@ public class Category : Entity
     public string Description { get; private set; } = string.Empty;
     public int Order { get; private set; }
     public string? ImageUrl { get; private set; }
+    public DateTime CreatedOn { get; private set; }
     public string CategoryPath { get; private set; } = string.Empty;
     // TODO ENTITY CONFIG
     public virtual Category ParentCategory { get; set; } = default!;
@@ -32,6 +33,7 @@ public class Category : Entity
                 Description = Description,
                 Order = Order,
                 ImageUrl = ImageUrl,
+                CreatedOn = DateTime.UtcNow
             };
             category.RaiseDomainEvent(new CategoryCreatedDomainEvent(CategoryName));
             return category;
@@ -44,6 +46,7 @@ public class Category : Entity
                 Description = Description,
                 Order = Order,
                 ImageUrl = ImageUrl,
+                CreatedOn = DateTime.UtcNow,
                 ParentCategoryName = parentCategory.CategoryName,
                 CategoryPath =
                     (

@@ -12,6 +12,7 @@ public class Vendor : Entity
     public string LogoUrl { get; set; } = string.Empty;
     public string ShipingZoneName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public DateTime CreatedOn { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
     public bool Active { get; set; }
     public static Vendor Create(
@@ -34,7 +35,8 @@ public class Vendor : Entity
             LogoUrl = logoUrl,
             ShipingZoneName = shippingZoneName,
             Description = description,
-            Active = active ?? true
+            Active = active ?? true,
+            CreatedOn = DateTime.UtcNow
         };
     }
     public void Update(
