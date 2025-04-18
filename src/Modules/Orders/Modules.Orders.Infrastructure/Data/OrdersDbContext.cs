@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Infrastructure.EntityConfig;
-using Modules.Users.Infrastructure;
 
 namespace Modules.Orders.Infrastructure.Data;
 
@@ -30,9 +29,9 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
         modelBuilder.ApplyConfiguration<Brand>(new BrandConfig());
         modelBuilder.ApplyConfiguration<Category>(new CategoryConfig());
         modelBuilder.ApplyConfiguration<Specification>(new SpecConfig());
-        modelBuilder.ApplyConfiguration<Discount>(new DiscountConfig());
         modelBuilder.ApplyConfiguration<Product>(new ProductConfig());
         modelBuilder.ApplyConfiguration<Vendor>(new VendorConfig());
         modelBuilder.ApplyConfiguration<Color>(new ColorConfig());
+        modelBuilder.ApplyConfiguration<CategorySpec>(new CategorySpecConfig());
     }
 }

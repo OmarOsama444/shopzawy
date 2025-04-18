@@ -14,4 +14,6 @@ public interface IProductRepository : IRepository<Product>
         KeyValuePair<DateTime, DateTime> DateRange);
 
     public Task<int> VendorProductsCount(Guid vendorId);
+    public Task UpdateCategoryName(string From, string To);
+    public Task<ICollection<Product>> GetByCategoryName(string categoryName);
 }

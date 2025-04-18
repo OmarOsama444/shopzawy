@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
@@ -25,7 +26,6 @@ public class CategoryRepository(
             category_name ,
             description ,
             image_url ,
-            category_path,
             parent_category_name ,
             "order" 
         FROM orders.category 
@@ -48,7 +48,6 @@ public class CategoryRepository(
             category_name as {nameof(Category.CategoryName)}, 
             description as {nameof(Category.Description)},
             image_url as {nameof(Category.ImageUrl)},
-            category_path as {nameof(Category.CategoryPath)},
             parent_category_name as {nameof(Category.ParentCategoryName)},
             "order" as {nameof(Category.Order)}
         FROM category_hierarchy;
@@ -64,9 +63,43 @@ public class CategoryRepository(
             .Include(x => x.ChilrenCategories)
             .Include(x => x.ParentCategory)
             .Include(x => x.CategorySpecs)
-            .ThenInclude(x => x.Spec)
+            .ThenInclude(x => x.Specification)
             .ThenInclude(c => c.SpecificationOptions)
             .FirstOrDefaultAsync(x => x.CategoryName == categoryName);
+    }
+
+    public async Task<ICollection<string>> GetCategoryPath(string CategoryName)
+    {
+        await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
+        string Query =
+        """
+        WITH RECURSIVE category_path AS (
+        SELECT 
+            category_name,
+            parent_category_name,
+            1 AS Level
+        FROM orders.category
+        WHERE category_name = @CategoryName
+
+        UNION ALL
+
+        SELECT 
+            c.category_name,
+            c.parent_category_name,
+            cp.Level + 1
+        FROM 
+            orders.category c
+        INNER JOIN 
+            category_path cp 
+        ON 
+            c.category_name = cp.parent_category_name
+        )
+        SELECT 
+        category_name as value
+        FROM category_path
+        ORDER BY Level DESC;
+        """;
+        return (await dbConnection.QueryAsync<string>(Query, new { CategoryName = CategoryName })).ToList();
     }
 
     public async Task<ICollection<Category>> GetMainCategories()
@@ -79,7 +112,7 @@ public class CategoryRepository(
             description as {nameof(Category.Description)},
             image_url as {nameof(Category.ImageUrl)}
         FROM
-        {Schemas.Orders}.Category
+        {Schemas.Orders}.Category C
         WHERE
         Parent_Category_Name is NULL
         ORDER BY 
@@ -87,6 +120,11 @@ public class CategoryRepository(
         """;
         IEnumerable<Category> categories = await dbConnection.QueryAsync<Category>(Query);
         return categories.ToList();
+    }
+
+    public async Task<bool> IsLeafCategory(string CategoryName)
+    {
+        return !await context.Categories.AnyAsync(x => x.ParentCategoryName == CategoryName);
     }
 
     public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter)
@@ -135,8 +173,4 @@ public class CategoryRepository(
         return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter });
     }
 
-    public Task<ICollection<Category>> TotalChildren(string CategoryName)
-    {
-        throw new NotImplementedException();
-    }
 }

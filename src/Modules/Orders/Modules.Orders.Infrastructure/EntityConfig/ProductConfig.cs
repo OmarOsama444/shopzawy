@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.ValueObjects;
@@ -12,16 +13,6 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
     {
         builder
             .HasKey(p => p.Id);
-
-        builder
-            .HasMany(p => p.ProductCategories)
-            .WithOne(pc => pc.Product)
-            .HasForeignKey(pc => pc.ProductId);
-
-        builder
-            .HasMany(p => p.ProductDiscounts)
-            .WithOne(pd => pd.Product)
-            .HasForeignKey(pd => pd.ProductId);
 
         builder
             .HasMany(p => p.ProductItems)
@@ -38,8 +29,8 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.Tags)
         .HasConversion(
-            v => JsonSerializer.Serialize(v, JsonDefaults.Options),
-            v => JsonSerializer.Deserialize<ICollection<string>>(v, JsonDefaults.Options) ?? new List<string>()
+            v => string.Join(',', v),
+            v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
         )
         .HasColumnName("Tags")
         .HasColumnType("TEXT");

@@ -23,13 +23,10 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         .WithOne(s => s.Category)
         .HasForeignKey(s => s.CategoryName);
 
-
         builder.HasMany(c => c.Products)
         .WithOne(p => p.Category)
         .HasForeignKey(p => p.CategoryName);
 
-        builder.HasMany(s => s.ProductCategories)
-            .WithOne(pc => pc.Category)
-            .HasForeignKey(pc => pc.CategoryName);
+
     }
 }

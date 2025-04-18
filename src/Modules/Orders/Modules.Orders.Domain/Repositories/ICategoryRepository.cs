@@ -6,7 +6,8 @@ namespace Modules.Orders.Domain.Repositories;
 public interface ICategoryRepository : IRepository<Category>
 {
     public Task<ICollection<Category>> Children(string CategoryName);
-    public Task<ICollection<Category>> TotalChildren(string CategoryName);
+    public Task<ICollection<string>> GetCategoryPath(string CategoryName);
+    public Task<bool> IsLeafCategory(string CategoryName);
     public Task<ICollection<Category>> GetMainCategories();
     public Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter);
     public Task<int> TotalCategories(string? nameFilter);

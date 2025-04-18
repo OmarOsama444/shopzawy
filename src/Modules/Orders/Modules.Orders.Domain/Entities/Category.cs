@@ -11,13 +11,10 @@ public class Category : Entity
     public int Order { get; private set; }
     public string? ImageUrl { get; private set; }
     public DateTime CreatedOn { get; private set; }
-    public string CategoryPath { get; private set; } = string.Empty;
-    // TODO ENTITY CONFIG
     public virtual Category ParentCategory { get; set; } = default!;
     public virtual ICollection<Category> ChilrenCategories { get; set; } = [];
     public virtual ICollection<Product> Products { get; set; } = [];
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
-    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = [];
     public static Category Create(
        string CategoryName,
        string Description,
@@ -25,40 +22,19 @@ public class Category : Entity
        string? ImageUrl = null,
        Category? parentCategory = null)
     {
-        if (parentCategory is null)
+
+        var category = new Category()
         {
-            var category = new Category()
-            {
-                CategoryName = CategoryName,
-                Description = Description,
-                Order = Order,
-                ImageUrl = ImageUrl,
-                CreatedOn = DateTime.UtcNow
-            };
-            category.RaiseDomainEvent(new CategoryCreatedDomainEvent(CategoryName));
-            return category;
-        }
-        else
-        {
-            var category = new Category()
-            {
-                CategoryName = CategoryName,
-                Description = Description,
-                Order = Order,
-                ImageUrl = ImageUrl,
-                CreatedOn = DateTime.UtcNow,
-                ParentCategoryName = parentCategory.CategoryName,
-                CategoryPath =
-                    (
-                        string.IsNullOrEmpty(parentCategory.CategoryPath)
-                        ? ""
-                        : (parentCategory.CategoryPath + ",")
-                    ) +
-                    parentCategory.CategoryName,
-            };
-            category.RaiseDomainEvent(new CategoryCreatedDomainEvent(CategoryName));
-            return category;
-        }
+            CategoryName = CategoryName,
+            Description = Description,
+            Order = Order,
+            ImageUrl = ImageUrl,
+            CreatedOn = DateTime.UtcNow,
+            ParentCategoryName = parentCategory?.CategoryName
+        };
+        category.RaiseDomainEvent(new CategoryCreatedDomainEvent(CategoryName));
+        return category;
+
     }
 
     public void Update(string? Description, int? Order, string? ImageUrl)

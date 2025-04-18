@@ -13,8 +13,9 @@ public class SpecConfig : IEntityTypeConfiguration<Specification>
             .WithOne(cso => cso.Specification)
             .HasForeignKey(ps => ps.SpecificationId);
         builder.HasIndex(cs => cs.Name);
+
         builder.HasMany(cs => cs.CategorySpecs)
-            .WithOne(c => c.Spec)
+            .WithOne(c => c.Specification)
             .HasForeignKey(c => c.SpecId);
     }
 }

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
@@ -6,11 +7,15 @@ using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure.Repositories;
 
-public class CategorySpecRepository(OrdersDbContext ordersDbContext) : Repository<CategorySpec, OrdersDbContext>(ordersDbContext), ICategorySpecRepository
+public class CategorySpecRepository(OrdersDbContext ordersDbContext) :
+    Repository<CategorySpec, OrdersDbContext>(ordersDbContext), ICategorySpecRepositroy
 {
-    public async Task<CategorySpec?> GetByCategoryNameAndSpecId(string categoryName, Guid specId)
+    public async Task UpdateCategoryName(string from, string to)
     {
-        return await context.CategorySpecs.FirstOrDefaultAsync(c => c.CategoryName == categoryName && c.SpecId == specId);
+        await context.CategorySpecs
+        .Where(p => p.CategoryName == from)
+        .ExecuteUpdateAsync(setters => setters
+            .SetProperty(p => p.CategoryName, to));
     }
 
 }

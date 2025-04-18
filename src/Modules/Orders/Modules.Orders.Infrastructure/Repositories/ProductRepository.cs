@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Infrastructure.Data;
@@ -7,14 +9,25 @@ namespace Modules.Orders.Infrastructure.Repositories;
 
 public class ProductRepository(OrdersDbContext ordersDbContext) : Repository<Product, OrdersDbContext>(ordersDbContext), IProductRepository
 {
+    public async Task<ICollection<Product>> GetByCategoryName(string categoryName)
+    {
+        return await context.Products.Where(x => x.CategoryName == categoryName).ToListAsync();
+    }
+
+    public async Task UpdateCategoryName(string From, string To)
+    {
+        await context.Categories
+        .Where(p => p.CategoryName == From)
+        .ExecuteUpdateAsync(setters => setters
+            .SetProperty(p => p.CategoryName, To));
+    }
     public ICollection<Product> Paginate(int pageNumber, int pageSize, ICollection<Guid> categoryIds, bool? OnSale, KeyValuePair<int, int>? PriceRange, KeyValuePair<DateTime, DateTime> DateRange)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<int> VendorProductsCount(Guid vendorId)
+    public Task<int> VendorProductsCount(Guid vendorId)
     {
-        // TODO Add logic here
-        return 0;
+        throw new NotImplementedException();
     }
 }

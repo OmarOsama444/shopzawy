@@ -14,19 +14,22 @@ public class SpecRepository(OrdersDbContext ordersDbContext) :
     {
         return await context.Specifications.Where(s => s.DataType == dataTypeName).ToListAsync();
     }
-
-
-    public async Task<Specification?> GetByNameAndCategoryName(string name, string categoryName)
+    public async Task<ICollection<SpecResponse>> Paginate(int pageNumber, int pageSize, string? name)
     {
-        var spec = await context.Specifications
-        .Include(s => s.CategorySpecs)
-        .FirstOrDefaultAsync(x => x.Name == name);
-
-        if (spec?.CategorySpecs.Any(cs => cs.CategoryName == categoryName) == true)
-        {
-            return spec;
-        }
-
-        return null;
+        return await context.Specifications
+            .Where(x => name == null || x.Name.StartsWith(name))
+            .Skip((pageNumber - 1) * pageSize)
+            .Include(x => x.SpecificationOptions)
+            .Take(pageSize)
+            .Select(x => new SpecResponse(x.Id, x.Name, x.DataType,
+                x.SpecificationOptions.Select(c => new SpecOptionsResponse(c.Id, c.Value)).ToList()
+            ))
+            .ToListAsync();
     }
+    public async Task<int> Total(string? name)
+    {
+        return await context.Specifications
+            .Where(x => name == null || x.Name.StartsWith(name)).CountAsync();
+    }
+
 }

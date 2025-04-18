@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Modules.Common.Application.Extensions;
 using MediatR;
 using Modules.Orders.Application.UseCases.GetCategorySpecOption;
+using Modules.Orders.Application.UseCases;
+using Modules.Orders.Application.UseCases.Spec.PaginateSpec;
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -32,7 +34,25 @@ public class SpecsEndpoints : IEndpoint
             var result = await sender.Send(new GetSpecOptionQuery(id));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
+
+        group.MapPost("", async ([FromBody] CreateSpecRequestDto requestDto, [FromServices] ISender sender) =>
+        {
+            var result = await sender.Send(new CreateSpecCommand(requestDto.name, requestDto.dataType));
+            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
+        });
+
+        group.MapGet("", async (
+            [FromServices] ISender sender,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 50,
+            [FromQuery] string? name = null
+            ) =>
+        {
+            var result = await sender.Send(new PaginateSpecQuery(pageNumber, pageSize, name));
+            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
+        });
     }
+    public record CreateSpecRequestDto(string name, string dataType);
     public record CreateCategorySpecOptionRequestDto(ICollection<string> values);
 
 }

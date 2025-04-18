@@ -11,3 +11,12 @@ public class CategoryNotFoundException : NotFoundException
     {
     }
 }
+
+public class SpecificationNotFoundException : NotFoundException
+{
+    public SpecificationNotFoundException(Guid id) : base("Spec.NotFound",
+    $"Spec with id {id} not found")
+    {
+
+    }
+}

@@ -13,7 +13,7 @@ public class Specification : Entity
     public string DataType { get; private set; } = string.Empty;
     public virtual ICollection<SpecificationOption> SpecificationOptions { get; set; } = [];
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
-    public static Specification Create(string name, string dataType, string CategoryName)
+    public static Specification Create(string name, string dataType)
     {
         var cat = new Specification() { Id = Guid.NewGuid(), Name = name, DataType = dataType };
         cat.RaiseDomainEvent(new SpecCreatedDomainEvent(cat.Id));

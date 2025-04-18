@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
-using Modules.Orders.Application.UseCases;
+using Modules.Orders.Application.UseCases.Categories.CreateCategorySpec;
 using Modules.Orders.Application.UseCases.CreateCategory;
 using Modules.Orders.Application.UseCases.GetCategory;
 using Modules.Orders.Application.UseCases.GetMainCategories;
@@ -50,17 +50,17 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
-        group.MapPost("{name}/specs", async (
+        group.MapPost("{name}/specs/", async (
             [FromRoute] string name,
             [FromBody] CreateCategorySpecRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateCategorySpecCommand(name, request.name, request.dataType));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
+            var result = await sender.Send(new CreateCategorySpecCommand(name, request.Ids));
+            return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
     }
-    public record CreateCategorySpecRequestDto(string name, string dataType);
+    public record CreateCategorySpecRequestDto(ICollection<Guid> Ids);
     public record UpdateCategoryRequestDto(string? Description, int? Order, string? ImageUrl);
 
 }

@@ -8,7 +8,8 @@ public class BannerConfig : IEntityTypeConfiguration<Banner>
 {
     public void Configure(EntityTypeBuilder<Banner> builder)
     {
-        builder.HasKey(b => b.Title);
+        builder.HasKey(b => b.Id);
         builder.Property(b => b.Title).HasMaxLength(100);
+        builder.HasIndex(b => b.Active);
     }
 }

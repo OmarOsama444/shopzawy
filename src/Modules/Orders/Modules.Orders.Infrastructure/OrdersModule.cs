@@ -10,6 +10,7 @@ using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Users.Application.Abstractions;
+using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure;
 
@@ -58,7 +59,6 @@ public static class OrdersModule
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
             );
-
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
         // decorates all the notification handlers in the application layer only
