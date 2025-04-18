@@ -1,0 +1,6 @@
+@shopzawy_HostAddress = http://localhost:5101
+
+GET {{shopzawy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

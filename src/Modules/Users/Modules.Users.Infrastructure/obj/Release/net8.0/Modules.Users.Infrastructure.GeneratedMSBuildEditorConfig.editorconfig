@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Modules.Users.Infrastructure
-build_property.ProjectDir = C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\
+build_property.ProjectDir = C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

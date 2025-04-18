@@ -70,10 +70,8 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Use
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Common.Application.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Common.Domain.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Users.Domain.dll
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Users.IntegrationEvents.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Common.Application.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Users.Domain.pdb
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Users.IntegrationEvents.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\bin\Debug\net8.0\Modules.Common.Domain.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\obj\Debug\net8.0\Modules.Users.Application.csproj.AssemblyReference.cache
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Application\obj\Debug\net8.0\Modules.Users.Application.GeneratedMSBuildEditorConfig.editorconfig

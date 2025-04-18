@@ -8,16 +8,26 @@
     ".NETCoreApp,Version=v8.0": {
       "Modules.Common.Application/1.0.0": {
         "dependencies": {
+          "Dapper": "2.1.28",
           "FluentValidation.DependencyInjectionExtensions": "11.11.0",
           "Markdig": "0.40.0",
           "MassTransit": "8.3.6",
           "MediatR": "12.4.1",
           "Modules.Common.Domain": "1.0.0",
           "Scrutor": "6.0.1",
-          "Serilog": "4.2.0"
+          "Serilog": "4.2.0",
+          "libphonenumber-csharp": "9.0.3"
         },
         "runtime": {
           "Modules.Common.Application.dll": {}
+        }
+      },
+      "Dapper/2.1.28": {
+        "runtime": {
+          "lib/net7.0/Dapper.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.1.28.55233"
+          }
         }
       },
       "FluentValidation/11.11.0": {
@@ -37,6 +47,14 @@
           "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.dll": {
             "assemblyVersion": "11.0.0.0",
             "fileVersion": "11.11.0.0"
+          }
+        }
+      },
+      "libphonenumber-csharp/9.0.3": {
+        "runtime": {
+          "lib/net8.0/PhoneNumbers.dll": {
+            "assemblyVersion": "9.0.3.0",
+            "fileVersion": "9.0.3.0"
           }
         }
       },
@@ -425,6 +443,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Dapper/2.1.28": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ha49pzOEDmCPkMxwfPSR/wxa/6RD3r42TESIgpzpi7FXq/gNVUuJVEO+wtUzntNRhtmq3BKCl0s0aAlSZLkBUA==",
+      "path": "dapper/2.1.28",
+      "hashPath": "dapper.2.1.28.nupkg.sha512"
+    },
     "FluentValidation/11.11.0": {
       "type": "package",
       "serviceable": true,
@@ -438,6 +463,13 @@
       "sha512": "sha512-viTKWaMbL3yJYgGI0DiCeavNbE9UPMWFVK2XS9nYXGbm3NDMd0/L5ER4wBzmTtW3BYh3SrlSXm9RACiKZ6stlA==",
       "path": "fluentvalidation.dependencyinjectionextensions/11.11.0",
       "hashPath": "fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512"
+    },
+    "libphonenumber-csharp/9.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SagM8e8vuWeyaGeL7xBKlGPEojDi3eQL4F02PVepNHqWDoqTOcHw+VZQxoCq1l3DZApE6AcyhqGC7hmNgm9nJw==",
+      "path": "libphonenumber-csharp/9.0.3",
+      "hashPath": "libphonenumber-csharp.9.0.3.nupkg.sha512"
     },
     "Markdig/0.40.0": {
       "type": "package",

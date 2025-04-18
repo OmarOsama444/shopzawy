@@ -9,8 +9,7 @@
       "Modules.Users.Application/1.0.0": {
         "dependencies": {
           "Modules.Common.Application": "1.0.0",
-          "Modules.Users.Domain": "1.0.0",
-          "Modules.Users.IntegrationEvents": "1.0.0"
+          "Modules.Users.Domain": "1.0.0"
         },
         "runtime": {
           "Modules.Users.Application.dll": {}
@@ -458,17 +457,6 @@
             "fileVersion": "1.0.0.0"
           }
         }
-      },
-      "Modules.Users.IntegrationEvents/1.0.0": {
-        "dependencies": {
-          "Modules.Common.Application": "1.0.0"
-        },
-        "runtime": {
-          "Modules.Users.IntegrationEvents.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
       }
     }
   },
@@ -860,11 +848,6 @@
       "sha512": ""
     },
     "Modules.Users.Domain/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Modules.Users.IntegrationEvents/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

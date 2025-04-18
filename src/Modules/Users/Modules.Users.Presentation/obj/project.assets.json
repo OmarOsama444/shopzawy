@@ -1801,8 +1801,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Modules.Common.Application": "1.0.0",
-          "Modules.Users.Domain": "1.0.0",
-          "Modules.Users.IntegrationEvents": "1.0.0"
+          "Modules.Users.Domain": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Modules.Users.Application.dll": {}
@@ -1822,19 +1821,6 @@
         },
         "runtime": {
           "bin/placeholder/Modules.Users.Domain.dll": {}
-        }
-      },
-      "Modules.Users.IntegrationEvents/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "Modules.Common.Application": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Modules.Users.IntegrationEvents.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Modules.Users.IntegrationEvents.dll": {}
         }
       }
     }
@@ -4220,11 +4206,6 @@
       "type": "project",
       "path": "../Modules.Users.Domain/Modules.Users.Domain.csproj",
       "msbuildProject": "../Modules.Users.Domain/Modules.Users.Domain.csproj"
-    },
-    "Modules.Users.IntegrationEvents/1.0.0": {
-      "type": "project",
-      "path": "../Modules.Users.IntegrationEvents/Modules.Users.IntegrationEvents.csproj",
-      "msbuildProject": "../Modules.Users.IntegrationEvents/Modules.Users.IntegrationEvents.csproj"
     }
   },
   "projectFileDependencyGroups": {

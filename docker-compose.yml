@@ -1,54 +1,44 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  evently.api:
-    image: ${DOCKER_REGISTRY-}eventlyapi
-    container_name: Evently.Api
-    build:
-      context: .
-      dockerfile: src/API/Evently.Api/Dockerfile
-    ports:
-      - 5000:8080
-      - 5001:8081
+    shopizawy.api:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_HTTP_PORTS=8080
+            # - ASPNETCORE_HTTPS_PORTS=8081
+        image: ${DOCKER_REGISTRY-}eventlyapi
+        container_name: shopzawy.api
+        build:
+            context: .
+            dockerfile: src/shopzawy/Dockerfile
+        ports:
+            - 5000:8080
+            - 5001:8081
 
-  evently.database:
-    image: postgres:latest
-    container_name: Evently.Database
-    environment:
-      - POSTGRES_DB=evently
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./.containers/db:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    evently.database:
+        image: postgres:latest
+        container_name: shopizawy.Database
+        environment:
+            - POSTGRES_DB=ShopizawyDb
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=784512
+        volumes:
+            - ./.containers/db:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
 
-  evently.identity:
-    image: quay.io/keycloak/keycloak:latest
-    container_name: Evently.Identity
-    command: start-dev --import-realm
-    environment:
-      - KC_HEALTH_ENABLED=true
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    volumes:
-      - ./.containers/identity:/opt/keycloak/data
-      - ./.files:/opt/keycloak/data/import
-    ports:
-      - 18080:8080
+    evently.seq:
+        image: datalust/seq:latest
+        container_name: Evently.Seq
+        environment:
+            - ACCEPT_EULA=Y
+        ports:
+            - 5341:5341
+            - 8081:80
 
-  evently.seq:
-    image: datalust/seq:latest
-    container_name: Evently.Seq
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:5341
-      - 8081:80
-
-  evently.redis:
-    image: redis:latest
-    container_name: Evently.Redis
-    restart: always
-    ports:
-      - 6379:6379
+    evently.redis:
+        image: redis:latest
+        container_name: Evently.Redis
+        restart: always
+        ports:
+            - 6379:6379

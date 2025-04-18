@@ -97,7 +97,6 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Use
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Common.Presentation.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.Application.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.Domain.dll
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.IntegrationEvents.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.Presentation.dll
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Common.Infrastructure.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.Application.pdb
@@ -106,7 +105,6 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Use
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Common.Domain.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Common.Presentation.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.Domain.pdb
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\bin\Debug\net8.0\Modules.Users.IntegrationEvents.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\obj\Debug\net8.0\Modules.Users.Infrastructure.csproj.AssemblyReference.cache
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\obj\Debug\net8.0\Modules.Users.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\Modules\Users\Modules.Users.Infrastructure\obj\Debug\net8.0\Modules.Users.Infrastructure.AssemblyInfoInputs.cache
