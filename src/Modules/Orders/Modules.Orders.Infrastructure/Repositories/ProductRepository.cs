@@ -16,7 +16,7 @@ public class ProductRepository(OrdersDbContext ordersDbContext) : Repository<Pro
 
     public async Task UpdateCategoryName(string From, string To)
     {
-        await context.Categories
+        await context.Products
         .Where(p => p.CategoryName == From)
         .ExecuteUpdateAsync(setters => setters
             .SetProperty(p => p.CategoryName, To));

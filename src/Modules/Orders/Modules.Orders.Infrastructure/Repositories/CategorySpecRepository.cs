@@ -10,12 +10,20 @@ namespace Modules.Orders.Infrastructure.Repositories;
 public class CategorySpecRepository(OrdersDbContext ordersDbContext) :
     Repository<CategorySpec, OrdersDbContext>(ordersDbContext), ICategorySpecRepositroy
 {
+    public async Task DeleteCategoryName(string from)
+    {
+        await context.CategorySpecs
+            .Where(cs => cs.CategoryName == from)
+            .ExecuteDeleteAsync();
+    }
+
+
     public async Task UpdateCategoryName(string from, string to)
     {
         await context.CategorySpecs
-        .Where(p => p.CategoryName == from)
+        .Where(cs => cs.CategoryName == from)
         .ExecuteUpdateAsync(setters => setters
-            .SetProperty(p => p.CategoryName, to));
+            .SetProperty(cs => cs.CategoryName, to));
     }
 
 }

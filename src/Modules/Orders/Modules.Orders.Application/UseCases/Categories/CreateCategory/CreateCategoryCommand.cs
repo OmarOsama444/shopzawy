@@ -1,4 +1,6 @@
+using System.Data.Common;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
@@ -21,36 +23,62 @@ public record CreateCategoryCommand(
 public class CreateCategoryCommandHandler(
     ICategoryRepository categoryRepository,
     ICategorySpecRepositroy categorySpecRepositroy,
-    ISpecRepository specRepository, IUnitOfWork unitOfWork) : ICommandHandler<CreateCategoryCommand, string>
+    IProductRepository productRepository
+    , IUnitOfWork unitOfWork) : ICommandHandler<CreateCategoryCommand, string>
 {
     public async Task<Result<string>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         if (await categoryRepository.GetByIdAsync(request.CategoryName) is not null)
             return new CategoryNameConflictException(request.CategoryName);
-        Category? parentCategory = null;
-        if (!String.IsNullOrEmpty(request.ParentCategoryName))
+        await unitOfWork.BeginTransactionAsync();
+        try
         {
-            parentCategory = await categoryRepository.GetByIdAsync(request.ParentCategoryName);
-            if (parentCategory is null)
-                return new CategoryNotFoundException(request.ParentCategoryName);
+            Category? parentCategory = null;
+            HashSet<Guid> specIds = new(request.Ids);
+            var category = Category.Create(
+                    request.CategoryName,
+                    request.Description,
+                    request.Order,
+                    request.ImageUrl,
+                    parentCategory
+                );
+            categoryRepository.Add(category);
+            await unitOfWork.SaveChangesAsync();
+            if (!String.IsNullOrEmpty(request.ParentCategoryName))
+            {
+                parentCategory = await categoryRepository.GetByIdAsync(request.ParentCategoryName);
+                if (parentCategory is null)
+                    return new CategoryNotFoundException(request.ParentCategoryName);
+                var parentSpecIds = parentCategory.CategorySpecs.Select(x => x.SpecId);
+                foreach (var id in parentSpecIds)
+                {
+                    specIds.Add(id);
+                }
+
+                await productRepository
+                    .UpdateCategoryName(
+                        request.ParentCategoryName,
+                        request.CategoryName
+                        );
+
+                await categorySpecRepositroy
+                    .DeleteCategoryName(
+                        request.ParentCategoryName
+                    );
+            }
+            foreach (var id in specIds)
+            {
+                var categorySpec = CategorySpec.Create(request.CategoryName, id);
+                categorySpecRepositroy.Add(categorySpec);
+            }
+            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitTransactionAsync();
         }
-        var category = Category.Create(
-                request.CategoryName,
-                request.Description,
-                request.Order,
-                request.ImageUrl,
-                parentCategory
-            );
-        categoryRepository.Add(category);
-        foreach (var id in request.Ids)
+        catch (Exception ex)
         {
-            var spec = await specRepository.GetByIdAsync(id);
-            if (spec is null)
-                return new SpecificationNotFoundException(id);
-            var categorySpec = CategorySpec.Create(request.CategoryName, id);
-            categorySpecRepositroy.Add(categorySpec);
+            await unitOfWork.RollBackTransactionAsync();
+            return ex;
         }
-        await unitOfWork.SaveChangesAsync();
         return request.CategoryName;
     }
 }

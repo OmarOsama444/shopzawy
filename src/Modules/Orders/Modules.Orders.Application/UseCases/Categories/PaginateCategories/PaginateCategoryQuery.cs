@@ -25,6 +25,6 @@ internal class PaginateCategoryQueryValidator : AbstractValidator<PaginateCatego
     public PaginateCategoryQueryValidator()
     {
         RuleFor(p => p.pageNumber).NotEmpty().GreaterThan(0);
-        RuleFor(p => p.pageSize).NotEmpty().GreaterThan(0).LessThan(50);
+        RuleFor(p => p.pageSize).NotEmpty().InclusiveBetween(1, 50);
     }
 }

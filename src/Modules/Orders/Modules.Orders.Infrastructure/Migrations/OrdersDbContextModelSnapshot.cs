@@ -141,7 +141,13 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.CategorySpec", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
                     b.Property<string>("CategoryName")
+                        .IsRequired()
                         .HasColumnType("character varying(100)")
                         .HasColumnName("category_name");
 
@@ -149,8 +155,11 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("spec_id");
 
-                    b.HasKey("CategoryName", "SpecId")
+                    b.HasKey("Id")
                         .HasName("pk_category_spec");
+
+                    b.HasIndex("CategoryName")
+                        .HasDatabaseName("ix_category_spec_category_name");
 
                     b.HasIndex("SpecId")
                         .HasDatabaseName("ix_category_spec_spec_id");

@@ -21,7 +21,7 @@ public class PaginateSpecQueryValidator : AbstractValidator<PaginateSpecQuery>
 {
     public PaginateSpecQueryValidator()
     {
-        RuleFor(p => p.pageNumber).GreaterThan(1);
-        RuleFor(p => p.pageSize).GreaterThan(1).LessThan(50);
+        RuleFor(p => p.pageNumber).GreaterThan(0);
+        RuleFor(p => p.pageSize).GreaterThan(0).LessThan(51);
     }
 }

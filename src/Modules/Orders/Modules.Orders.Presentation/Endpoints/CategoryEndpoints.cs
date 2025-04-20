@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.Categories.CreateCategorySpec;
+using Modules.Orders.Application.UseCases.Categories.GetCategory;
 using Modules.Orders.Application.UseCases.CreateCategory;
-using Modules.Orders.Application.UseCases.GetCategory;
 using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
 using Modules.Orders.Application.UseCases.UpdateCategory;
@@ -32,7 +32,7 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? nameFilter = null) =>
+        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, [FromQuery] string? nameFilter = null) =>
         {
             var result = await sender.Send(new PaginateCategoryQuery(pageNumber, pageSize, nameFilter));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
