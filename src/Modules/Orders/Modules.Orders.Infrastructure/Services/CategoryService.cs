@@ -13,8 +13,7 @@ public class CategoryService
 (
     OrdersDbContext context,
     ICategoryRepository categoryRepository,
-    ICategorySpecRepositroy categorySpecRepositroy,
-    IProductRepository productRepository
+    ICategorySpecRepositroy categorySpecRepositroy
 ) : ICategoryService
 {
     public async Task<Result<string>> CreateCategory(
@@ -44,17 +43,27 @@ public class CategoryService
             await context.SaveChangesAsync();
             if (!string.IsNullOrEmpty(ParentCategoryName))
             {
-                parentCategory = await categoryRepository.GetByIdAsync(ParentCategoryName);
-                if (parentCategory is null)
+                if (!await context.Categories.AnyAsync(x => x.CategoryName == ParentCategoryName))
                     return new CategoryNotFoundException(ParentCategoryName);
-                var parentSpecIds = parentCategory.CategorySpecs.Select(x => x.SpecId);
-                foreach (var id in parentSpecIds)
-                {
-                    specIds.Add(id);
-                }
 
-                await MoveSpecs(parentCategory.CategoryName, category.CategoryName);
-                await MoveProducts(parentCategory.CategoryName, category.CategoryName);
+                HashSet<Guid> parentSpecIds = await context
+                    .CategorySpecs
+                    .Where(x => x.CategoryName == ParentCategoryName)
+                    .Select(x => x.SpecId)
+                    .ToHashSetAsync();
+
+                specIds.ExceptWith(parentSpecIds);
+
+                await context
+                .CategorySpecs
+                .Where(c => c.CategoryName == ParentCategoryName)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, CategoryName));
+
+                await context
+                .Products
+                .Where(p => p.CategoryName == ParentCategoryName)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, CategoryName));
+
             }
             foreach (var id in specIds)
             {
@@ -71,19 +80,6 @@ public class CategoryService
         }
         return CategoryName;
     }
-    public async Task MoveSpecs(string from, string to)
-    {
-        await context
-            .CategorySpecs
-            .Where(c => c.CategoryName == from)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, to));
-    }
 
-    public async Task MoveProducts(string from, string to)
-    {
-        await context
-            .Products
-            .Where(p => p.CategoryName == from)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, to));
-    }
+
 }

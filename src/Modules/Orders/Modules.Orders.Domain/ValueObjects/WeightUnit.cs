@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Modules.Orders.Domain.ValueObjects;
 
 public enum WeightUnit

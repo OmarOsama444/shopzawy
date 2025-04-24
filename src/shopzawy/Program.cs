@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using shopzawy.Extensions;
 using shopzawy.Middleware;
+using Modules.Orders.Domain.ValueObjects;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
+using shopzawy.Swagger;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +19,7 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
 builder.Services.AddCors(option =>
 {
     option.AddDefaultPolicy(policy =>
@@ -22,7 +27,11 @@ builder.Services.AddCors(option =>
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.UseInlineDefinitionsForEnums();
+    options.SchemaFilter<EnumSchemaFilter>();
+});
 // pass the application layer assemblues here
 // to use mediatr and fluent validation 
 builder.Services.AddApplication(

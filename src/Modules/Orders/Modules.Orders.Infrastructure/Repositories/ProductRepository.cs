@@ -9,17 +9,19 @@ namespace Modules.Orders.Infrastructure.Repositories;
 
 public class ProductRepository(OrdersDbContext ordersDbContext) : Repository<Product, OrdersDbContext>(ordersDbContext), IProductRepository
 {
+    public override Task<Product?> GetByIdAsync(object id)
+    {
+        Guid Id = (Guid)id;
+        return context.Products
+            .Include(x => x.Category)
+            .ThenInclude(x => x.CategorySpecs)
+            .ThenInclude(x => x.Specification)
+            .Include(x => x.ProductItems)
+            .FirstOrDefaultAsync(x => x.Id == Id);
+    }
     public async Task<ICollection<Product>> GetByCategoryName(string categoryName)
     {
         return await context.Products.Where(x => x.CategoryName == categoryName).ToListAsync();
-    }
-
-    public async Task UpdateCategoryName(string From, string To)
-    {
-        await context.Products
-        .Where(p => p.CategoryName == From)
-        .ExecuteUpdateAsync(setters => setters
-            .SetProperty(p => p.CategoryName, To));
     }
     public ICollection<Product> Paginate(int pageNumber, int pageSize, ICollection<Guid> categoryIds, bool? OnSale, KeyValuePair<int, int>? PriceRange, KeyValuePair<DateTime, DateTime> DateRange)
     {

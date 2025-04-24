@@ -1,5 +1,7 @@
 namespace Modules.Orders.Domain.ValueObjects;
-
+/// <summary>
+/// Units of dimensions
+/// </summary>
 public enum DimensionUnit
 {
     Centimeter = 1,

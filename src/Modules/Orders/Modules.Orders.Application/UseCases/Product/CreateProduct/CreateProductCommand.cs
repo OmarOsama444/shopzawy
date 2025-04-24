@@ -16,7 +16,6 @@ public record CreateProductCommand(
     string shortDescription,
     WeightUnit weightUnit,
     float weight,
-    float price,
     DimensionUnit dimensionUnit,
     float width,
     float length,
@@ -48,7 +47,6 @@ public sealed class CreateProductCommandHandler(
             request.shortDescription,
             request.weightUnit,
             request.weight,
-            request.price,
             request.dimensionUnit,
             request.weight,
             request.length,
@@ -73,7 +71,6 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
         RuleFor(c => c.shortDescription).NotEmpty().MinimumLength(10);
         RuleFor(c => c.weightUnit).NotEmpty();
         RuleFor(c => c.weight).NotEmpty();
-        RuleFor(c => c.price).NotEmpty().GreaterThan(0);
         RuleFor(c => c.dimensionUnit).NotEmpty();
         RuleFor(c => c.width).NotEmpty();
         RuleFor(c => c.height).NotEmpty();
