@@ -29,7 +29,7 @@ public class ProductEndpoints : IEndpoint
                 result.ExceptionToResult();
         });
 
-        group.MapPost("{Id}",
+        group.MapPost("{Id}/items",
             async ([FromRoute] Guid Id, [FromBody] ICollection<product_item> request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateProductItemCommand(
@@ -40,15 +40,6 @@ public class ProductEndpoints : IEndpoint
                 Results.Ok(result.Value) :
                 result.ExceptionToResult();
         });
-
-        group.MapPost("{Id}/items",
-            async ([FromRoute] Guid Id, [FromBody] CreateProductItemCommand request, [FromServices] ISender sender) =>
-            {
-                var result = await sender.Send(request);
-                return result.isSuccess ?
-                Results.Ok(result.Value) :
-                result.ExceptionToResult();
-            });
 
         group.MapPut("items/{Id}",
             async ([FromRoute] Guid Id, [FromBody] ProductItemRequest request, [FromServices] ISender sender) =>
