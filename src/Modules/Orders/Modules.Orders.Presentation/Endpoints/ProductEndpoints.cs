@@ -6,7 +6,11 @@ using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.CreateProduct;
 using MediatR;
 using Modules.Common.Application.Extensions;
+using Modules.Orders.Application.Services;
 using Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
+using Modules.Orders.Application.UseCases.ProductItems.UpdateProductItem;
+using Modules.Orders.Application.UseCases.ProductItems.DeleteProductItem;
+
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -25,31 +29,53 @@ public class ProductEndpoints : IEndpoint
                 result.ExceptionToResult();
         });
 
-        group.MapPost("{id}",
-            async ([FromRoute] Guid id, [FromBody] ProductItemRequest request, [FromServices] ISender sender) =>
+        group.MapPost("{Id}",
+            async ([FromRoute] Guid Id, [FromBody] ICollection<product_item> request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateProductItemCommand(
-                request.stockKeepingUnit,
-                request.quantityInStock,
-                request.price,
-                id,
-                request.urls));
+                Id,
+                request)
+                );
             return result.isSuccess ?
                 Results.Ok(result.Value) :
                 result.ExceptionToResult();
         });
 
-        group.MapPut("{id}/items/{itemId}",
-            async ([FromRoute] Guid id, [FromRoute] Guid productItemId, [FromBody] ProductItemRequest request, [FromServices] ISender sender) =>
+        group.MapPost("{Id}/items",
+            async ([FromRoute] Guid Id, [FromBody] CreateProductItemCommand request, [FromServices] ISender sender) =>
+            {
+                var result = await sender.Send(request);
+                return result.isSuccess ?
+                Results.Ok(result.Value) :
+                result.ExceptionToResult();
+            });
+
+        group.MapPut("items/{Id}",
+            async ([FromRoute] Guid Id, [FromBody] ProductItemRequest request, [FromServices] ISender sender) =>
         {
-            // var result = await sender.Send();
+            var result = await sender.Send(new UpdateProductItemCommand(
+                    Id,
+                    request.stock_keeping_unit,
+                    request.quantity_in_stock,
+                    request.price,
+                    request.image_urls));
         });
+
+        group.MapDelete("items/{Id}",
+            async ([FromRoute] Guid Id, [FromServices] ISender sender) =>
+            {
+                var result = await sender.Send(new DeleteProductItemCommand(Id));
+                return
+                    result.isSuccess ?
+                    Results.Ok(result.Value) :
+                    result.ExceptionToResult();
+            });
     }
 
 }
 
 public record ProductItemRequest(
-    string stockKeepingUnit,
-    int quantityInStock,
-    float price,
-    ICollection<string> urls);
+    string? stock_keeping_unit,
+    int? quantity_in_stock,
+    float? price,
+    ICollection<string>? image_urls);

@@ -2,6 +2,7 @@ using Modules.Common.Domain.Entities;
 using Modules.Orders.Domain.DomainEvents;
 
 namespace Modules.Orders.Domain.Entities;
+
 public class ProductItem : Entity
 {
     public Guid Id { get; set; }
@@ -29,7 +30,7 @@ public class ProductItem : Entity
             ImageUrls = urls,
             Price = price,
             ProductId = productId,
-            CreatedOn = DateTime.Now
+            CreatedOn = DateTime.UtcNow
         };
         productItem.RaiseDomainEvent(new ProductItemCreatedDomainEvent(productItem.Id));
         return productItem;

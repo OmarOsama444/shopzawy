@@ -199,10 +199,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
                     b.Property<string>("BrandName")
                         .IsRequired()
                         .HasColumnType("character varying(100)")
@@ -217,10 +213,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on");
 
-                    b.Property<bool>("Featured")
-                        .HasColumnType("boolean")
-                        .HasColumnName("featured");
-
                     b.Property<float>("Height")
                         .HasColumnType("real")
                         .HasColumnName("height");
@@ -233,10 +225,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("long_description");
-
-                    b.Property<bool>("NewArrival")
-                        .HasColumnType("boolean")
-                        .HasColumnName("new_arrival");
 
                     b.Property<float>("Price")
                         .HasColumnType("real")
@@ -302,10 +290,14 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("ImageUrls")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("image_url");
+                        .HasColumnName("image_urls");
 
                     b.Property<float>("Price")
                         .HasColumnType("real")
@@ -327,8 +319,14 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_product_item");
 
+                    b.HasIndex("CreatedOn")
+                        .HasDatabaseName("ix_product_item_created_on");
+
                     b.HasIndex("ProductId")
                         .HasDatabaseName("ix_product_item_product_id");
+
+                    b.HasIndex("StockKeepingUnit")
+                        .HasDatabaseName("ix_product_item_stock_keeping_unit");
 
                     b.ToTable("product_item", "orders");
                 });

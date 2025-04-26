@@ -1,44 +1,26 @@
 using System.Data;
 using FluentValidation;
 using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Exceptions;
-using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Application.Services;
+using Modules.Orders.Application.UseCases.CreateProduct;
+
 
 namespace Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 
 public record CreateProductItemCommand(
-        string stockKeepingUnit,
-        int quantityInStock,
-        float price,
         Guid productId,
-        ICollection<string> urls
-        ) : ICommand<Guid>;
+        ICollection<product_item> product_items
+        ) : ICommand<ICollection<Guid>>;
 
 public sealed class CreateProductItemCommandHandler(
-    IProductItemRepository productItemRepository,
-    IProductRepository productRepository,
-    IUnitOfWork unitOfWork
-) : ICommandHandler<CreateProductItemCommand, Guid>
+    IProductService productService
+) : ICommandHandler<CreateProductItemCommand, ICollection<Guid>>
 {
-    public async Task<Result<Guid>> Handle(CreateProductItemCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ICollection<Guid>>> Handle(CreateProductItemCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.productId);
-        ProductItem? productItem = productItemRepository.GetByProductIdAndSku(request.productId, request.stockKeepingUnit);
-        if (product == null)
-            return new ProductNotFoundException(request.productId);
-        productItem = ProductItem.Create(
-            request.stockKeepingUnit,
-            request.quantityInStock,
-            request.price,
-            request.productId,
-            request.urls);
-        productItemRepository.Add(productItem);
-        await unitOfWork.SaveChangesAsync();
-        return productItem.Id;
+        var productItemIds = await productService.CreateProductItems(request.productId, request.product_items);
+        return productItemIds;
     }
 }
 
@@ -46,15 +28,8 @@ internal class CreateProductItemCommandValidator : AbstractValidator<CreateProdu
 {
     public CreateProductItemCommandValidator()
     {
-        RuleFor(x => x.stockKeepingUnit).NotEmpty();
-        RuleFor(x => x.quantityInStock).GreaterThan(0);
-        RuleFor(x => x.price).GreaterThan(0);
         RuleFor(x => x.productId).NotEmpty();
-        RuleFor(x => x.urls).NotEmpty();
-        RuleForEach(x => x.urls)
-            .NotEmpty()
-            .WithMessage("Urls Can't be empty")
-            .Must(UrlValidator.Must)
-            .WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.product_items)
+            .SetValidator(new productItemValidator());
     }
 }

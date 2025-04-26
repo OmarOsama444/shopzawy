@@ -1,4 +1,3 @@
-using EFCore.NamingConventions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +11,6 @@ using Modules.Orders.Application.Services;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Orders.Infrastructure.Services;
 using Modules.Users.Application.Abstractions;
-using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure;
 
@@ -63,6 +61,7 @@ public static class OrdersModule
             );
 
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
         // decorates all the notification handlers in the application layer only

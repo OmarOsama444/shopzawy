@@ -2,6 +2,7 @@ using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
+using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.Repositories;
 
@@ -16,7 +17,8 @@ public record UpdateProductItemCommand(
 ) : ICommand<Guid>;
 
 public sealed class UpdateProductItemCommandHandler(
-    IProductItemRepository productItemRepository
+    IProductItemRepository productItemRepository,
+    IUnitOfWork unitOfWork
 ) : ICommandHandler<UpdateProductItemCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(UpdateProductItemCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,7 @@ public sealed class UpdateProductItemCommandHandler(
             request.quantityInStock,
             request.price,
             request.urls);
+        await unitOfWork.SaveChangesAsync();
         return request.productItemId;
     }
 }

@@ -2,63 +2,50 @@ using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Exceptions;
-using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateProduct;
 
 public record CreateProductCommand(
-    string productName,
-    string longDescription,
-    string shortDescription,
-    WeightUnit weightUnit,
+    string product_name,
+    string long_description,
+    string short_description,
+    WeightUnit weight_unit,
     float weight,
-    DimensionUnit dimensionUnit,
+    DimensionUnit dimension_unit,
     float width,
     float length,
     float height,
     ICollection<string> tags,
-    Guid vendorId,
-    string brandName,
-    string categoryName) : ICommand<Guid>;
+    Guid vendor_id,
+    string brand_name,
+    string category_name,
+    ICollection<product_item> product_items) : ICommand<Guid>;
 
 public sealed class CreateProductCommandHandler(
-    IVendorRepository vendorRepository,
-    IBrandRepository brandRepository,
-    ICategoryRepository categoryRepository,
-    IProductRepository productRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateProductCommand, Guid>
+    IProductService productService) : ICommandHandler<CreateProductCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        if (await vendorRepository.GetByIdAsync(request.vendorId) is null)
-            return new VendorNotFoundException(request.vendorId);
-        if (await categoryRepository.GetByIdAsync(request.categoryName) is null)
-            return new CategoryNotFoundException(request.categoryName);
-        if (await brandRepository.GetByIdAsync(request.brandName) is null)
-            return new BrandNotFoundException(request.brandName);
 
-        var product = Product.Create(
-            request.productName,
-            request.longDescription,
-            request.shortDescription,
-            request.weightUnit,
+        var result = await productService.CreateProductWithItem(
+            request.product_name,
+            request.long_description,
+            request.short_description,
+            request.weight_unit,
             request.weight,
-            request.dimensionUnit,
+            request.dimension_unit,
             request.weight,
             request.length,
             request.height,
             request.tags,
-            request.vendorId,
-            request.brandName,
-            request.categoryName);
+            request.vendor_id,
+            request.brand_name,
+            request.category_name,
+            request.product_items);
 
-        productRepository.Add(product);
-        await unitOfWork.SaveChangesAsync();
-        return product.Id;
+        return result;
     }
 }
 
@@ -66,14 +53,33 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(c => c.productName).NotEmpty();
-        RuleFor(c => c.longDescription).NotEmpty().MinimumLength(10);
-        RuleFor(c => c.shortDescription).NotEmpty().MinimumLength(10);
-        RuleFor(c => c.weightUnit).NotEmpty();
+        RuleFor(c => c.product_name).NotEmpty();
+        RuleFor(c => c.long_description).NotEmpty().MinimumLength(10);
+        RuleFor(c => c.short_description).NotEmpty().MinimumLength(10);
+        RuleFor(c => c.weight_unit).NotEmpty();
         RuleFor(c => c.weight).NotEmpty();
-        RuleFor(c => c.dimensionUnit).NotEmpty();
+        RuleFor(c => c.dimension_unit).NotEmpty();
         RuleFor(c => c.width).NotEmpty();
         RuleFor(c => c.height).NotEmpty();
         RuleFor(c => c.length).NotEmpty();
+        RuleFor(c => c.product_items).NotEmpty();
+        RuleForEach(c => c.product_items)
+            .SetValidator(new productItemValidator());
+    }
+}
+
+internal class productItemValidator : AbstractValidator<product_item>
+{
+    public productItemValidator()
+    {
+        RuleFor(x => x.stock_keeping_unit).NotEmpty();
+        RuleFor(x => x.quantity_in_stock).GreaterThan(0);
+        RuleFor(x => x.price).GreaterThan(0);
+        RuleFor(x => x.urls).NotEmpty();
+        RuleForEach(x => x.urls)
+            .NotEmpty()
+            .WithMessage("Urls Can't be empty")
+            .Must(UrlValidator.Must)
+            .WithMessage(UrlValidator.Message);
     }
 }
