@@ -8,25 +8,23 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.HasKey(c => c.CategoryName);
-
-        builder.Property(c => c.CategoryName)
-        .IsRequired()
-        .HasMaxLength(100);
+        builder.HasKey(c => c.Id);
 
         builder.HasMany(c => c.ChilrenCategories)
         .WithOne(c => c.ParentCategory)
-        .HasForeignKey(c => c.ParentCategoryName)
+        .HasForeignKey(c => c.ParentCategoryId)
         .IsRequired(false);
+
+        builder.HasIndex(c => c.Order)
+            .IsUnique();
 
         builder.HasMany(c => c.CategorySpecs)
         .WithOne(s => s.Category)
-        .HasForeignKey(s => s.CategoryName);
+        .HasForeignKey(s => s.CategoryId);
 
         builder.HasMany(c => c.Products)
         .WithOne(p => p.Category)
-        .HasForeignKey(p => p.CategoryName);
-
+        .HasForeignKey(p => p.CategoryId);
 
     }
 }

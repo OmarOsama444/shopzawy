@@ -13,7 +13,7 @@ public class CategorySpecConfig : IEntityTypeConfiguration<CategorySpec>
         builder
             .HasOne(x => x.Category)
             .WithMany(x => x.CategorySpecs)
-            .HasForeignKey(x => x.CategoryName);
+            .HasForeignKey(x => x.CategoryId);
         builder
             .HasOne(x => x.Specification)
             .WithMany(x => x.CategorySpecs)

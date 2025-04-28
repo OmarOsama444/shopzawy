@@ -11,6 +11,7 @@ using Modules.Orders.Application.UseCases.CreateCategory;
 using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
 using Modules.Orders.Application.UseCases.UpdateCategory;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -26,9 +27,9 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("main", async (ISender sender) =>
+        group.MapGet("main", async ([FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
         {
-            var result = await sender.Send(new GetMainCategoriesQuery());
+            var result = await sender.Send(new GetMainCategoriesQuery(lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 

@@ -9,3 +9,4 @@ public static class UrlValidator
     }
     public static string Message => "Invalid URL. Must be a valid HTTP or HTTPS link.";
 }
+

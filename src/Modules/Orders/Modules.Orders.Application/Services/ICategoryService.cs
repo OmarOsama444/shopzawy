@@ -1,15 +1,19 @@
+using FluentValidation;
+using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.Services;
 
 public interface ICategoryService
 {
-    public Task<Result<string>> CreateCategory(
-        string CategoryName,
-        string Description,
+    public Task<Result<Guid>> CreateCategory(
         int Order,
-        string ImageUrl,
-        string? ParentCategoryName,
-        ICollection<Guid> Ids
+        Guid? parentCategoryId,
+        ICollection<Guid> Ids,
+        IDictionary<Language, CategoryLangData> categoryLangData
     );
 }
+
+public record CategoryLangData(string name, string description, string image_url);
+

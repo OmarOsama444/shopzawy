@@ -5,38 +5,38 @@ namespace Modules.Orders.Application.Services;
 
 public interface IProductService
 {
-    public Task<Result<Guid>> CreateProduct(
-       string productName,
-       string longDescription,
-       string shortDescription,
-       WeightUnit weightUnit,
-       float weight,
-       DimensionUnit dimensionUnit,
-       float width,
-       float length,
-       float height,
-       ICollection<string> tags,
-       Guid vendorId,
-       string brandName,
-       string categoryName);
-    public Task<Result<ICollection<Guid>>> CreateProductItems(
-     Guid productId,
-     ICollection<product_item> product_Items);
-    public Task<Result<Guid>> CreateProductWithItem(
-            string product_name,
-            string long_description,
-            string short_description,
-            WeightUnit weight_unit,
-            float weight,
-            DimensionUnit dimension_unit,
-            float width,
-            float length,
-            float height,
-            ICollection<string> tags,
-            Guid vendor_id,
-            string brand_name,
-            string category_name,
-            ICollection<product_item> product_items);
+        public Task<Result<Guid>> CreateProduct(
+           string productName,
+           string longDescription,
+           string shortDescription,
+           WeightUnit weightUnit,
+           float weight,
+           DimensionUnit dimensionUnit,
+           float width,
+           float length,
+           float height,
+           ICollection<string> tags,
+           Guid vendorId,
+           string brandName,
+           string categoryName);
+        public Task<Result<ICollection<Guid>>> CreateProductItems(
+         Guid productId,
+         ICollection<product_item> product_Items);
+        public Task<Result<Guid>> CreateProductWithItem(
+                string product_name,
+                string long_description,
+                string short_description,
+                WeightUnit weight_unit,
+                float weight,
+                DimensionUnit dimension_unit,
+                float width,
+                float length,
+                float height,
+                ICollection<string> tags,
+                Guid vendor_id,
+                string brand_name,
+                string category_name,
+                ICollection<product_item> product_items);
 
 
 

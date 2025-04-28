@@ -25,7 +25,12 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
         builder
             .HasOne(p => p.Category)
             .WithMany(c => c.Products)
-            .HasForeignKey(p => p.CategoryName);
+            .HasForeignKey(p => p.CategoryId);
+
+        // builder
+        //     .HasIndex(b => new { b.ProductName, b.ShortDescription, b.LongDescription })
+        //     .HasMethod("GIN")
+        //     .IsTsVectorExpressionIndex("english");
 
         builder.Property(p => p.Tags)
         .HasConversion(

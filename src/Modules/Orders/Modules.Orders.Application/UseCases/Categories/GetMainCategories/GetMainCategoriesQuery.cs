@@ -1,40 +1,28 @@
 using FluentValidation;
+using MassTransit;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
 using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.GetMainCategories;
 
-public record GetMainCategoriesQuery : IQuery<ICollection<CategoryResponse>>;
+public record GetMainCategoriesQuery(Language lang_code) : IQuery<ICollection<MainCategoryResponse>>;
 
-public sealed class GetMainCategoriesQueryHandler(ICategoryRepository categoryRepository) : IQueryHandler<GetMainCategoriesQuery, ICollection<CategoryResponse>>
+public sealed class GetMainCategoriesQueryHandler(ICategoryRepository categoryRepository) : IQueryHandler<GetMainCategoriesQuery, ICollection<MainCategoryResponse>>
 {
-    public async Task<Result<ICollection<CategoryResponse>>> Handle(GetMainCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ICollection<MainCategoryResponse>>> Handle(GetMainCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await categoryRepository.GetMainCategories();
-        return categories.Select(
-            c =>
-            {
-                return new CategoryResponse()
-                {
-                    CategoryName = c.CategoryName,
-                    Description = c.Description,
-                    ImageUrl = c.ImageUrl
-                };
-            }
-        ).ToList();
+        var categories = await categoryRepository.GetMainCategories(request.lang_code.ToString());
+        return categories.ToList();
     }
 }
 
-public class CategoryResponse
-{
-
-    public string CategoryName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string? ImageUrl { get; set; }
-}
 
 internal class GetMainCategoriesValidator : AbstractValidator<GetMainCategoriesQuery>
 {
-
+    public GetMainCategoriesValidator()
+    {
+        RuleFor(x => x.lang_code).NotEmpty();
+    }
 }

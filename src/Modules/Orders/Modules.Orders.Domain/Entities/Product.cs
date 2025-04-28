@@ -1,5 +1,4 @@
 using Modules.Common.Domain.Entities;
-using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
@@ -21,7 +20,7 @@ public class Product : Entity
     public ICollection<string> Tags { get; set; } = [];
     public Guid VendorId { get; private set; }
     public string BrandName { get; set; } = string.Empty;
-    public string CategoryName { get; set; } = string.Empty;
+    public Guid CategoryId { get; set; }
     public virtual Vendor Vendor { get; set; } = default!;
     public virtual Brand Brand { get; private set; } = default!;
     public virtual Category Category { get; set; } = default!;
@@ -39,7 +38,7 @@ public class Product : Entity
     ICollection<string> tags,
     Guid vendorId,
     string brandName,
-    string categoryName)
+    Guid categoryId)
     {
         var product = new Product
         {
@@ -57,7 +56,7 @@ public class Product : Entity
             Tags = tags,
             VendorId = vendorId,
             BrandName = brandName,
-            CategoryName = categoryName
+            CategoryId = categoryId
         };
         return product;
     }

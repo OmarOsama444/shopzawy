@@ -5,48 +5,36 @@ namespace Modules.Orders.Domain.Entities;
 
 public class Category : Entity
 {
-    public string? ParentCategoryName { get; private set; }
-    public string CategoryName { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
+    public Guid Id { get; private set; }
+    public Guid? ParentCategoryId { get; private set; }
     public int Order { get; private set; }
-    public string? ImageUrl { get; private set; }
     public DateTime CreatedOn { get; private set; }
     public virtual Category ParentCategory { get; set; } = default!;
     public virtual ICollection<Category> ChilrenCategories { get; set; } = [];
     public virtual ICollection<Product> Products { get; set; } = [];
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
+    public virtual ICollection<CategoryTranslation> CategoryTranslations { get; set; } = [];
     public static Category Create(
-       string CategoryName,
-       string Description,
        int Order,
-       string? ImageUrl = null,
        Category? parentCategory = null)
     {
 
         var category = new Category()
         {
-            CategoryName = CategoryName,
-            Description = Description,
+            Id = Guid.NewGuid(),
             Order = Order,
-            ImageUrl = ImageUrl,
             CreatedOn = DateTime.UtcNow,
-            ParentCategoryName = parentCategory?.CategoryName
+            ParentCategoryId = parentCategory?.Id
         };
-        category.RaiseDomainEvent(new CategoryCreatedDomainEvent(CategoryName));
+        category.RaiseDomainEvent(new CategoryCreatedDomainEvent(category.Id));
         return category;
 
     }
 
-    public void Update(string? Description, int? Order, string? ImageUrl)
+    public void Update(int? Order)
     {
-        if (!String.IsNullOrEmpty(Description))
-            this.Description = Description;
-
         if (Order.HasValue)
             this.Order = Order.Value;
-
-        if (!String.IsNullOrEmpty(ImageUrl))
-            this.ImageUrl = ImageUrl;
     }
 
 }

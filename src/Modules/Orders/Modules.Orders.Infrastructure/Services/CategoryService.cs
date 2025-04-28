@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using Modules.Common.Domain;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 
 namespace Modules.Orders.Infrastructure.Services;
@@ -16,39 +18,41 @@ public class CategoryService
     ICategorySpecRepositroy categorySpecRepositroy
 ) : ICategoryService
 {
-    public async Task<Result<string>> CreateCategory(
-        string CategoryName,
-        string Description,
+    public async Task<Result<Guid>> CreateCategory(
         int Order,
-        string ImageUrl,
-        string? ParentCategoryName,
-        ICollection<Guid> Ids)
+        Guid? parentCategoryId,
+        ICollection<Guid> Ids,
+        IDictionary<Language, CategoryLangData> categoryLangPacks)
     {
+        foreach (var categoryLangPack in categoryLangPacks)
+        {
+            if (await context.CategoryTranslations
+                .AnyAsync(
+                    x => x.LangCode == categoryLangPack.Key.GetDisplayName()
+                    && x.Name == categoryLangPack.Value.name)
+                )
+                return new CategoryNameConflictException(categoryLangPack.Value.name);
+        }
 
-        if (await context.Categories.AnyAsync(x => x.CategoryName == CategoryName))
-            return new CategoryNameConflictException(CategoryName);
-        await context.Database.BeginTransactionAsync();
         try
         {
+            await context.Database.BeginTransactionAsync();
             Category? parentCategory = null;
-            HashSet<Guid> specIds = new(Ids);
+            HashSet<Guid> specIds = Ids.ToHashSet();
             var category = Category.Create(
-                    CategoryName,
-                    Description,
                     Order,
-                    ImageUrl,
                     parentCategory
                 );
             categoryRepository.Add(category);
             await context.SaveChangesAsync();
-            if (!string.IsNullOrEmpty(ParentCategoryName))
+            if (parentCategoryId != null)
             {
-                if (!await context.Categories.AnyAsync(x => x.CategoryName == ParentCategoryName))
-                    return new CategoryNotFoundException(ParentCategoryName);
+                if (!await context.Categories.AnyAsync(x => x.Id == parentCategoryId))
+                    return new CategoryNotFoundException(parentCategoryId.Value);
 
                 HashSet<Guid> parentSpecIds = await context
                     .CategorySpecs
-                    .Where(x => x.CategoryName == ParentCategoryName)
+                    .Where(x => x.Id == parentCategoryId.Value)
                     .Select(x => x.SpecId)
                     .ToHashSetAsync();
 
@@ -56,29 +60,39 @@ public class CategoryService
 
                 await context
                 .CategorySpecs
-                .Where(c => c.CategoryName == ParentCategoryName)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, CategoryName));
+                .Where(c => c.CategoryId == parentCategoryId.Value)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryId, category.Id));
 
                 await context
                 .Products
-                .Where(p => p.CategoryName == ParentCategoryName)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryName, CategoryName));
+                .Where(p => p.CategoryId == parentCategoryId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CategoryId, category.Id));
 
             }
             foreach (var id in specIds)
             {
-                var categorySpec = CategorySpec.Create(CategoryName, id);
+                var categorySpec = CategorySpec.Create(category.Id, id);
                 categorySpecRepositroy.Add(categorySpec);
+            }
+            foreach (var categoryLangPack in categoryLangPacks)
+            {
+                var categoryTranslation = CategoryTranslation.Create(
+                    category.Id,
+                    categoryLangPack.Key.GetDisplayName(),
+                    categoryLangPack.Value.name,
+                    categoryLangPack.Value.description,
+                    categoryLangPack.Value.image_url);
+                context.CategoryTranslations.Add(categoryTranslation);
             }
             await context.SaveChangesAsync();
             await context.Database.CommitTransactionAsync();
+            return category.Id;
         }
         catch (Exception ex)
         {
             await context.Database.RollbackTransactionAsync();
             return ex;
         }
-        return CategoryName;
     }
 
 
