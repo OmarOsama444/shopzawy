@@ -1,96 +1,91 @@
-# Orders Module API
+# 🛒 Modular E-Commerce Backend (Orders Module)
 
-This project is a modular ASP.NET Core Web API responsible for handling operations related to products, categories, brands, specifications, vendors, and banners. It uses MediatR for CQRS pattern implementation and clean separation between concerns.
-
-## Table of Contents
-
-* [Overview](#overview)
-* [Tech Stack](#tech-stack)
-* [API Endpoints](#api-endpoints)
-
-  * [Vendors](#vendors)
-  * [Specifications](#specifications)
-  * [Products](#products)
-  * [Categories](#categories)
-  * [Brands](#brands)
-  * [Banners](#banners)
-* [Contributing](#contributing)
-* [License](#license)
+This project is a modular e-commerce backend built with ASP.NET Core, MediatR, and Minimal APIs. It focuses on clean architecture, modular separation, and scalability — specifically handling Vendors, Categories, Specifications, Brands, Products, and Banners in the Orders domain.
 
 ---
 
-## Overview
+## 🧱 Tech Stack
 
-This API is part of a larger e-commerce solution. It supports:
+- **ASP.NET Core 8+**
+- **MediatR** – for in-process messaging
+- **Minimal APIs** – for lightweight and fast endpoint mapping
+- **Modular Monolith Architecture** – decoupled features within the same solution
+- **Fluent Results** – for consistent success/failure handling
+- **Swagger/OpenAPI** – API documentation (if enabled)
 
-* Creating and updating vendors
-* Managing specifications and their options
-* Creating and managing products and their items
-* Category and brand CRUD operations
-* Managing promotional banners
+---
 
-The modular approach allows you to maintain and scale features independently.
+## 📦 Modules and Endpoints
 
-## Tech Stack
+### ✅ Vendors (`/api/vendors`)
+- **POST /** – Create a vendor
+- **GET /** – Paginate vendors (with optional name filter)
+- **PUT /{id}** – Update a vendor
 
-* **Framework:** ASP.NET Core Web API
-* **Pattern:** CQRS with MediatR
-* **Validation & Error Handling:** Custom extension `ExceptionToResult`
-* **Routing:** Minimal API with `MapGroup`
+### 🧾 Specifications (`/api/specs`)
+- **POST /{id}** – Add specification options to a category
+- **GET /{id}** – Get spec options for a category
+- **POST /** – Create a new spec
+- **GET /** – Paginate specs with filtering
 
-## API Endpoints
+### 🛍️ Products (`/api/products`)
+- **POST /** – Create a product
+- **POST /{Id}/items** – Add product items (SKUs)
+- **PUT /items/{Id}** – Update a product item
+- **DELETE /items/{Id}** – Delete a product item
 
-### Vendors
+### 🗂️ Categories (`/api/categories`)
+- **POST /** – Create category
+- **GET /main** – Get main categories (localized)
+- **GET /** – Paginate categories
+- **GET /{name}** – Get category by name
+- **PUT /{name}** – Update category
+- **POST /{name}/specs/** – Assign specs to category
 
-| Method | Route             | Description              |
-| ------ | ----------------- | ------------------------ |
-| POST   | /api/vendors      | Create a new vendor      |
-| GET    | /api/vendors      | Paginate vendor list     |
-| PUT    | /api/vendors/{id} | Update a specific vendor |
+### 🏷️ Brands (`/api/brands`)
+- **POST /** – Create brand
+- **GET /** – Paginate brands
+- **PUT /{name}** – Update brand
 
-### Specifications
+### 🎏 Banners (`/api/banners`)
+- **POST /** – Create banner
+- **GET /active** – Get active banners
+- **GET /** – Paginate banners
+- **DELETE /{id}** – Delete banner
 
-| Method | Route           | Description                   |
-| ------ | --------------- | ----------------------------- |
-| POST   | /api/specs/{id} | Add spec options to category  |
-| GET    | /api/specs/{id} | Get spec options for category |
-| POST   | /api/specs      | Create new specification      |
-| GET    | /api/specs      | Paginate specifications       |
+---
 
-### Products
+## 🧪 Running Locally
 
-| Method | Route                    | Description           |
-| ------ | ------------------------ | --------------------- |
-| POST   | /api/products            | Create new product    |
-| POST   | /api/products/{id}/items | Add product items     |
-| PUT    | /api/products/items/{id} | Update a product item |
-| DELETE | /api/products/items/{id} | Delete a product item |
+1. **Clone the repo**
 
-### Categories
+    ```bash
+    git clone https://github.com/your-org/ecommerce-backend.git
+    cd ecommerce-backend
+    ```
 
-| Method | Route                        | Description                |
-| ------ | ---------------------------- | -------------------------- |
-| POST   | /api/categories              | Create new category        |
-| GET    | /api/categories/main         | Get main categories        |
-| GET    | /api/categories              | Paginate categories        |
-| GET    | /api/categories/{name}       | Get category by name       |
-| PUT    | /api/categories/{name}       | Update category by name    |
-| POST   | /api/categories/{name}/specs | Assign specs to a category |
+2. **Run the project**
 
-### Brands
+    ```bash
+    dotnet run --project src/Modules.Orders.Presentation
+    ```
 
-| Method | Route              | Description          |
-| ------ | ------------------ | -------------------- |
-| POST   | /api/brands        | Create new brand     |
-| GET    | /api/brands        | Paginate brands      |
-| PUT    | /api/brands/{name} | Update brand details |
+3. **Access the API**
 
-### Banners
+    - **Swagger UI**: [https://localhost:5001/swagger/index.html](https://localhost:5001/swagger/index.html) (if Swagger is configured)
+    - Use **Postman/Insomnia** for testing endpoints.
 
-| Method | Route               | Description        |
-| ------ | ------------------- | ------------------ |
-| POST   | /api/banners        | Create banner      |
-| GET    | /api/banners/active | Get active banners |
-| GET    | /api/banners        | Paginate banners   |
-| DELETE | /api/banners/{id}   | Delete a banner    |
+---
 
+## 🧱 Folder Structure (Simplified)
+
+```bash
+Modules/
+└── Orders/
+    ├── Application/
+    │   └── UseCases/...
+    ├── Domain/
+    ├── Infrastructure/
+    └── Presentation/
+        └── Endpoints/
+```
