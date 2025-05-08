@@ -16,7 +16,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
-        @"
+        $"""
         SELECT
             B.Brand_Name as BrandName ,
             B.Logo_Url as LogoUrl,
@@ -25,7 +25,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
             B.Active as Active ,
             COUNT(P.Id) AS NumberOfProducts
         FROM
-            Orders.Brand AS B
+            {Schemas.Orders}.Brand AS B
         LEFT JOIN
             Orders.Product AS P
         ON P.Brand_Name = B.Brand_Name
@@ -36,7 +36,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
         ORDER BY
             B.Brand_Name
         LIMIT @pageSize OFFSET @offset;
-        ";
+        """;
         IEnumerable<BrandResponse> brands = await sqlConnection.QueryAsync<BrandResponse>(Query, new { nameField, offset, pageSize });
         return brands.ToList();
     }

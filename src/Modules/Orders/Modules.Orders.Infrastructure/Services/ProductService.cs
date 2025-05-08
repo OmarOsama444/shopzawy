@@ -27,15 +27,15 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
         ICollection<string> tags,
         Guid vendorId,
         string brandName,
-        string categoryName)
+        Guid categoryId)
     {
         Category? category = await ordersDbContext
             .Categories
-            .FirstOrDefaultAsync(x => x.CategoryName == categoryName);
+            .FirstOrDefaultAsync(x => x.Id == categoryId);
 
         if (category is null)
-            return new CategoryNotFoundException(categoryName);
-        if (ordersDbContext.Categories.Any(x => x.ParentCategoryName == category.CategoryName))
+            return new CategoryNotFoundException(categoryId);
+        if (ordersDbContext.Categories.Any(x => x.ParentCategoryId == category.Id))
             return new ConflictException("Category.Conflict", "you can only add products to leaf categorys");
         if (!await ordersDbContext.Vendors.AnyAsync(x => x.Id == vendorId))
             return new VendorNotFoundException(vendorId);
@@ -55,7 +55,7 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
             tags,
             vendorId,
             brandName,
-            categoryName
+            categoryId
         );
 
         ordersDbContext.Products.Add(product);
@@ -133,7 +133,7 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
         ICollection<string> tags,
         Guid vendor_id,
         string brand_name,
-        string category_name,
+        Guid categoryId,
         ICollection<product_item> product_items)
     {
         await using var transaction = await ordersDbContext.Database.BeginTransactionAsync();
@@ -153,7 +153,7 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
                 tags,
                 vendor_id,
                 brand_name,
-                category_name
+                categoryId
             );
 
             if (!productResult.isSuccess)

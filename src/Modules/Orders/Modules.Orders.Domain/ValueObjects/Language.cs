@@ -2,6 +2,6 @@ namespace Modules.Orders.Domain.ValueObjects;
 
 public enum Language
 {
-    ar = 1,
-    en = 2,
+    en = 1,
+    ar = 2
 }

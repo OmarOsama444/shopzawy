@@ -18,7 +18,7 @@ public interface IProductService
            ICollection<string> tags,
            Guid vendorId,
            string brandName,
-           string categoryName);
+           Guid categoryId);
         public Task<Result<ICollection<Guid>>> CreateProductItems(
          Guid productId,
          ICollection<product_item> product_Items);
@@ -35,7 +35,7 @@ public interface IProductService
                 ICollection<string> tags,
                 Guid vendor_id,
                 string brand_name,
-                string category_name,
+                Guid categoryId,
                 ICollection<product_item> product_items);
 
 

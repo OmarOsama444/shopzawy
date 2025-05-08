@@ -19,6 +19,7 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
     public DbSet<ProductItem> ProductItems { get; set; }
     public DbSet<ProductItemOptions> ProductItemOptions { get; set; }
     public DbSet<Specification> Specifications { get; set; }
+    public DbSet<SpecificationTranslation> SpecificationTranslations { get; set; }
     public DbSet<SpecificationOption> SpecificationOptions { get; set; }
     public DbSet<CategorySpec> CategorySpecs { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,7 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
         modelBuilder.ApplyConfiguration<Category>(new CategoryConfig());
         modelBuilder.ApplyConfiguration<CategoryTranslation>(new CategoryTranslationConfig());
         modelBuilder.ApplyConfiguration<Specification>(new SpecConfig());
+        modelBuilder.ApplyConfiguration<SpecificationTranslation>(new SpecificationTranslationConfig());
         modelBuilder.ApplyConfiguration<Product>(new ProductConfig());
         modelBuilder.ApplyConfiguration<Vendor>(new VendorConfig());
         modelBuilder.ApplyConfiguration<Color>(new ColorConfig());

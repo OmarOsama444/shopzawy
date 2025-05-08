@@ -33,9 +33,14 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, [FromQuery] string? nameFilter = null) =>
+        group.MapGet("", async (
+            [FromServices] ISender sender,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 50,
+            [FromQuery] Language lang_code = Language.en,
+            [FromQuery] string? nameFilter = null) =>
         {
-            var result = await sender.Send(new PaginateCategoryQuery(pageNumber, pageSize, nameFilter));
+            var result = await sender.Send(new PaginateCategoryQuery(pageNumber, pageSize, nameFilter, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 

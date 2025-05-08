@@ -12,10 +12,11 @@ public class Specification : Entity
     public string Name { get; private set; } = string.Empty;
     public string DataType { get; private set; } = string.Empty;
     public virtual ICollection<SpecificationOption> SpecificationOptions { get; set; } = [];
+    public virtual ICollection<SpecificationTranslation> Translations { get; set; } = [];
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
-    public static Specification Create(string name, string dataType)
+    public static Specification Create(string dataType)
     {
-        var cat = new Specification() { Id = Guid.NewGuid(), Name = name, DataType = dataType };
+        var cat = new Specification() { Id = Guid.NewGuid(), DataType = dataType };
         cat.RaiseDomainEvent(new SpecCreatedDomainEvent(cat.Id));
         return cat;
     }

@@ -1,15 +1,8 @@
-using System.Data.Common;
-using System.Security.Cryptography.X509Certificates;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Services;
-using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Exceptions;
-using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateCategory;
@@ -42,8 +35,8 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
         RuleFor(c => c.order).NotEmpty();
         RuleFor(c => c.category_data)
             .NotEmpty()
-            .Must(x => x.Count == 2)
-            .WithMessage("Your Missing the defination for one of the required languages");
+            .Must(LanguageValidator.Must)
+            .WithMessage(LanguageValidator.Message);
         RuleForEach(c => c.category_data)
             .SetValidator(new CategoryLangDataEntryValidator());
     }

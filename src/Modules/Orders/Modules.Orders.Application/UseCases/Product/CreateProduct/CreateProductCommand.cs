@@ -20,7 +20,7 @@ public record CreateProductCommand(
     ICollection<string> tags,
     Guid vendor_id,
     string brand_name,
-    string category_name,
+    Guid category_id,
     ICollection<product_item> product_items) : ICommand<Guid>;
 
 public sealed class CreateProductCommandHandler(
@@ -42,7 +42,7 @@ public sealed class CreateProductCommandHandler(
             request.tags,
             request.vendor_id,
             request.brand_name,
-            request.category_name,
+            request.category_id,
             request.product_items);
 
         return result;

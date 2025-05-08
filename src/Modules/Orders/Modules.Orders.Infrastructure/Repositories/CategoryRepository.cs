@@ -5,6 +5,7 @@ using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Users.Infrastructure.Repositories;
 
@@ -20,7 +21,7 @@ public class CategoryRepository(
         context.CategoryTranslations.Add(categoryTranslation);
     }
 
-    public async Task<ICollection<MainCategoryResponse>> Children(Guid Id, string lang_code)
+    public async Task<ICollection<MainCategoryResponse>> Children(Guid Id, Language lang_code)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
@@ -79,7 +80,7 @@ public class CategoryRepository(
             .FirstOrDefaultAsync(x => x.Id == categoryId);
     }
 
-    public async Task<ICollection<string>> GetCategoryPath(Guid Id, string LangCode)
+    public async Task<ICollection<string>> GetCategoryPath(Guid Id, Language LangCode)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
@@ -120,7 +121,7 @@ public class CategoryRepository(
         return (await dbConnection.QueryAsync<string>(Query, new { Id, LangCode })).ToList();
     }
 
-    public async Task<ICollection<MainCategoryResponse>> GetMainCategories(string lang_code)
+    public async Task<ICollection<MainCategoryResponse>> GetMainCategories(Language lang_code)
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
@@ -152,7 +153,7 @@ public class CategoryRepository(
         return !await context.Categories.AnyAsync(x => x.ParentCategoryId == Id);
     }
 
-    public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, string langCode)
+    public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
@@ -198,7 +199,7 @@ public class CategoryRepository(
         return results.ToList();
     }
 
-    public async Task<int> TotalCategories(string? nameFilter, string langCode)
+    public async Task<int> TotalCategories(string? nameFilter, Language langCode)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
