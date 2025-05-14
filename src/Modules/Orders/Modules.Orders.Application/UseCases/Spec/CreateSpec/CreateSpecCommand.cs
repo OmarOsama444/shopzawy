@@ -23,7 +23,7 @@ public sealed class CreateSpecCommandHandler(
         foreach (var specName in request.specNames)
         {
             specTranslationRepository.Add(
-                SpecificationTranslation.Create(spec.Id, specName.Key.ToString(), specName.Value)
+                SpecificationTranslation.Create(spec.Id, specName.Key, specName.Value)
             );
         }
         await unitOfWork.SaveChangesAsync();

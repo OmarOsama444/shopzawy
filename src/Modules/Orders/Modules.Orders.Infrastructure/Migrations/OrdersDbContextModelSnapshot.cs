@@ -104,37 +104,32 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Category", b =>
                 {
-                    b.Property<string>("CategoryName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("category_name");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("image_url");
-
                     b.Property<int>("Order")
                         .HasColumnType("integer")
                         .HasColumnName("order");
 
-                    b.Property<string>("ParentCategoryName")
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("parent_category_name");
+                    b.Property<Guid?>("ParentCategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("parent_category_id");
 
-                    b.HasKey("CategoryName")
+                    b.HasKey("Id")
                         .HasName("pk_category");
 
-                    b.HasIndex("ParentCategoryName")
-                        .HasDatabaseName("ix_category_parent_category_name");
+                    b.HasIndex("Order")
+                        .IsUnique()
+                        .HasDatabaseName("ix_category_order");
+
+                    b.HasIndex("ParentCategoryId")
+                        .HasDatabaseName("ix_category_parent_category_id");
 
                     b.ToTable("category", "orders");
                 });
@@ -146,10 +141,9 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("category_name");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
 
                     b.Property<Guid>("SpecId")
                         .HasColumnType("uuid")
@@ -158,13 +152,59 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_category_spec");
 
-                    b.HasIndex("CategoryName")
-                        .HasDatabaseName("ix_category_spec_category_name");
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_category_spec_category_id");
 
                     b.HasIndex("SpecId")
                         .HasDatabaseName("ix_category_spec_spec_id");
 
                     b.ToTable("category_spec", "orders");
+                });
+
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.CategoryTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("image_url");
+
+                    b.Property<int>("LangCode")
+                        .HasColumnType("integer")
+                        .HasColumnName("lang_code");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_category_translation");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_category_translation_name");
+
+                    b.HasIndex("CategoryId", "LangCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_category_translation_category_id_lang_code");
+
+                    b.ToTable("category_translation", "orders");
                 });
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Color", b =>
@@ -204,10 +244,9 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("brand_name");
 
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("category_name");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone")
@@ -271,8 +310,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.HasIndex("BrandName")
                         .HasDatabaseName("ix_product_brand_name");
 
-                    b.HasIndex("CategoryName")
-                        .HasDatabaseName("ix_product_category_name");
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_product_category_id");
 
                     b.HasIndex("CreatedOn")
                         .HasDatabaseName("ix_product_created_on");
@@ -362,16 +401,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("data_type");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
                     b.HasKey("Id")
                         .HasName("pk_specification");
-
-                    b.HasIndex("Name")
-                        .HasDatabaseName("ix_specification_name");
 
                     b.ToTable("specification", "orders");
                 });
@@ -416,6 +447,40 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasDatabaseName("ix_specification_option_specification_id");
 
                     b.ToTable("specification_option", "orders");
+                });
+
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.SpecificationTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("LangCode")
+                        .HasColumnType("integer")
+                        .HasColumnName("lang_code");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("SpecId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("spec_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_specification_translation");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_specification_translation_name");
+
+                    b.HasIndex("SpecId", "LangCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_specification_translation_spec_id_lang_code");
+
+                    b.ToTable("specification_translation", "orders");
                 });
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Vendor", b =>
@@ -489,8 +554,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                 {
                     b.HasOne("Modules.Orders.Domain.Entities.Category", "ParentCategory")
                         .WithMany("ChilrenCategories")
-                        .HasForeignKey("ParentCategoryName")
-                        .HasConstraintName("fk_category_category_parent_category_name");
+                        .HasForeignKey("ParentCategoryId")
+                        .HasConstraintName("fk_category_category_parent_category_id");
 
                     b.Navigation("ParentCategory");
                 });
@@ -499,10 +564,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                 {
                     b.HasOne("Modules.Orders.Domain.Entities.Category", "Category")
                         .WithMany("CategorySpecs")
-                        .HasForeignKey("CategoryName")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_category_spec_category_category_name");
+                        .HasConstraintName("fk_category_spec_category_category_id");
 
                     b.HasOne("Modules.Orders.Domain.Entities.Specification", "Specification")
                         .WithMany("CategorySpecs")
@@ -516,6 +581,18 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.Navigation("Specification");
                 });
 
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.CategoryTranslation", b =>
+                {
+                    b.HasOne("Modules.Orders.Domain.Entities.Category", "Category")
+                        .WithMany("CategoryTranslations")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_category_translation_category_category_id");
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Product", b =>
                 {
                     b.HasOne("Modules.Orders.Domain.Entities.Brand", "Brand")
@@ -527,10 +604,10 @@ namespace Modules.Orders.Infrastructure.Migrations
 
                     b.HasOne("Modules.Orders.Domain.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryName")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_product_category_category_name");
+                        .HasConstraintName("fk_product_category_category_id");
 
                     b.HasOne("Modules.Orders.Domain.Entities.Vendor", "Vendor")
                         .WithMany("Products")
@@ -591,6 +668,18 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.Navigation("Specification");
                 });
 
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.SpecificationTranslation", b =>
+                {
+                    b.HasOne("Modules.Orders.Domain.Entities.Specification", "specification")
+                        .WithMany("Translations")
+                        .HasForeignKey("SpecId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_specification_translation_specification_spec_id");
+
+                    b.Navigation("specification");
+                });
+
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
@@ -599,6 +688,8 @@ namespace Modules.Orders.Infrastructure.Migrations
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Category", b =>
                 {
                     b.Navigation("CategorySpecs");
+
+                    b.Navigation("CategoryTranslations");
 
                     b.Navigation("ChilrenCategories");
 
@@ -620,6 +711,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.Navigation("CategorySpecs");
 
                     b.Navigation("SpecificationOptions");
+
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.SpecificationOption", b =>

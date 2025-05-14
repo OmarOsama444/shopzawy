@@ -22,6 +22,9 @@ public class SpecificationTranslationConfig : IEntityTypeConfiguration<Specifica
             .HasMaxLength(100);
 
         builder
+            .HasIndex(x => x.Name);
+
+        builder
             .HasIndex(x => new { x.SpecId, x.LangCode })
             .IsUnique();
     }

@@ -109,7 +109,8 @@ public sealed class GetCategoryByIdQueryHandler(
                 spec.options.Add(option);
                 return spec;
             },
-            splitOn: "optionId").GroupBy(s => s.id)
+            splitOn: "optionId")
+            .GroupBy(s => s.id)
             .Select(g =>
             {
                 var spec = g.First();

@@ -19,9 +19,9 @@ public class ProductRepository(OrdersDbContext ordersDbContext) : Repository<Pro
             .Include(x => x.ProductItems)
             .FirstOrDefaultAsync(x => x.Id == Id);
     }
-    public async Task<ICollection<Product>> GetByCategoryName(string categoryName)
+    public async Task<ICollection<Product>> GetByCategoryId(Guid categoryId)
     {
-        return await context.Products.Where(x => x.CategoryName == categoryName).ToListAsync();
+        return await context.Products.Where(x => x.Id == categoryId).ToListAsync();
     }
     public ICollection<Product> Paginate(int pageNumber, int pageSize, ICollection<Guid> categoryIds, bool? OnSale, KeyValuePair<int, int>? PriceRange, KeyValuePair<DateTime, DateTime> DateRange)
     {
