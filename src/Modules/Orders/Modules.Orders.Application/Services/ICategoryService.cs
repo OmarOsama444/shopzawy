@@ -1,8 +1,4 @@
-using FluentValidation;
-using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
-using Modules.Orders.Application.UseCases.Categories.GetCategory;
-using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.Services;

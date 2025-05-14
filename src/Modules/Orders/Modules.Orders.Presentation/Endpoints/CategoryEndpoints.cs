@@ -44,29 +44,32 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("{name}", async ([FromRoute] string name, [FromServices] ISender sender) =>
+        group.MapGet("{id}", async ([FromRoute] Guid id, [FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
         {
-            var result = await sender.Send(new GetCategoryByNameQuery(name));
+            var result = await sender.Send(new GetCategoryByIdQuery(id, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapPut("{name}", async ([FromRoute] string name, [FromBody] UpdateCategoryRequestDto request, ISender sender) =>
+        group.MapPut("{id}", async ([FromRoute] Guid id, [FromBody] UpdateCategoryRequestDto request, ISender sender) =>
         {
-            var result = await sender.Send(new UpdateCategoryCommand(name, request.Description, request.Order, request.ImageUrl));
+            var result = await sender.Send(new UpdateCategoryCommand(
+                id,
+                request.order,
+                request.category_lang_data));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
-        group.MapPost("{name}/specs/", async (
-            [FromRoute] string name,
+        group.MapPost("{id}/specs/", async (
+            [FromRoute] Guid id,
             [FromBody] CreateCategorySpecRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateCategorySpecCommand(name, request.Ids));
+            var result = await sender.Send(new CreateCategorySpecCommand(id, request.Ids));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
     }
     public record CreateCategorySpecRequestDto(ICollection<Guid> Ids);
-    public record UpdateCategoryRequestDto(string? Description, int? Order, string? ImageUrl);
+    public record UpdateCategoryRequestDto(int? order, IDictionary<Language, CategoryLangData> category_lang_data);
 
 }

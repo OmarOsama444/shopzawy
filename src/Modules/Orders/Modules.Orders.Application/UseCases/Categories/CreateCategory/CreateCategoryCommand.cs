@@ -14,6 +14,21 @@ public record CreateCategoryCommand(
     IDictionary<Language, CategoryLangData> category_data
 ) : ICommand<Guid>;
 
+//  {
+//      order : 1 , 
+//      parent_id : 12414-1341341-2354135 , 
+//      category_date : {
+//          "en" : {
+//              name : "my accecories"
+//          } ,
+//          "ar" : {
+//              name : "اكسسواراتي"
+//          } ,
+//          "fr" : {
+//              name : "mo accecoثies"
+//          } ,
+//      }
+//  }
 public class CreateCategoryCommandHandler(
     ICategoryService categoryService
     ) : ICommandHandler<CreateCategoryCommand, Guid>

@@ -16,8 +16,8 @@ public sealed class PaginateCategoryQueryHandler(ICategoryRepository categoryRep
 {
     public async Task<Result<PaginationResponse<CategoryResponse>>> Handle(PaginateCategoryQuery request, CancellationToken cancellationToken)
     {
-        var categories = await categoryRepository.Paginate(request.pageNumber, request.pageSize, request.nameFilter, request.lang_code.ToString());
-        var total = await categoryRepository.TotalCategories(request.nameFilter, request.lang_code.ToString());
+        var categories = await categoryRepository.Paginate(request.pageNumber, request.pageSize, request.nameFilter, request.lang_code);
+        var total = await categoryRepository.TotalCategories(request.nameFilter, request.lang_code);
         return new PaginationResponse<CategoryResponse>(categories, total, request.pageSize, request.pageNumber);
     }
 }

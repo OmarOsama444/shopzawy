@@ -9,7 +9,6 @@ namespace Modules.Orders.Domain.Entities;
 public class Specification : Entity
 {
     public Guid Id { get; private set; }
-    public string Name { get; private set; } = string.Empty;
     public string DataType { get; private set; } = string.Empty;
     public virtual ICollection<SpecificationOption> SpecificationOptions { get; set; } = [];
     public virtual ICollection<SpecificationTranslation> Translations { get; set; } = [];

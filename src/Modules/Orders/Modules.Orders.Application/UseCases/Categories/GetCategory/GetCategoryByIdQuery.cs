@@ -95,8 +95,8 @@ public sealed class GetCategoryByIdQueryHandler(
         var category = await multiSelect.ReadFirstOrDefaultAsync<CategoryRespone.SubCategory>();
         if (category == null)
             return new CategoryNotFoundException(request.id);
-        var childrenCategory = await multiSelect.ReadAsync<CategoryRespone.SubCategory>();
-        var parentCategory = await multiSelect.ReadFirstOrDefaultAsync();
+        var childrenCategory = multiSelect.Read<CategoryRespone.SubCategory>();
+        var parentCategory = multiSelect.ReadFirstOrDefault();
 
         var specs = multiSelect.Read<
             CategoryRespone.SpecResponse,

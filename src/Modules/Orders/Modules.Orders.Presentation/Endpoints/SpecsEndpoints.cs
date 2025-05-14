@@ -9,6 +9,7 @@ using MediatR;
 using Modules.Orders.Application.UseCases.GetCategorySpecOption;
 using Modules.Orders.Application.UseCases;
 using Modules.Orders.Application.UseCases.Spec.PaginateSpec;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -37,7 +38,7 @@ public class SpecsEndpoints : IEndpoint
 
         group.MapPost("", async ([FromBody] CreateSpecRequestDto requestDto, [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateSpecCommand(requestDto.name, requestDto.dataType));
+            var result = await sender.Send(new CreateSpecCommand(requestDto.spec_names, requestDto.dataType));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
@@ -45,14 +46,15 @@ public class SpecsEndpoints : IEndpoint
             [FromServices] ISender sender,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 50,
-            [FromQuery] string? name = null
+            [FromQuery] string? name = null,
+            [FromQuery] Language lang_code = Language.en
             ) =>
         {
-            var result = await sender.Send(new PaginateSpecQuery(pageNumber, pageSize, name));
+            var result = await sender.Send(new PaginateSpecQuery(pageNumber, pageSize, name, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
     }
-    public record CreateSpecRequestDto(string name, string dataType);
+    public record CreateSpecRequestDto(IDictionary<Language, string> spec_names, string dataType);
     public record CreateCategorySpecOptionRequestDto(ICollection<string> values);
 
 }

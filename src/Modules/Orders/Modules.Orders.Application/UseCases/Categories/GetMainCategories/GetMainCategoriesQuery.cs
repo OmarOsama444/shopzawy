@@ -13,7 +13,7 @@ public sealed class GetMainCategoriesQueryHandler(ICategoryRepository categoryRe
 {
     public async Task<Result<ICollection<MainCategoryResponse>>> Handle(GetMainCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await categoryRepository.GetMainCategories(request.lang_code.ToString());
+        var categories = await categoryRepository.GetMainCategories(request.lang_code);
         return categories.ToList();
     }
 }

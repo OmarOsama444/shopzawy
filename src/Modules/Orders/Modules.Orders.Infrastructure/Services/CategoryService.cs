@@ -1,16 +1,11 @@
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Extensions;
 using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Services;
-using Modules.Orders.Application.UseCases.Categories.GetCategory;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
-
 namespace Modules.Orders.Infrastructure.Services;
 
 public class CategoryService
@@ -30,7 +25,7 @@ public class CategoryService
         {
             if (await context.CategoryTranslations
                 .AnyAsync(
-                    x => x.LangCode == categoryLangPack.Key.ToString()
+                    x => x.LangCode == categoryLangPack.Key
                     && x.Name == categoryLangPack.Value.name)
                 )
                 return new CategoryNameConflictException(categoryLangPack.Value.name);
@@ -80,7 +75,7 @@ public class CategoryService
             {
                 var categoryTranslation = CategoryTranslation.Create(
                     category.Id,
-                    categoryLangPack.Key.ToString(),
+                    categoryLangPack.Key,
                     categoryLangPack.Value.name,
                     categoryLangPack.Value.description,
                     categoryLangPack.Value.image_url);
