@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Modules.Common.Domain;
 using Modules.Orders.Application.Services;
+using Modules.Orders.Application.UseCases.UpdateCategory;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.Repositories;

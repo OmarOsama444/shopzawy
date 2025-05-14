@@ -12,11 +12,7 @@ public record CreateProductCommand(
     string long_description,
     string short_description,
     WeightUnit weight_unit,
-    float weight,
     DimensionUnit dimension_unit,
-    float width,
-    float length,
-    float height,
     ICollection<string> tags,
     Guid vendor_id,
     string brand_name,
@@ -34,11 +30,7 @@ public sealed class CreateProductCommandHandler(
             request.long_description,
             request.short_description,
             request.weight_unit,
-            request.weight,
             request.dimension_unit,
-            request.weight,
-            request.length,
-            request.height,
             request.tags,
             request.vendor_id,
             request.brand_name,
@@ -57,11 +49,7 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
         RuleFor(c => c.long_description).NotEmpty().MinimumLength(10);
         RuleFor(c => c.short_description).NotEmpty().MinimumLength(10);
         RuleFor(c => c.weight_unit).NotEmpty();
-        RuleFor(c => c.weight).NotEmpty();
         RuleFor(c => c.dimension_unit).NotEmpty();
-        RuleFor(c => c.width).NotEmpty();
-        RuleFor(c => c.height).NotEmpty();
-        RuleFor(c => c.length).NotEmpty();
         RuleFor(c => c.product_items).NotEmpty();
         RuleForEach(c => c.product_items)
             .SetValidator(new productItemValidator());
@@ -76,6 +64,10 @@ internal class productItemValidator : AbstractValidator<product_item>
         RuleFor(x => x.quantity_in_stock).GreaterThan(0);
         RuleFor(x => x.price).GreaterThan(0);
         RuleFor(x => x.urls).NotEmpty();
+        RuleFor(c => c.weight).NotEmpty();
+        RuleFor(c => c.width).NotEmpty();
+        RuleFor(c => c.height).NotEmpty();
+        RuleFor(c => c.length).NotEmpty();
         RuleForEach(x => x.urls)
             .NotEmpty()
             .WithMessage("Urls Can't be empty")

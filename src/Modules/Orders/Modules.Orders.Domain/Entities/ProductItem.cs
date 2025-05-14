@@ -9,6 +9,10 @@ public class ProductItem : Entity
     public string StockKeepingUnit { get; set; } = string.Empty;
     public int QuantityInStock { get; set; }
     public ICollection<string> ImageUrls { get; set; } = [];
+    public float Weight { get; set; }
+    public float Width { get; set; }
+    public float Length { get; set; }
+    public float Height { get; set; }
     public float Price { get; set; }
     public Guid ProductId { get; set; }
     public DateTime CreatedOn { get; set; }
@@ -18,6 +22,10 @@ public class ProductItem : Entity
         string sku,
         int QuantityInStock,
         float price,
+        float width,
+        float length,
+        float height,
+        float weight,
         Guid productId,
         ICollection<string> urls
         )
@@ -29,6 +37,10 @@ public class ProductItem : Entity
             QuantityInStock = QuantityInStock,
             ImageUrls = urls,
             Price = price,
+            Width = width,
+            Length = length,
+            Height = height,
+            Weight = weight,
             ProductId = productId,
             CreatedOn = DateTime.UtcNow
         };
@@ -39,6 +51,10 @@ public class ProductItem : Entity
         string? sku,
         int? QuantityInStock,
         float? price,
+        float? width,
+        float? length,
+        float? height,
+        float? weight,
         ICollection<string>? urls
     )
     {
@@ -48,6 +64,14 @@ public class ProductItem : Entity
             this.QuantityInStock = QuantityInStock.Value;
         if (price.HasValue)
             this.Price = price.Value;
+        if (width.HasValue)
+            this.Width = width.Value;
+        if (length.HasValue)
+            this.Length = length.Value;
+        if (height.HasValue)
+            this.Height = height.Value;
+        if (weight.HasValue)
+            this.Weight = weight.Value;
         if (urls != null)
             this.ImageUrls = urls;
     }

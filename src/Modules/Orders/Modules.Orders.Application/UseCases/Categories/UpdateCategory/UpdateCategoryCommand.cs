@@ -54,7 +54,6 @@ internal class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategory
             .SetValidator(new CategoryLangDataEntryValidator());
     }
 }
-
 public record CategoryLangData(string? name, string? description, string? image_url);
 internal class CategoryLangDataEntryValidator : AbstractValidator<KeyValuePair<Language, CategoryLangData>>
 {

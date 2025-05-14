@@ -1,4 +1,5 @@
 using Modules.Common.Domain;
+using Modules.Orders.Application.UseCases.UpdateCategory;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.Services;
@@ -13,9 +14,6 @@ public interface ICategoryService
     );
 
 }
-
-public record CategoryLangData(string name, string description, string image_url);
-
 
 public class CategoryRespone
 {

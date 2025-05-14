@@ -3,6 +3,7 @@ using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
 using Modules.Orders.Application.Services;
+using Modules.Orders.Application.UseCases.UpdateCategory;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateCategory;
@@ -74,7 +75,7 @@ internal class CategoryLangDataValidator : AbstractValidator<CategoryLangData>
     public CategoryLangDataValidator()
     {
         RuleFor(x => x.name).NotEmpty().MinimumLength(3).MaximumLength(100);
-        RuleFor(x => x.image_url).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(x => x.image_url).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
         RuleFor(x => x.description).NotEmpty().MinimumLength(10).MaximumLength(500);
     }
 }

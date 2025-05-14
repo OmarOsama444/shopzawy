@@ -9,15 +9,10 @@ public class Product : Entity
     public string ProductName { get; private set; } = string.Empty;
     public string LongDescription { get; private set; } = string.Empty;
     public string ShortDescription { get; private set; } = string.Empty;
+    public ICollection<string> Tags { get; set; } = [];
     public DateTime CreatedOn { get; set; }
     public WeightUnit weightUnit { get; set; }
-    public float weight { get; set; }
     public DimensionUnit dimensionUnit { get; set; }
-    public float Width { get; set; }
-    public float Length { get; set; }
-    public float Height { get; set; }
-    public float Price { get; set; }
-    public ICollection<string> Tags { get; set; } = [];
     public Guid VendorId { get; private set; }
     public string BrandName { get; set; } = string.Empty;
     public Guid CategoryId { get; set; }
@@ -30,11 +25,7 @@ public class Product : Entity
     string longDescription,
     string shortDescription,
     WeightUnit weightUnit,
-    float weight,
     DimensionUnit dimensionUnit,
-    float width,
-    float length,
-    float height,
     ICollection<string> tags,
     Guid vendorId,
     string brandName,
@@ -48,11 +39,7 @@ public class Product : Entity
             ShortDescription = shortDescription,
             CreatedOn = DateTime.UtcNow,
             weightUnit = weightUnit,
-            weight = weight,
             dimensionUnit = dimensionUnit,
-            Width = width,
-            Length = length,
-            Height = height,
             Tags = tags,
             VendorId = vendorId,
             BrandName = brandName,
@@ -66,11 +53,7 @@ public class Product : Entity
     string? longDescription,
     string? shortDescription,
     WeightUnit? weightUnit,
-    float? weight,
     DimensionUnit? dimensionUnit,
-    float? width,
-    float? length,
-    float? height,
     ICollection<string>? tags)
     {
         if (productName is not null)
@@ -85,20 +68,8 @@ public class Product : Entity
         if (weightUnit is not null)
             this.weightUnit = weightUnit.Value;
 
-        if (weight is not null)
-            this.weight = weight.Value;
-
         if (dimensionUnit is not null)
             this.dimensionUnit = dimensionUnit.Value;
-
-        if (width is not null)
-            Width = width.Value;
-
-        if (length is not null)
-            Length = length.Value;
-
-        if (height is not null)
-            Height = height.Value;
 
         if (tags is not null)
             Tags = tags;
