@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Modules.Common.Application.Extensions;
 using Modules.Orders.Application.UseCases.PaginateBrands;
 using Modules.Orders.Application.UseCases.UpdateBrand;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -22,16 +23,16 @@ public class BrandEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? nameField = null) =>
+        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int page_number = 1, [FromQuery] int page_size = 10, [FromQuery] string? name_field = null, [FromQuery] Language lang_code = Language.en) =>
         {
-            var result = await sender.Send(new PaginateBrandsQuery(pageNumber, pageSize, nameField));
+            var result = await sender.Send(new PaginateBrandsQuery(page_number, page_size, name_field, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapPut("{name}", async ([FromRoute] string name, [FromBody] UpdateBrandRequestDto request, [FromServices] ISender sender) =>
+        group.MapPut("{id}", async ([FromRoute] Guid id, [FromBody] UpdateBrandRequestDto request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(
-            new UpdateBrandCommand(name,
+            new UpdateBrandCommand(id,
             request.LogoUrl,
             request.Description,
             request.Featured,

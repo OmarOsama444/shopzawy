@@ -1,4 +1,3 @@
-using System.Globalization;
 using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
@@ -9,39 +8,49 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.UpdateProduct;
 
+public record LocalizedText(IDictionary<Language, string> translations);
 public record UpdateProductCommand(
-    Guid productId,
-    string? productName,
-    string? longDescription,
-    string? shortDescription,
-    string? imageUrl,
-    WeightUnit? weightUnit,
-    float? weight,
-    float? price,
-    DimensionUnit? dimensionUnit,
-    float? width,
-    float? length,
-    float? height,
+    Guid product_id,
+    LocalizedText product_names,
+    LocalizedText long_descriptions,
+    LocalizedText short_descriptions,
+    WeightUnit? weight_unit,
+    DimensionUnit? dimension_unit,
     ICollection<string>? tags) : ICommand<Guid>;
 
-public sealed class UpdateProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork) : ICommandHandler<UpdateProductCommand, Guid>
+public sealed class UpdateProductCommandHandler(
+    IProductRepository productRepository,
+    IProductTranslationsRepository productTranslationsRepository,
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateProductCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.productId);
+        var product = await productRepository.GetByIdAsync(request.product_id);
         if (product is null)
-            return new ProductNotFoundException(request.productId);
+            return new ProductNotFoundException(request.product_id);
         product.Update(
-            request.productName,
-            request.longDescription,
-            request.shortDescription,
-            request.weightUnit,
-            request.weight,
-            request.dimensionUnit,
-            request.width,
-            request.length,
-            request.height,
+            request.weight_unit,
+            request.dimension_unit,
             request.tags);
+        var keys =
+            request.product_names.translations.Keys
+            .Union(request.long_descriptions.translations.Keys)
+            .Union(request.short_descriptions.translations.Keys);
+        foreach (Language langCode in keys)
+        {
+            var productTranslation = await productTranslationsRepository.GetByIdAndLang(request.product_id, langCode);
+            if (productTranslation is null)
+                return new ProductTranslationNotFound(request.product_id, langCode);
+            productTranslation.Update(
+                request.product_names.translations.TryGetValue(langCode, out string? name) ? name : null,
+                request.long_descriptions.translations.TryGetValue(langCode, out string? long_description) ? long_description : null,
+                request.short_descriptions.translations.TryGetValue(langCode, out string? short_description) ? short_description : null
+                );
+            productTranslationsRepository.Update(productTranslation);
+        }
+
+        productRepository.Update(product);
+
         await unitOfWork.SaveChangesAsync();
         return product.Id;
     }
@@ -51,33 +60,12 @@ internal class UpdateProductCommandValidator : AbstractValidator<UpdateProductCo
 {
     public UpdateProductCommandValidator()
     {
-        RuleFor(c => c.productId).NotEmpty();
-        RuleFor(c => c.productName)
+        RuleFor(c => c.product_id).NotEmpty();
+        RuleFor(c => c.weight_unit)
             .NotEmpty()
-            .When(x => !string.IsNullOrEmpty(x.productName));
-        RuleFor(c => c.longDescription)
-            .MinimumLength(10)
-            .When(x => !string.IsNullOrEmpty(x.longDescription));
-        RuleFor(c => c.shortDescription)
-            .MinimumLength(10)
-            .When(x => !string.IsNullOrEmpty(x.shortDescription));
-        RuleFor(c => c.weightUnit)
+            .When(x => x.weight_unit != null);
+        RuleFor(c => c.dimension_unit)
             .NotEmpty()
-            .When(x => x.weightUnit != null);
-        RuleFor(c => c.weight)
-            .NotEmpty()
-            .When(x => x.weight != null);
-        RuleFor(c => c.dimensionUnit)
-            .NotEmpty()
-            .When(x => x.dimensionUnit != null);
-        RuleFor(c => c.width)
-            .NotEmpty()
-            .When(x => x.width != null);
-        RuleFor(c => c.height)
-            .NotEmpty()
-            .When(x => x.height != null);
-        RuleFor(c => c.length)
-            .NotEmpty()
-            .When(x => x.length != null);
+            .When(x => x.dimension_unit != null);
     }
 }

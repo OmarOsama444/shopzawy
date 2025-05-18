@@ -1,11 +1,12 @@
 using Modules.Orders.Domain.Entities;
+using Modules.Orders.Domain.ValueObjects;
 using Modules.Users.Application.Abstractions;
 
 namespace Modules.Orders.Domain.Repositories;
 
 public interface IBrandRepository : IRepository<Brand>
 {
-    public Task<ICollection<BrandResponse>> Paginate(int pageNumber, int pageSize, string? nameField);
+    public Task<ICollection<BrandResponse>> Paginate(int pageNumber, int pageSize, string? nameField, Language langCode);
     public Task<int> TotalBrands(string? namefiler);
 }
 

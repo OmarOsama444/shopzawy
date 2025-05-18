@@ -1585,7 +1585,7 @@
         "runtime": {
           "Modules.Common.Application.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1597,7 +1597,7 @@
         "runtime": {
           "Modules.Common.Domain.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1619,7 +1619,7 @@
         "runtime": {
           "Modules.Common.Infrastructure.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1631,7 +1631,7 @@
         "runtime": {
           "Modules.Common.Presentation.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1668,7 +1668,7 @@
         "runtime": {
           "Modules.Orders.Infrastructure.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1680,7 +1680,7 @@
         "runtime": {
           "Modules.Orders.Presentation.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1692,7 +1692,7 @@
         "runtime": {
           "Modules.Users.Application.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1703,7 +1703,7 @@
         "runtime": {
           "Modules.Users.Domain.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1719,7 +1719,7 @@
         "runtime": {
           "Modules.Users.Infrastructure.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -1732,7 +1732,7 @@
         "runtime": {
           "Modules.Users.Presentation.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       }

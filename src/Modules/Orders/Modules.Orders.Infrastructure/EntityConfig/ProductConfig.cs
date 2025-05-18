@@ -20,6 +20,11 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.ProductId);
 
         builder
+            .HasMany(p => p.ProductTranslations)
+            .WithOne(pt => pt.Product)
+            .HasForeignKey(pt => pt.ProductId);
+
+        builder
             .HasIndex(p => p.CreatedOn);
 
         builder

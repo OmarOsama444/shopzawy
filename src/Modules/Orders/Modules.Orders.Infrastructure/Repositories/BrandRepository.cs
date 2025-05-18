@@ -4,6 +4,7 @@ using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Users.Infrastructure.Repositories;
 
@@ -11,8 +12,11 @@ namespace Modules.Orders.Infrastructure.Repositories;
 
 public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) : Repository<Brand, OrdersDbContext>(ordersDbContext), IBrandRepository
 {
-    public async Task<ICollection<BrandResponse>> Paginate(int pageNumber, int pageSize, string? nameField)
+    // todo add translation here
+    public async Task<ICollection<BrandResponse>> Paginate(int pageNumber, int pageSize, string? nameField, Language langCode)
     {
+        if (!string.IsNullOrEmpty(nameField))
+            nameField = nameField + "%";
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
@@ -30,7 +34,7 @@ public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFacto
             Orders.Product AS P
         ON P.Brand_Name = B.Brand_Name
         WHERE
-            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField || '%')
+            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField )
         GROUP BY
             B.Brand_Name, B.Logo_Url, B.Description, B.Featured, B.Active
         ORDER BY

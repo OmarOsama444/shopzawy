@@ -50,12 +50,17 @@ public class CategoryEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
-        group.MapPut("{id}", async ([FromRoute] Guid id, [FromBody] UpdateCategoryRequestDto request, ISender sender) =>
+        group.MapPut("{id}", async (
+            [FromServices] ISender sender,
+            [FromRoute] Guid id,
+            [FromBody] UpdateCategoryRequestDto request) =>
         {
             var result = await sender.Send(new UpdateCategoryCommand(
                 id,
                 request.order,
-                request.category_lang_data));
+                new(request?.names?.translations!),
+                new(request?.descriptions?.translations!),
+                new(request?.image_urls?.translations!)));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
@@ -69,7 +74,13 @@ public class CategoryEndpoints : IEndpoint
         });
 
     }
+
+    public record LocalizedText(IDictionary<Language, string> translations);
     public record CreateCategorySpecRequestDto(ICollection<Guid> Ids);
-    public record UpdateCategoryRequestDto(int? order, IDictionary<Language, CategoryLangData> category_lang_data);
+    public record UpdateCategoryRequestDto(
+        int? order,
+        LocalizedText names,
+        LocalizedText descriptions,
+        LocalizedText image_urls);
 
 }

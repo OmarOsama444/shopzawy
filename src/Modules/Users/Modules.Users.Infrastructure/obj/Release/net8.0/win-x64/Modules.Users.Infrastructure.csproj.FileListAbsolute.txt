@@ -1,6 +1,0 @@
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.csproj.AssemblyReference.cache
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.AssemblyInfoInputs.cache
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.AssemblyInfo.cs
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.csproj.CoreCompileInputs.cache
-C:\Users\omaro\OneDrive\Desktop\SkillHive\SkillHive\src\Modules\Users\Modules.Users.Infrastructure\obj\Release\net8.0\win-x64\Modules.Users.Infrastructure.sourcelink.json

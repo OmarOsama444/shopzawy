@@ -11,10 +11,13 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.UpdateCategory;
 
+public record LocalizedText(IDictionary<Language, string?> translations);
 public record UpdateCategoryCommand(
     Guid id,
     int? order,
-    IDictionary<Language, CategoryLangData> category_lang_data) : ICommand;
+    LocalizedText names,
+    LocalizedText descriptions,
+    LocalizedText image_urls) : ICommand;
 
 public sealed class UpdateCategoryCommandHandler(
     ICategoryRepository categoryRepository,
@@ -28,15 +31,25 @@ public sealed class UpdateCategoryCommandHandler(
         if (category is null)
             return new CategoryNotFoundException(request.id);
         category.Update(request.order);
-        foreach (var langData in request.category_lang_data)
+        var keyMix =
+            request.names.translations.Keys
+            .Union(request.descriptions.translations.Keys)
+            .Union(request.image_urls.translations.Keys);
+
+        foreach (Language langCode in keyMix)
         {
-            CategoryTranslation? categoryTranslation = await categoryTranslationRepository.GetByCategoryIdAndLangCode(request.id, langData.Key);
-            CategoryLangData categoryLangData = langData.Value;
+            CategoryTranslation? categoryTranslation = await
+                categoryTranslationRepository
+                    .GetByIdAndLang(request.id, langCode);
             if (categoryTranslation == null)
-                return new CategoryTranslationNotFound(request.id, langData.Key);
+                return new CategoryTranslationNotFound(request.id, langCode);
             else
             {
-                categoryTranslation.Update(categoryLangData.name, categoryLangData.description, categoryLangData.image_url);
+                categoryTranslation.Update(
+                    request.names.translations.TryGetValue(langCode, out string? name) ? name : null,
+                    request.descriptions.translations.TryGetValue(langCode, out string? description) ? description : null,
+                    request.image_urls.translations.TryGetValue(langCode, out string? imageUrl) ? imageUrl : null
+                    );
                 categoryTranslationRepository.Update(categoryTranslation);
             }
         }
@@ -50,41 +63,10 @@ internal class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategory
     public UpdateCategoryCommandValidator()
     {
         RuleFor(c => c.id).NotEmpty();
-        RuleForEach(c => c.category_lang_data)
-            .SetValidator(new CategoryLangDataEntryValidator());
+        RuleFor(c => c.order).NotEmpty();
+        RuleForEach(x => x.names.translations.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
+        RuleForEach(x => x.image_urls.translations.Values).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.descriptions.translations.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
     }
-}
-public record CategoryLangData(string? name, string? description, string? image_url);
-internal class CategoryLangDataEntryValidator : AbstractValidator<KeyValuePair<Language, CategoryLangData>>
-{
-    public CategoryLangDataEntryValidator()
-    {
-        RuleFor(x => x.Key)
-            .NotEmpty();
-        RuleFor(x => x.Value)
-            .NotEmpty()
-            .SetValidator(new CategoryLangDataValidator());
-    }
-}
 
-internal class CategoryLangDataValidator : AbstractValidator<CategoryLangData>
-{
-    public CategoryLangDataValidator()
-    {
-        RuleFor(x => x.name)
-            .NotEmpty()
-            .MinimumLength(3)
-            .MaximumLength(100)
-            .When(x => !string.IsNullOrEmpty(x.image_url));
-        RuleFor(x => x.image_url)
-            .NotEmpty()
-            .Must(UrlValidator.Must!)
-            .WithMessage(UrlValidator.Message)
-            .When(x => !string.IsNullOrEmpty(x.image_url));
-        RuleFor(x => x.description)
-            .NotEmpty()
-            .MinimumLength(10)
-            .MaximumLength(500)
-            .When(x => !String.IsNullOrEmpty(x.image_url));
-    }
 }

@@ -431,7 +431,7 @@
         "runtime": {
           "Modules.Common.Application.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -443,7 +443,7 @@
         "runtime": {
           "Modules.Common.Domain.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },

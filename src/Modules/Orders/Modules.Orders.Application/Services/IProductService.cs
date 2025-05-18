@@ -6,28 +6,28 @@ namespace Modules.Orders.Application.Services;
 public interface IProductService
 {
         public Task<Result<Guid>> CreateProduct(
-           string productName,
-           string longDescription,
-           string shortDescription,
-           WeightUnit weightUnit,
-           DimensionUnit dimensionUnit,
-           ICollection<string> tags,
-           Guid vendorId,
-           string brandName,
-           Guid categoryId);
+                IDictionary<Language, string> product_name,
+                IDictionary<Language, string> long_description,
+                IDictionary<Language, string> short_description,
+                WeightUnit weightUnit,
+                DimensionUnit dimensionUnit,
+                ICollection<string> tags,
+                Guid vendorId,
+                Guid brandId,
+                Guid categoryId);
         public Task<Result<ICollection<Guid>>> CreateProductItems(
          Guid productId,
          ICollection<product_item> product_Items);
         public Task<Result<Guid>> CreateProductWithItem(
-                string product_name,
-                string long_description,
-                string short_description,
+                IDictionary<Language, string> product_name,
+                IDictionary<Language, string> long_description,
+                IDictionary<Language, string> short_description,
                 WeightUnit weight_unit,
                 DimensionUnit dimension_unit,
                 ICollection<string> tags,
                 Guid vendor_id,
-                string brand_name,
-                Guid categoryId,
+                Guid brand_id,
+                Guid category_id,
                 ICollection<product_item> product_items);
 
 

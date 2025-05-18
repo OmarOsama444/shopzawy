@@ -9,11 +9,12 @@ public class BrandConfig : IEntityTypeConfiguration<Brand>
 {
     public void Configure(EntityTypeBuilder<Brand> builder)
     {
-        builder.HasKey(b => b.BrandName);
-        builder.Property(b => b.BrandName).HasMaxLength(100);
+        builder.HasKey(b => b.Id);
         builder.HasMany(b => b.Products)
             .WithOne(p => p.Brand)
-            .HasForeignKey(p => p.BrandName);
-
+            .HasForeignKey(p => p.BrandId);
+        builder.HasMany(b => b.BrandTranslations)
+            .WithOne(b => b.Brand)
+            .HasForeignKey(b => b.BrandId);
     }
 }

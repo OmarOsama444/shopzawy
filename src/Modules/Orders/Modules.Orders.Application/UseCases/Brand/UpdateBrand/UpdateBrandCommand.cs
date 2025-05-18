@@ -12,7 +12,7 @@ using Modules.Orders.Domain.Repositories;
 namespace Modules.Orders.Application.UseCases.UpdateBrand;
 
 public record UpdateBrandCommand(
-    string BrandName,
+    Guid BrandId,
     string? LogoUrl,
     string? Description,
     bool? Featured,
@@ -22,9 +22,9 @@ public sealed class UpdateBrandCommandHandler(IBrandRepository brandRepository, 
 {
     public async Task<Result> Handle(UpdateBrandCommand request, CancellationToken cancellationToken)
     {
-        Brand? brand = await brandRepository.GetByIdAsync(request.BrandName);
+        Brand? brand = await brandRepository.GetByIdAsync(request.BrandId);
         if (brand is null)
-            return new BrandNotFoundException(request.BrandName);
+            return new BrandNotFoundException(request.BrandId);
         brand.Update(request.Description, request.LogoUrl, request.Featured, request.Active);
         brandRepository.Update(brand);
         await unitOfWork.SaveChangesAsync();
@@ -36,7 +36,7 @@ internal class UpdateBrandCommandValidator : AbstractValidator<UpdateBrandComman
 {
     public UpdateBrandCommandValidator()
     {
-        RuleFor(b => b.BrandName).NotEmpty();
+        RuleFor(b => b.BrandId).NotEmpty();
         RuleFor(b => b.LogoUrl!).Must(UrlValidator.Must).WithMessage(UrlValidator.Message).When(b => !String.IsNullOrEmpty(b.LogoUrl));
     }
 }

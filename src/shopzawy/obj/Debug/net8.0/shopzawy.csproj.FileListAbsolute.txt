@@ -1,5 +1,7 @@
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\appsettings.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\modules.users.development.json
+C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\modules.users.json
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\shopzawy.exe
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\shopzawy.deps.json
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\shopzawy.runtimeconfig.json
@@ -214,8 +216,6 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\Modules.Users.Presentation.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.csproj.AssemblyReference.cache
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.AssemblyInfoInputs.cache
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.AssemblyInfo.cs
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.csproj.CoreCompileInputs.cache
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.MvcApplicationPartsAssemblyInfo.cache
@@ -234,5 +234,3 @@ C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.pdb
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\shopzawy.genruntimeconfig.cache
 C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\obj\Debug\net8.0\ref\shopzawy.dll
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\modules.users.development.json
-C:\Users\omaro\OneDrive\Desktop\SkillHive\shopzawy\src\shopzawy\bin\Debug\net8.0\modules.users.json

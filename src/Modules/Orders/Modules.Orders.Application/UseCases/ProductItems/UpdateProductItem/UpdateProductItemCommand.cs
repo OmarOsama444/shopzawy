@@ -1,3 +1,4 @@
+using System.Data;
 using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
@@ -13,6 +14,10 @@ public record UpdateProductItemCommand(
     string? stockKeepingUnit,
     int? quantityInStock,
     float? price,
+    float? width,
+    float? length,
+    float? height,
+    float? weight,
     ICollection<string>? urls
 ) : ICommand<Guid>;
 
@@ -32,6 +37,10 @@ public sealed class UpdateProductItemCommandHandler(
             request.stockKeepingUnit,
             request.quantityInStock,
             request.price,
+            request.width,
+            request.length,
+            request.height,
+            request.weight,
             request.urls);
         await unitOfWork.SaveChangesAsync();
         return request.productItemId;
@@ -44,7 +53,11 @@ internal class UpdateProductItemCommandValidator : AbstractValidator<UpdateProdu
     {
         RuleFor(x => x.productItemId).NotEmpty();
         RuleFor(x => x.quantityInStock).GreaterThan(0).When(x => x != null);
-        RuleFor(x => x.price).GreaterThan(0).When(x => x != null);
+        RuleFor(x => x.price).GreaterThan(0).When(x => x.price.HasValue);
+        RuleFor(x => x.width).GreaterThan(0).When(x => x.width.HasValue);
+        RuleFor(x => x.height).GreaterThan(0).When(x => x.height.HasValue);
+        RuleFor(x => x.length).GreaterThan(0).When(x => x.length.HasValue);
+        RuleFor(x => x.weight).GreaterThan(0).When(x => x.weight.HasValue);
         RuleForEach(x => x.urls)
         .Must(UrlValidator.Must)
         .WithMessage(UrlValidator.Message);

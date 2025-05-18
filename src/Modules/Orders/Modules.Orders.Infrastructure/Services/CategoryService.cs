@@ -20,16 +20,18 @@ public class CategoryService
         int Order,
         Guid? parentCategoryId,
         ICollection<Guid> Ids,
-        IDictionary<Language, CategoryLangData> categoryLangPacks)
+        IDictionary<Language, string> names,
+        IDictionary<Language, string> descriptions,
+        IDictionary<Language, string> imageUrls)
     {
-        foreach (var categoryLangPack in categoryLangPacks)
+        foreach (Language langCode in names.Keys)
         {
             if (await context.CategoryTranslations
                 .AnyAsync(
-                    x => x.LangCode == categoryLangPack.Key
-                    && x.Name == categoryLangPack.Value.name)
+                    x => x.LangCode == langCode
+                    && x.Name == names[langCode])
                 )
-                return new CategoryNameConflictException(categoryLangPack.Value.name);
+                return new CategoryNameConflictException(names[langCode]);
         }
 
         try
@@ -72,14 +74,14 @@ public class CategoryService
                 var categorySpec = CategorySpec.Create(category.Id, id);
                 categorySpecRepositroy.Add(categorySpec);
             }
-            foreach (var categoryLangPack in categoryLangPacks)
+            foreach (Language langCode in names.Keys)
             {
                 var categoryTranslation = CategoryTranslation.Create(
                     category.Id,
-                    categoryLangPack.Key,
-                    categoryLangPack.Value.name,
-                    categoryLangPack.Value.description,
-                    categoryLangPack.Value.image_url);
+                    langCode,
+                    names[langCode],
+                    descriptions[langCode],
+                    imageUrls[langCode]);
                 context.CategoryTranslations.Add(categoryTranslation);
             }
             await context.SaveChangesAsync();

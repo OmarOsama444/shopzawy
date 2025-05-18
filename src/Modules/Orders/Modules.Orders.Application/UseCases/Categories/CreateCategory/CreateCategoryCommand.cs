@@ -8,28 +8,16 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateCategory;
 
+public record CategoryLangData(string? name, string? description, string? image_url);
+public record LocalizedText(IDictionary<Language, string> translations);
 public record CreateCategoryCommand(
     int order,
     Guid? parent_category_id,
     ICollection<Guid> spec_ids,
-    IDictionary<Language, CategoryLangData> category_data
+    LocalizedText names,
+    LocalizedText descriptions,
+    LocalizedText image_urls
 ) : ICommand<Guid>;
-
-//  {
-//      order : 1 , 
-//      parent_id : 12414-1341341-2354135 , 
-//      category_date : {
-//          "en" : {
-//              name : "my accecories"
-//          } ,
-//          "ar" : {
-//              name : "اكسسواراتي"
-//          } ,
-//          "fr" : {
-//              name : "mo accecoثies"
-//          } ,
-//      }
-//  }
 public class CreateCategoryCommandHandler(
     ICategoryService categoryService
     ) : ICommandHandler<CreateCategoryCommand, Guid>
@@ -40,7 +28,9 @@ public class CreateCategoryCommandHandler(
             request.order,
             request.parent_category_id,
             request.spec_ids,
-            request.category_data);
+            request.names.translations,
+            request.descriptions.translations,
+            request.image_urls.translations);
     }
 }
 
@@ -49,33 +39,23 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
     public CreateCategoryCommandValidator()
     {
         RuleFor(c => c.order).NotEmpty();
-        RuleFor(c => c.category_data)
-            .NotEmpty()
-            .Must(LanguageValidator.Must)
-            .WithMessage(LanguageValidator.Message);
-        RuleForEach(c => c.category_data)
-            .SetValidator(new CategoryLangDataEntryValidator());
-    }
-}
+        RuleForEach(x => x.names.translations.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
+        RuleForEach(x => x.image_urls.translations.Values).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.descriptions.translations.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
+        RuleFor(c => c)
+            .Must(HaveConsistentLanguageKeys)
+            .WithMessage("All localized fields must have the same set of language codes (keys).");
 
-internal class CategoryLangDataEntryValidator : AbstractValidator<KeyValuePair<Language, CategoryLangData>>
-{
-    public CategoryLangDataEntryValidator()
-    {
-        RuleFor(x => x.Key)
-            .NotEmpty();
-        RuleFor(x => x.Value)
-            .NotEmpty()
-            .SetValidator(new CategoryLangDataValidator());
     }
-}
-
-internal class CategoryLangDataValidator : AbstractValidator<CategoryLangData>
-{
-    public CategoryLangDataValidator()
+    private bool HaveConsistentLanguageKeys(CreateCategoryCommand cmd)
     {
-        RuleFor(x => x.name).NotEmpty().MinimumLength(3).MaximumLength(100);
-        RuleFor(x => x.image_url).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
-        RuleFor(x => x.description).NotEmpty().MinimumLength(10).MaximumLength(500);
+        var keys1 = cmd.names?.translations?.Keys?.OrderBy(k => k).ToArray();
+        var keys2 = cmd.descriptions?.translations?.Keys?.OrderBy(k => k).ToArray();
+        var keys3 = cmd.image_urls?.translations?.Keys?.OrderBy(k => k).ToArray();
+
+        if (keys1 == null || keys2 == null || keys3 == null)
+            return false;
+
+        return keys1.SequenceEqual(keys2) && keys1.SequenceEqual(keys3);
     }
 }

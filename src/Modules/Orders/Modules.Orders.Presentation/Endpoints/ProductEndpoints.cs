@@ -49,6 +49,10 @@ public class ProductEndpoints : IEndpoint
                     request.stock_keeping_unit,
                     request.quantity_in_stock,
                     request.price,
+                    request.width,
+                    request.length,
+                    request.height,
+                    request.weight,
                     request.image_urls));
         });
 
@@ -69,4 +73,8 @@ public record ProductItemRequest(
     string? stock_keeping_unit,
     int? quantity_in_stock,
     float? price,
+    float? width,
+    float? length,
+    float? height,
+    float? weight,
     ICollection<string>? image_urls);

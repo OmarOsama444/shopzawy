@@ -10,7 +10,9 @@ public interface ICategoryService
         int Order,
         Guid? parentCategoryId,
         ICollection<Guid> Ids,
-        IDictionary<Language, CategoryLangData> categoryLangData
+        IDictionary<Language, string> names,
+        IDictionary<Language, string> descriptions,
+        IDictionary<Language, string> imageUrls
     );
 
 }

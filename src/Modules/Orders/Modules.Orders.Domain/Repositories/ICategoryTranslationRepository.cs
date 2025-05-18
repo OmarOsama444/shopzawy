@@ -4,7 +4,6 @@ using Modules.Users.Application.Abstractions;
 
 namespace Modules.Orders.Domain.Repositories;
 
-public interface ICategoryTranslationRepository : IRepository<CategoryTranslation>
+public interface ICategoryTranslationRepository : IRepository<CategoryTranslation>, ITranslationRepository<CategoryTranslation, Guid>
 {
-    public Task<CategoryTranslation?> GetByCategoryIdAndLangCode(Guid id, Language langCode);
 }

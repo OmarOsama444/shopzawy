@@ -15,14 +15,14 @@ namespace Modules.Orders.Infrastructure.Services;
 public class ProductService(OrdersDbContext ordersDbContext) : IProductService
 {
     public async Task<Result<Guid>> CreateProduct(
-        string productName,
-        string longDescription,
-        string shortDescription,
+        IDictionary<Language, string> product_name,
+        IDictionary<Language, string> long_description,
+        IDictionary<Language, string> short_description,
         WeightUnit weightUnit,
         DimensionUnit dimensionUnit,
         ICollection<string> tags,
         Guid vendorId,
-        string brandName,
+        Guid brandId,
         Guid categoryId)
     {
         Category? category = await ordersDbContext
@@ -35,22 +35,30 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
             return new ConflictException("Category.Conflict", "you can only add products to leaf categorys");
         if (!await ordersDbContext.Vendors.AnyAsync(x => x.Id == vendorId))
             return new VendorNotFoundException(vendorId);
-        if (!await ordersDbContext.Brands.AnyAsync(x => x.BrandName == brandName))
-            return new BrandNotFoundException(brandName);
+        if (!await ordersDbContext.Brands.AnyAsync(x => x.Id == brandId))
+            return new BrandNotFoundException(brandId);
 
         var product = Product.Create(
-            productName,
-            longDescription,
-            shortDescription,
             weightUnit,
             dimensionUnit,
             tags,
             vendorId,
-            brandName,
+            brandId,
             categoryId
         );
 
         ordersDbContext.Products.Add(product);
+        foreach (Language langCode in product_name.Keys)
+        {
+            ProductTranslation productTranslation = ProductTranslation.Create(
+                productId: product.Id,
+                langCode: langCode,
+                productName: product_name[langCode],
+                longDescription: long_description[langCode],
+                shortDescription: short_description[langCode]);
+
+            ordersDbContext.ProductTranslations.Add(productTranslation);
+        }
         await ordersDbContext.SaveChangesAsync();
 
         return product.Id;
@@ -117,15 +125,15 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
     }
 
     public async Task<Result<Guid>> CreateProductWithItem(
-        string product_name,
-        string long_description,
-        string short_description,
+        IDictionary<Language, string> product_name,
+        IDictionary<Language, string> long_description,
+        IDictionary<Language, string> short_description,
         WeightUnit weight_unit,
         DimensionUnit dimension_unit,
         ICollection<string> tags,
         Guid vendor_id,
-        string brand_name,
-        Guid categoryId,
+        Guid brand_id,
+        Guid category_id,
         ICollection<product_item> product_items)
     {
         await using var transaction = await ordersDbContext.Database.BeginTransactionAsync();
@@ -140,8 +148,8 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
                 dimension_unit,
                 tags,
                 vendor_id,
-                brand_name,
-                categoryId
+                brand_id,
+                category_id
             );
 
             if (!productResult.isSuccess)
