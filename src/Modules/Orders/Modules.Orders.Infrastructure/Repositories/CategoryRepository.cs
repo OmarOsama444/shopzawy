@@ -132,11 +132,11 @@ public class CategoryRepository(
             C.order AS {nameof(MainCategoryResponse.order)} ,
             CT.name AS {nameof(MainCategoryResponse.CategoryName)} ,
             CT.description AS {nameof(MainCategoryResponse.Description)} ,
-            CT.ImageUrl AS {nameof(MainCategoryResponse.ImageUrl)} 
+            CT.Image_url AS {nameof(MainCategoryResponse.ImageUrl)} 
         FROM
-            category AS C
+            {Schemas.Orders}.category AS C
         LEFT JOIN
-            category_translation AS CT
+            {Schemas.Orders}.category_translation AS CT
         ON
             C.id = Ct.Category_id
         WHERE
@@ -155,36 +155,39 @@ public class CategoryRepository(
 
     public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
+        if (!string.IsNullOrEmpty(nameFilter))
+            nameFilter = $"%{nameFilter}%";
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
         $"""
         SELECT 
+            C.id as {nameof(CategoryResponse.Id)},
             CT.name as {nameof(CategoryResponse.CategoryName)},
             C.Order as {nameof(CategoryResponse.Order)},
-            C.Parent_Category_Name as {nameof(CategoryResponse.ParentName)},
-            COUNT(DISTINCT CC.Category_Name) AS {nameof(CategoryResponse.NumberOfChildren)},
+            C.parent_category_id as {nameof(CategoryResponse.parentCategoryId)} ,
+            COUNT(DISTINCT CC.id) AS {nameof(CategoryResponse.NumberOfChildren)},
             COUNT(DISTINCT P.Id) AS {nameof(CategoryResponse.NumberOfProducts)}
         FROM 
             {Schemas.Orders}.Category AS C
         LEFT JOIN 
             {Schemas.Orders}.Category AS CC 
         ON 
-            CC.parent_category_id = C.category_id
+            CC.parent_category_id = C.id
         LEFT JOIN 
             {Schemas.Orders}.Product AS P 
         ON 
-            P.category_id = C.category_id
+            P.category_id = C.id
         LEFT JOIN
             {Schemas.Orders}.category_translation AS CT
         ON
-            CT.category_id = C.id AND CT.lang_code == @langCode
+            CT.category_id = C.id AND CT.lang_code = @langCode
         WHERE 
-            (@nameFilter IS NULL OR CT.name ILIKE @nameFilter || '%')
+            (@nameFilter IS NULL OR CT.name ILIKE @nameFilter )
         GROUP BY 
-            C.category_id , C.Order, C.Parent_Category_id
+            C.id , C.Order, C.Parent_Category_id , CT.name
         ORDER BY 
-            C.category_id
+            C.order , C.id
         LIMIT @pageSize OFFSET @offset;
         """;
         var results = await dbConnection
@@ -201,17 +204,19 @@ public class CategoryRepository(
 
     public async Task<int> TotalCategories(string? nameFilter, Language langCode)
     {
+        if (!string.IsNullOrEmpty(nameFilter))
+            nameFilter = $"%{nameFilter}%";
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
         SELECT
-            COUNT(CT.name)
+            COUNT(*)
         FROM 
             {Schemas.Orders}.category_translation AS CT
         WHERE
-            CT.lang_code = langCode
-        &&
-            (@filter IS NULL OR CT.name ILIKE @filter || '%')
+            CT.lang_code = @langCode
+        AND
+            (@filter IS NULL OR CT.name ILIKE @filter )
         """;
         return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter, langCode });
     }

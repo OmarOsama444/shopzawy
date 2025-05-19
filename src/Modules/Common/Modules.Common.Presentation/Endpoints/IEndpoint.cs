@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Common.Presentation.Endpoints
 {
@@ -6,4 +7,6 @@ namespace Modules.Common.Presentation.Endpoints
     {
         void MapEndpoint(IEndpointRouteBuilder app);
     }
+    public record LocalizedText(IDictionary<Language, string> translations);
+
 }

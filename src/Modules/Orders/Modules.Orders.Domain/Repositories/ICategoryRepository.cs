@@ -31,7 +31,6 @@ public class CategoryResponse
     public string CategoryName { get; set; } = string.Empty;
     public int Order { get; set; }
     public Guid parentCategoryId { get; set; }
-    public string ParentName { get; set; } = string.Empty;
     public int NumberOfProducts { get; set; }
     public int NumberOfChildren { get; set; }
     public CategoryResponse()
@@ -42,14 +41,12 @@ public class CategoryResponse
         Guid id,
         string categoryName,
         int order,
-        string parentName,
         int numberOfProducts,
         int numberOfChildren)
     {
         Id = id;
         CategoryName = categoryName;
         Order = order;
-        ParentName = parentName;
         NumberOfProducts = numberOfProducts;
         NumberOfChildren = numberOfChildren;
     }

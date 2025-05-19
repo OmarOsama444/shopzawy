@@ -11,13 +11,12 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.UpdateCategory;
 
-public record LocalizedText(IDictionary<Language, string?> translations);
 public record UpdateCategoryCommand(
     Guid id,
     int? order,
-    LocalizedText names,
-    LocalizedText descriptions,
-    LocalizedText image_urls) : ICommand;
+    IDictionary<Language, string> names,
+    IDictionary<Language, string> descriptions,
+    IDictionary<Language, string> imageUrls) : ICommand;
 
 public sealed class UpdateCategoryCommandHandler(
     ICategoryRepository categoryRepository,
@@ -32,9 +31,9 @@ public sealed class UpdateCategoryCommandHandler(
             return new CategoryNotFoundException(request.id);
         category.Update(request.order);
         var keyMix =
-            request.names.translations.Keys
-            .Union(request.descriptions.translations.Keys)
-            .Union(request.image_urls.translations.Keys);
+            request.names.Keys
+            .Union(request.descriptions.Keys)
+            .Union(request.imageUrls.Keys);
 
         foreach (Language langCode in keyMix)
         {
@@ -46,9 +45,9 @@ public sealed class UpdateCategoryCommandHandler(
             else
             {
                 categoryTranslation.Update(
-                    request.names.translations.TryGetValue(langCode, out string? name) ? name : null,
-                    request.descriptions.translations.TryGetValue(langCode, out string? description) ? description : null,
-                    request.image_urls.translations.TryGetValue(langCode, out string? imageUrl) ? imageUrl : null
+                    request.names.TryGetValue(langCode, out string? name) ? name : null,
+                    request.descriptions.TryGetValue(langCode, out string? description) ? description : null,
+                    request.imageUrls.TryGetValue(langCode, out string? imageUrl) ? imageUrl : null
                     );
                 categoryTranslationRepository.Update(categoryTranslation);
             }
@@ -64,9 +63,9 @@ internal class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategory
     {
         RuleFor(c => c.id).NotEmpty();
         RuleFor(c => c.order).NotEmpty();
-        RuleForEach(x => x.names.translations.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
-        RuleForEach(x => x.image_urls.translations.Values).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
-        RuleForEach(x => x.descriptions.translations.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
+        RuleForEach(x => x.names.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
+        RuleForEach(x => x.imageUrls.Values).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.descriptions.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
     }
 
 }

@@ -37,16 +37,15 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 columns: table => new
                 {
-                    brand_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     logo_url = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
                     featured = table.Column<bool>(type: "boolean", nullable: false),
                     active = table.Column<bool>(type: "boolean", nullable: false),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_brand", x => x.brand_name);
+                    table.PrimaryKey("pk_brand", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +115,29 @@ namespace Modules.Orders.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_vendor", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "brand_translation",
+                schema: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    brand_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    lang_code = table.Column<int>(type: "integer", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_brand_translation", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_brand_translation_brand_brand_id",
+                        column: x => x.brand_id,
+                        principalSchema: "orders",
+                        principalTable: "brand",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,31 +245,23 @@ namespace Modules.Orders.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    product_name = table.Column<string>(type: "text", nullable: false),
-                    long_description = table.Column<string>(type: "text", nullable: false),
-                    short_description = table.Column<string>(type: "text", nullable: false),
+                    Tags = table.Column<string>(type: "TEXT", nullable: false),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     weight_unit = table.Column<int>(type: "integer", nullable: false),
-                    weight = table.Column<float>(type: "real", nullable: false),
                     dimension_unit = table.Column<int>(type: "integer", nullable: false),
-                    width = table.Column<float>(type: "real", nullable: false),
-                    length = table.Column<float>(type: "real", nullable: false),
-                    height = table.Column<float>(type: "real", nullable: false),
-                    price = table.Column<float>(type: "real", nullable: false),
-                    Tags = table.Column<string>(type: "TEXT", nullable: false),
                     vendor_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    brand_name = table.Column<string>(type: "character varying(100)", nullable: false),
+                    brand_id = table.Column<Guid>(type: "uuid", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_product", x => x.id);
                     table.ForeignKey(
-                        name: "fk_product_brand_brand_name",
-                        column: x => x.brand_name,
+                        name: "fk_product_brand_brand_id",
+                        column: x => x.brand_id,
                         principalSchema: "orders",
                         principalTable: "brand",
-                        principalColumn: "brand_name",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_product_category_category_id",
@@ -274,6 +288,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                     stock_keeping_unit = table.Column<string>(type: "text", nullable: false),
                     quantity_in_stock = table.Column<int>(type: "integer", nullable: false),
                     image_urls = table.Column<string>(type: "text", nullable: false),
+                    weight = table.Column<float>(type: "real", nullable: false),
+                    width = table.Column<float>(type: "real", nullable: false),
+                    length = table.Column<float>(type: "real", nullable: false),
+                    height = table.Column<float>(type: "real", nullable: false),
                     price = table.Column<float>(type: "real", nullable: false),
                     product_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -283,6 +301,30 @@ namespace Modules.Orders.Infrastructure.Migrations
                     table.PrimaryKey("pk_product_item", x => x.id);
                     table.ForeignKey(
                         name: "fk_product_item_product_product_id",
+                        column: x => x.product_id,
+                        principalSchema: "orders",
+                        principalTable: "product",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "product_translation",
+                schema: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    lang_code = table.Column<int>(type: "integer", nullable: false),
+                    product_name = table.Column<string>(type: "text", nullable: false),
+                    long_description = table.Column<string>(type: "text", nullable: false),
+                    short_description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_product_translation", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_product_translation_product_product_id",
                         column: x => x.product_id,
                         principalSchema: "orders",
                         principalTable: "product",
@@ -322,6 +364,13 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 table: "banner",
                 column: "active");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_brand_translation_brand_id_lang_code",
+                schema: "orders",
+                table: "brand_translation",
+                columns: new[] { "brand_id", "lang_code" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_category_order",
@@ -370,10 +419,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_product_brand_name",
+                name: "ix_product_brand_id",
                 schema: "orders",
                 table: "product",
-                column: "brand_name");
+                column: "brand_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_product_category_id",
@@ -416,6 +465,13 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 table: "product_item_options",
                 column: "category_specification_option_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_product_translation_product_id_lang_code",
+                schema: "orders",
+                table: "product_translation",
+                columns: new[] { "product_id", "lang_code" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_specification_option_specification_id",
@@ -465,6 +521,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders");
 
             migrationBuilder.DropTable(
+                name: "brand_translation",
+                schema: "orders");
+
+            migrationBuilder.DropTable(
                 name: "category_spec",
                 schema: "orders");
 
@@ -478,6 +538,10 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "product_item_options",
+                schema: "orders");
+
+            migrationBuilder.DropTable(
+                name: "product_translation",
                 schema: "orders");
 
             migrationBuilder.DropTable(

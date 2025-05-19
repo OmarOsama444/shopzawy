@@ -10,6 +10,7 @@ using Modules.Orders.Application.Services;
 using Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.UpdateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.DeleteProductItem;
+using Modules.Orders.Domain.ValueObjects;
 
 
 namespace Modules.Orders.Presentation.Endpoints;
@@ -20,9 +21,20 @@ public class ProductEndpoints : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/products").WithTags("Products");
-        group.MapPost("", async ([FromBody] CreateProductCommand request, [FromServices] ISender sender) =>
+        group.MapPost("", async ([FromBody] ProductCreateRequest request, [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(request);
+            var result = await sender.Send(new CreateProductCommand(
+                request.product_names.translations,
+                request.long_descriptions.translations,
+                request.short_descriptions.translations,
+                request.tags,
+                request.weight_unit,
+                request.dimension_unit,
+                request.vendor_id,
+                request.brand_id,
+                request.category_id,
+                request.product_items
+            ));
             return
                 result.isSuccess ?
                 Results.Ok(result.Value) :
@@ -68,7 +80,17 @@ public class ProductEndpoints : IEndpoint
     }
 
 }
-
+public record ProductCreateRequest(
+    LocalizedText product_names,
+    LocalizedText long_descriptions,
+    LocalizedText short_descriptions,
+    ICollection<string> tags,
+    WeightUnit weight_unit,
+    DimensionUnit dimension_unit,
+    Guid vendor_id,
+    Guid brand_id,
+    Guid category_id,
+    ICollection<product_item> product_items);
 public record ProductItemRequest(
     string? stock_keeping_unit,
     int? quantity_in_stock,

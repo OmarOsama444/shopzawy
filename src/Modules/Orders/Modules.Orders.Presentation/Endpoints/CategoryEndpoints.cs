@@ -21,9 +21,16 @@ public class CategoryEndpoints : IEndpoint
     {
         var group = app.MapGroup("api/categories").WithTags("Categories");
 
-        group.MapPost("", async ([FromBody] CreateCategoryCommand request, [FromServices] ISender sender) =>
+        group.MapPost("", async ([FromBody] CreateCategoryRequestDto request, [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(request);
+            var result = await sender.Send(new CreateCategoryCommand(
+                request.order,
+                request.parent_category_id,
+                request.spec_ids,
+                request.names.translations,
+                request.descriptions.translations,
+                request.image_urls.translations
+            ));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         });
 
@@ -58,9 +65,9 @@ public class CategoryEndpoints : IEndpoint
             var result = await sender.Send(new UpdateCategoryCommand(
                 id,
                 request.order,
-                new(request?.names?.translations!),
-                new(request?.descriptions?.translations!),
-                new(request?.image_urls?.translations!)));
+                request.names.translations,
+                request.descriptions.translations,
+                request.image_urls.translations));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
@@ -75,8 +82,15 @@ public class CategoryEndpoints : IEndpoint
 
     }
 
-    public record LocalizedText(IDictionary<Language, string> translations);
     public record CreateCategorySpecRequestDto(ICollection<Guid> Ids);
+    public record CreateCategoryRequestDto(
+        int order,
+        Guid? parent_category_id,
+        ICollection<Guid> spec_ids,
+        LocalizedText names,
+        LocalizedText descriptions,
+        LocalizedText image_urls
+    );
     public record UpdateCategoryRequestDto(
         int? order,
         LocalizedText names,

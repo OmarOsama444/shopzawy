@@ -7,18 +7,17 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateProduct;
 
-public record LocalizedText(IDictionary<Language, string> translations);
 public record CreateProductCommand(
-    LocalizedText product_names,
-    LocalizedText long_descriptions,
-    LocalizedText short_descriptions,
+    IDictionary<Language, string> productNames,
+    IDictionary<Language, string> longDescriptions,
+    IDictionary<Language, string> shortDescriptions,
     ICollection<string> tags,
-    WeightUnit weight_unit,
-    DimensionUnit dimension_unit,
-    Guid vendor_id,
-    Guid brand_id,
-    Guid category_id,
-    ICollection<product_item> product_items) : ICommand<Guid>;
+    WeightUnit weightUnit,
+    DimensionUnit dimensionUnit,
+    Guid vendorId,
+    Guid brandId,
+    Guid categoryId,
+    ICollection<product_item> productItems) : ICommand<Guid>;
 
 public sealed class CreateProductCommandHandler(
     IProductService productService) : ICommandHandler<CreateProductCommand, Guid>
@@ -27,16 +26,16 @@ public sealed class CreateProductCommandHandler(
     {
 
         var result = await productService.CreateProductWithItem(
-            request.product_names.translations,
-            request.long_descriptions.translations,
-            request.short_descriptions.translations,
-            request.weight_unit,
-            request.dimension_unit,
+            request.productNames,
+            request.longDescriptions,
+            request.shortDescriptions,
+            request.weightUnit,
+            request.dimensionUnit,
             request.tags,
-            request.vendor_id,
-            request.brand_id,
-            request.category_id,
-            request.product_items);
+            request.vendorId,
+            request.brandId,
+            request.categoryId,
+            request.productItems);
 
         return result;
     }
@@ -46,37 +45,37 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(c => c.product_names.translations)
+        RuleFor(c => c.productNames)
             .NotEmpty()
             .Must(LanguageValidator.Must)
             .WithMessage(LanguageValidator.Message);
 
-        RuleForEach(c => c.product_names.translations.Values)
+        RuleForEach(c => c.productNames.Values)
             .NotEmpty()
             .MinimumLength(10);
 
-        RuleFor(c => c.long_descriptions.translations)
+        RuleFor(c => c.longDescriptions)
             .NotEmpty()
             .Must(LanguageValidator.Must)
             .WithMessage(LanguageValidator.Message);
 
-        RuleForEach(c => c.long_descriptions.translations.Values)
+        RuleForEach(c => c.longDescriptions.Values)
             .NotEmpty()
             .MinimumLength(10);
 
-        RuleFor(c => c.short_descriptions.translations)
+        RuleFor(c => c.shortDescriptions)
             .NotEmpty()
             .Must(LanguageValidator.Must)
             .WithMessage(LanguageValidator.Message);
 
-        RuleForEach(c => c.short_descriptions.translations.Values)
+        RuleForEach(c => c.shortDescriptions.Values)
             .NotEmpty()
             .MinimumLength(10);
 
-        RuleFor(c => c.weight_unit).NotEmpty();
-        RuleFor(c => c.dimension_unit).NotEmpty();
-        RuleFor(c => c.product_items).NotEmpty();
-        RuleForEach(c => c.product_items)
+        RuleFor(c => c.weightUnit).NotEmpty();
+        RuleFor(c => c.dimensionUnit).NotEmpty();
+        RuleFor(c => c.productItems).NotEmpty();
+        RuleForEach(c => c.productItems)
             .SetValidator(new productItemValidator());
 
         RuleFor(x => x)
@@ -85,9 +84,9 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
     }
     private bool HaveConsistentLanguageKeys(CreateProductCommand cmd)
     {
-        var keys1 = cmd.product_names?.translations?.Keys?.OrderBy(k => k).ToArray();
-        var keys2 = cmd.long_descriptions?.translations?.Keys?.OrderBy(k => k).ToArray();
-        var keys3 = cmd.short_descriptions?.translations?.Keys?.OrderBy(k => k).ToArray();
+        var keys1 = cmd.productNames?.Keys?.OrderBy(k => k).ToArray();
+        var keys2 = cmd.longDescriptions?.Keys?.OrderBy(k => k).ToArray();
+        var keys3 = cmd.shortDescriptions?.Keys?.OrderBy(k => k).ToArray();
 
         if (keys1 == null || keys2 == null || keys3 == null)
             return false;
@@ -101,13 +100,14 @@ internal class productItemValidator : AbstractValidator<product_item>
     public productItemValidator()
     {
         RuleFor(x => x.stock_keeping_unit).NotEmpty();
-        RuleFor(x => x.quantity_in_stock).GreaterThan(0);
+        RuleFor(x => x.quantity_in_stock);
         RuleFor(x => x.price).GreaterThan(0);
         RuleFor(x => x.urls).NotEmpty();
-        RuleFor(c => c.weight).NotEmpty();
-        RuleFor(c => c.width).NotEmpty();
-        RuleFor(c => c.height).NotEmpty();
-        RuleFor(c => c.length).NotEmpty();
+        RuleForEach(x => x.urls).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(c => c.weight).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.width).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.height).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.length).NotEmpty().GreaterThan(0);
         RuleForEach(x => x.urls)
             .NotEmpty()
             .WithMessage("Urls Can't be empty")

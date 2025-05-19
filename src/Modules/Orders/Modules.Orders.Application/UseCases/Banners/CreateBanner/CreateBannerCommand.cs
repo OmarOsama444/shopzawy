@@ -1,4 +1,3 @@
-using System.Data;
 using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Application.Validators;
@@ -11,12 +10,12 @@ using Modules.Orders.Domain.ValueObjects;
 namespace Modules.Orders.Application.UseCases.Banners.CreateBanner;
 
 public record CreateBannerCommand(
-            string Title,
-            string Description,
-            string Link,
-            BannerPosition Position,
-            BannerSize Size,
-            bool Active) : ICommand<Guid>;
+            string title,
+            string description,
+            string link,
+            BannerPosition position,
+            BannerSize size,
+            bool active) : ICommand<Guid>;
 
 public sealed class CreateBannerCommandHandler(
     IBannerRepository bannerRepository,
@@ -24,7 +23,7 @@ public sealed class CreateBannerCommandHandler(
 {
     public async Task<Result<Guid>> Handle(CreateBannerCommand request, CancellationToken cancellationToken)
     {
-        var banner = Banner.Create(request.Title, request.Description, request.Link, request.Position, request.Size, request.Active);
+        var banner = Banner.Create(request.title, request.description, request.link, request.position, request.size, request.active);
         bannerRepository.Add(banner);
         await unitOfWork.SaveChangesAsync();
         return banner.Id;
@@ -35,11 +34,11 @@ internal class CreateBannerCommandValidator : AbstractValidator<CreateBannerComm
 {
     public CreateBannerCommandValidator()
     {
-        RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.Description).NotEmpty();
-        RuleFor(x => x.Link).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
-        RuleFor(x => x.Position).NotEmpty();
-        RuleFor(x => x.Size).NotEmpty();
-        RuleFor(x => x.Active).NotEmpty();
+        RuleFor(x => x.title).NotEmpty();
+        RuleFor(x => x.description).NotEmpty();
+        RuleFor(x => x.link).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(x => x.position).NotEmpty();
+        RuleFor(x => x.size).NotEmpty();
+        RuleFor(x => x.active).NotEmpty();
     }
 }
