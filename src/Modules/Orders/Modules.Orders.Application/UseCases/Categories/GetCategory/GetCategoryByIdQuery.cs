@@ -38,7 +38,7 @@ public sealed class GetCategoryByIdQueryHandler(
         ON
             C.id = CT.Category_Id
         WHERE
-            CT.lang_code = @lang_code && C.id = @id ;
+            CT.lang_code = @lang_code AND C.id = @id ;
     
         SELECT
             C.id as {nameof(CategoryRespone.SubCategory.Id)} ,
@@ -53,7 +53,7 @@ public sealed class GetCategoryByIdQueryHandler(
         ON
             C.id = CT.Category_Id
         WHERE
-            CT.lang_code = @lang_code && C.parent_id = @id ;
+            CT.lang_code = @lang_code AND C.parent_category_id = @id ;
 
         SELECT
             PC.id as {nameof(CategoryRespone.SubCategory.Id)} ,
@@ -64,7 +64,7 @@ public sealed class GetCategoryByIdQueryHandler(
         FROM 
             {Schemas.Orders}.category as C
         JOIN 
-            {Schemas.Orders}.category as PC ON C.parent_id = PC.id
+            {Schemas.Orders}.category as PC ON C.parent_category_id = PC.id
         LEFT JOIN 
             {Schemas.Orders}.category_translation as PCT ON PC.id = PCT.Category_Id
         WHERE 
@@ -88,15 +88,15 @@ public sealed class GetCategoryByIdQueryHandler(
         ON
             s.id = st.spec_id
         WHERE
-            st.lang_code = @lang_code AND cs.category_id = @id
+            st.lang_code = @lang_code AND cs.category_id = @id;
         """;
 
         var multiSelect = await connection.QueryMultipleAsync(Query, request);
         var category = await multiSelect.ReadFirstOrDefaultAsync<CategoryRespone.SubCategory>();
         if (category == null)
             return new CategoryNotFoundException(request.id);
-        var childrenCategory = multiSelect.Read<CategoryRespone.SubCategory>();
-        var parentCategory = multiSelect.ReadFirstOrDefault();
+        var childrenCategory = await multiSelect.ReadAsync<CategoryRespone.SubCategory>();
+        var parentCategory = await multiSelect.ReadFirstOrDefaultAsync<CategoryRespone.SubCategory>();
 
         var specs = multiSelect.Read<
             CategoryRespone.SpecResponse,

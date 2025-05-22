@@ -90,7 +90,7 @@ public class CategoryRepository(
             id,
             parent_category_id,
             1 AS Level
-        FROM orders.category
+        FROM {Schemas.Orders}.category
         WHERE id = @Id
 
         UNION ALL
@@ -100,7 +100,7 @@ public class CategoryRepository(
             c.parent_category_id,
             cp.Level + 1
         FROM 
-            orders.category c
+            {Schemas.Orders}.category c
         INNER JOIN 
             category_path cp 
         ON 
@@ -111,7 +111,7 @@ public class CategoryRepository(
         FROM 
             category_path AS CP
         LEFT JOIN
-            category_translation AS CT
+            {Schemas.Orders}.category_translation AS CT
         ON
             CP.id = CT.category_id
         AND
@@ -156,7 +156,7 @@ public class CategoryRepository(
     public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
         if (!string.IsNullOrEmpty(nameFilter))
-            nameFilter = $"%{nameFilter}%";
+            nameFilter = $"{nameFilter}%";
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
@@ -188,7 +188,10 @@ public class CategoryRepository(
             C.id , C.Order, C.Parent_Category_id , CT.name
         ORDER BY 
             C.order , C.id
-        LIMIT @pageSize OFFSET @offset;
+        LIMIT 
+            @pageSize 
+        OFFSET 
+            @offset;
         """;
         var results = await dbConnection
             .QueryAsync<CategoryResponse>(
@@ -205,7 +208,7 @@ public class CategoryRepository(
     public async Task<int> TotalCategories(string? nameFilter, Language langCode)
     {
         if (!string.IsNullOrEmpty(nameFilter))
-            nameFilter = $"%{nameFilter}%";
+            nameFilter = $"{nameFilter}%";
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""

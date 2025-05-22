@@ -10,4 +10,8 @@ public interface IColorRepository : IRepository<Color>
     public Task<int> TotalColors(string? name);
 }
 
-public record ColorResponse(string name, string code);
+public class ColorResponse
+{
+    public string name { get; set; } = string.Empty;
+    public string code { get; set; } = string.Empty;
+};

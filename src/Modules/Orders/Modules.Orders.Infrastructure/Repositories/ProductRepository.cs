@@ -9,16 +9,6 @@ namespace Modules.Orders.Infrastructure.Repositories;
 
 public class ProductRepository(OrdersDbContext ordersDbContext) : Repository<Product, OrdersDbContext>(ordersDbContext), IProductRepository
 {
-    public override Task<Product?> GetByIdAsync(object id)
-    {
-        Guid Id = (Guid)id;
-        return context.Products
-            .Include(x => x.Category)
-            .ThenInclude(x => x.CategorySpecs)
-            .ThenInclude(x => x.Specification)
-            .Include(x => x.ProductItems)
-            .FirstOrDefaultAsync(x => x.Id == Id);
-    }
     public async Task<ICollection<Product>> GetByCategoryId(Guid categoryId)
     {
         return await context.Products.Where(x => x.Id == categoryId).ToListAsync();

@@ -39,9 +39,23 @@ public class ColorRepository : Repository<Color, OrdersDbContext>, IColorReposit
 
     public async Task<ICollection<ColorResponse>> Paginate(int pageSize, int pageNumber, string? name)
     {
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
-        IQueryable<Color> colors = name is null ? context.Colors : context.Colors.Where(x => x.Name.StartsWith(name));
-        return await colors.Skip(offset).Take(pageSize).Select(c => new ColorResponse(c.Name, c.Code)).OrderBy(c => c.name).ToListAsync();
+        string Query =
+        $"""
+        SELECT
+        code as {nameof(ColorResponse.code)},
+        name as {nameof(ColorResponse.name)}
+        FROM
+        {Schemas.Orders}.Color
+        WHERE
+            ( @name is NULL ) OR ( name ILIKE @name )
+        LIMIT 
+            @pageSize 
+        OFFSET 
+            @offset;
+        """;
+        return (await connection.QueryAsync<ColorResponse>(Query, new { pageSize, offset, name })).ToList();
     }
 
     public async Task<int> TotalColors(string? name)

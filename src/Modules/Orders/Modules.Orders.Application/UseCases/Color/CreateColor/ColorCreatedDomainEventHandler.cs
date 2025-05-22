@@ -14,11 +14,10 @@ public class ColorCreatedDomainEventHandler(
 {
     public async Task Handle(ColorCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-
         var specs = await specRepository.GetByDataType(SpecDataType.Color);
         foreach (var spec in specs)
         {
-            var specOption = SpecificationOption.Create(spec.DataType, notification.name, spec.Id);
+            var specOption = SpecificationOption.Create(spec.DataType, notification.code, spec.Id);
             specOptionRepository.Add(specOption);
         }
         await unitOfWork.SaveChangesAsync();

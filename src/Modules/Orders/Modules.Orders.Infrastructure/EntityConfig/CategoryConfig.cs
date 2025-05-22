@@ -15,9 +15,6 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         .HasForeignKey(c => c.ParentCategoryId)
         .IsRequired(false);
 
-        builder.HasIndex(c => c.Order)
-            .IsUnique();
-
         builder.HasMany(c => c.CategorySpecs)
         .WithOne(s => s.Category)
         .HasForeignKey(s => s.CategoryId);

@@ -11,7 +11,7 @@ public class Color : Entity
     public static Color Create(string code, string name)
     {
         var color = new Color { Code = code, Name = name, CreatedOn = DateTime.UtcNow };
-        color.RaiseDomainEvent(new ColorCreatedDomainEvent(color.Name));
+        color.RaiseDomainEvent(new ColorCreatedDomainEvent(color.Name, color.Code));
         return color;
     }
 }

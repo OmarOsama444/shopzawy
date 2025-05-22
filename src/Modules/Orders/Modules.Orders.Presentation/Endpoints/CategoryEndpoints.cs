@@ -65,9 +65,9 @@ public class CategoryEndpoints : IEndpoint
             var result = await sender.Send(new UpdateCategoryCommand(
                 id,
                 request.order,
-                request.names.translations,
-                request.descriptions.translations,
-                request.image_urls.translations));
+                request.names?.translations ?? new Dictionary<Language, string>(),
+                request.descriptions?.translations ?? new Dictionary<Language, string>(),
+                request.image_urls?.translations ?? new Dictionary<Language, string>()));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
 
@@ -93,8 +93,8 @@ public class CategoryEndpoints : IEndpoint
     );
     public record UpdateCategoryRequestDto(
         int? order,
-        LocalizedText names,
-        LocalizedText descriptions,
-        LocalizedText image_urls);
+        LocalizedText? names,
+        LocalizedText? descriptions,
+        LocalizedText? image_urls);
 
 }

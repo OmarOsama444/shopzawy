@@ -28,7 +28,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
         $"""
         SELECT
             s.id as id , 
-            s.datatype as data_type ,
+            s.data_type as datatype ,
             st.name as name , 
             sp.id as option_id , 
             sp.value as value  

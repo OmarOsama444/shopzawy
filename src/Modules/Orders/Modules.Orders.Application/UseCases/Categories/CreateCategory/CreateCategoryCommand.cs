@@ -37,8 +37,9 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
     public CreateCategoryCommandValidator()
     {
         RuleFor(c => c.order).NotEmpty();
+        RuleFor(c => c.spec_ids).NotNull();
         RuleForEach(x => x.names.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
-        RuleForEach(x => x.image_urls.Values).NotEmpty().Must(UrlValidator.Must!).WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.image_urls.Values).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
         RuleForEach(x => x.descriptions.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
         RuleFor(c => c)
             .Must(HaveConsistentLanguageKeys)
