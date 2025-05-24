@@ -1,5 +1,6 @@
 using Modules.Common.Domain;
 using Modules.Orders.Application.UseCases.UpdateCategory;
+using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.Services;
@@ -24,7 +25,7 @@ public class CategoryRespone
     public string description { get; set; } = string.Empty;
     public int order { get; set; }
     public string? imageUrl { get; set; }
-    public ICollection<string> categoryPath { get; set; } = [];
+    public IDictionary<Guid, string> categoryPath { get; set; } = new Dictionary<Guid, string>();
     public ICollection<SpecResponse> specifications { get; set; } = [];
     public SubCategory? parent { get; init; }
     public ICollection<SubCategory> children { get; set; } = [];
@@ -35,14 +36,5 @@ public class CategoryRespone
         public string description { get; set; } = string.Empty;
         public int order { get; set; }
         public string? imageUrl { get; set; }
-        public string categoryPath { get; set; } = string.Empty;
     }
-    public class SpecResponse
-    {
-        public Guid id { get; set; }
-        public string name { get; set; } = string.Empty;
-        public string dataType { get; set; } = string.Empty;
-        public ICollection<SpecOptionResponse> options { get; set; } = [];
-    }
-    public record SpecOptionResponse(Guid optionId, string value);
 }

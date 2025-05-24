@@ -80,7 +80,7 @@ public class CategoryRepository(
             .FirstOrDefaultAsync(x => x.Id == categoryId);
     }
 
-    public async Task<ICollection<string>> GetCategoryPath(Guid Id, Language LangCode)
+    public async Task<IDictionary<Guid, string>> GetCategoryPath(Guid Id, Language LangCode)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
@@ -107,6 +107,7 @@ public class CategoryRepository(
             c.id = cp.parent_category_id
         )
         SELECT 
+            CP.id as key
             CT.name as value
         FROM 
             category_path AS CP
@@ -118,7 +119,7 @@ public class CategoryRepository(
             CT.lang_code = @LangCode
         ORDER BY Level DESC;
         """;
-        return (await dbConnection.QueryAsync<string>(Query, new { Id, LangCode })).ToList();
+        return (await dbConnection.QueryAsync<(Guid key, string value)>(Query, new { Id, LangCode })).ToDictionary();
     }
 
     public async Task<ICollection<MainCategoryResponse>> GetMainCategories(Language lang_code)
@@ -153,7 +154,7 @@ public class CategoryRepository(
         return !await context.Categories.AnyAsync(x => x.ParentCategoryId == Id);
     }
 
-    public async Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
+    public async Task<ICollection<CategoryPaginationResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
         if (!string.IsNullOrEmpty(nameFilter))
             nameFilter = $"{nameFilter}%";
@@ -162,12 +163,12 @@ public class CategoryRepository(
         string Query =
         $"""
         SELECT 
-            C.id as {nameof(CategoryResponse.Id)},
-            CT.name as {nameof(CategoryResponse.CategoryName)},
-            C.Order as {nameof(CategoryResponse.Order)},
-            C.parent_category_id as {nameof(CategoryResponse.parentCategoryId)} ,
-            COUNT(DISTINCT CC.id) AS {nameof(CategoryResponse.NumberOfChildren)},
-            COUNT(DISTINCT P.Id) AS {nameof(CategoryResponse.NumberOfProducts)}
+            C.id as {nameof(CategoryPaginationResponse.Id)},
+            CT.name as {nameof(CategoryPaginationResponse.CategoryName)},
+            C.Order as {nameof(CategoryPaginationResponse.Order)},
+            C.parent_category_id as {nameof(CategoryPaginationResponse.parentCategoryId)} ,
+            COUNT(DISTINCT CC.id) AS {nameof(CategoryPaginationResponse.NumberOfChildren)},
+            COUNT(DISTINCT P.Id) AS {nameof(CategoryPaginationResponse.NumberOfProducts)}
         FROM 
             {Schemas.Orders}.Category AS C
         LEFT JOIN 
@@ -194,7 +195,7 @@ public class CategoryRepository(
             @offset;
         """;
         var results = await dbConnection
-            .QueryAsync<CategoryResponse>(
+            .QueryAsync<CategoryPaginationResponse>(
                 Query, new
                 {
                     offset,

@@ -10,15 +10,15 @@ public record PaginateCategoryQuery(
     int pageNumber,
     int pageSize,
     string? nameFilter,
-    Language lang_code) : IQuery<PaginationResponse<CategoryResponse>>;
+    Language lang_code) : IQuery<PaginationResponse<CategoryPaginationResponse>>;
 
-public sealed class PaginateCategoryQueryHandler(ICategoryRepository categoryRepository) : IQueryHandler<PaginateCategoryQuery, PaginationResponse<CategoryResponse>>
+public sealed class PaginateCategoryQueryHandler(ICategoryRepository categoryRepository) : IQueryHandler<PaginateCategoryQuery, PaginationResponse<CategoryPaginationResponse>>
 {
-    public async Task<Result<PaginationResponse<CategoryResponse>>> Handle(PaginateCategoryQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginationResponse<CategoryPaginationResponse>>> Handle(PaginateCategoryQuery request, CancellationToken cancellationToken)
     {
         var categories = await categoryRepository.Paginate(request.pageNumber, request.pageSize, request.nameFilter, request.lang_code);
         var total = await categoryRepository.TotalCategories(request.nameFilter, request.lang_code);
-        return new PaginationResponse<CategoryResponse>(categories, total, request.pageSize, request.pageNumber);
+        return new PaginationResponse<CategoryPaginationResponse>(categories, total, request.pageSize, request.pageNumber);
     }
 }
 

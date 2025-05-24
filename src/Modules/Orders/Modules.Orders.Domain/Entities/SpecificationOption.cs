@@ -33,6 +33,9 @@ public class SpecificationOption : Entity
             case "boolean":
                 option.BoolValue = Convert.ToBoolean(value);
                 break;
+            case "color":
+                option.StringValue = value.ToString();
+                break;
         }
 
         return option;

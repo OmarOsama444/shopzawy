@@ -46,7 +46,7 @@ public class JwtProvider : IJwtProvider
             signingCredentials: signingCredentials
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new JwtSecurityTokenHandler() { MapInboundClaims = false }.WriteToken(token);
     }
 
     public string GenerateReferesh()

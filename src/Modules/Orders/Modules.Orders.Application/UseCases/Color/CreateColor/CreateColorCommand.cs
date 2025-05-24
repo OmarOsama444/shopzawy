@@ -30,7 +30,10 @@ internal class CreateColorCommandValidator : AbstractValidator<CreateColorComman
 {
     public CreateColorCommandValidator()
     {
-        RuleFor(c => c.code).NotEmpty();
-        RuleFor(c => c.name).NotEmpty();
+        RuleFor(c => c.code)
+        .NotEmpty()
+        .Matches(@"^#?[0-9A-Fa-f]{6}$")
+        .WithMessage("Code must be a valid 6-digit hexadecimal color code.");
+        RuleFor(c => c.name).NotEmpty().MinimumLength(3).MaximumLength(30);
     }
 }

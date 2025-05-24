@@ -51,7 +51,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
                 map: (specResponse, specOptionsResponse) =>
                 {
                     if (specOptionsResponse is null)
-                        specResponse.Options = new List<SpecOptionsResponse>();
+                        specResponse.Options = [];
                     return specResponse;
                 },
                 param: new { name, lang_code },
@@ -83,4 +83,49 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
         return await connection.ExecuteScalarAsync<int>(query, new { name, lang_code });
     }
 
+    public async Task<ICollection<SpecResponse>> GetByCategoryId(Language langCode, params Guid[] categoryId)
+    {
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
+        string query =
+        $"""
+        SELECT
+            s.id as id , st.name , s.data_type as dataType ,
+            so.id as optionId , so.value as value 
+        FROM
+            {Schemas.Orders}.category_spec as cs
+        LEFT JOIN
+            {Schemas.Orders}.specification as s
+        ON
+            cs.spec_id = s.id
+        LEFT JOIN
+            {Schemas.Orders}.specification_option as so
+        ON
+            so.specification_id = s.id
+        LEFT JOIN
+            {Schemas.Orders}.specification_translation as st
+        ON
+            s.id = st.spec_id
+        WHERE
+            st.lang_code = @lang_code AND cs.category_id IN @ids;
+        """;
+        var specs = (await connection.QueryAsync<SpecResponse, SpecOptionsResponse, SpecResponse>(
+            sql: query,
+            map: (spec, option) =>
+            {
+                if (spec.Options is null || spec.Options.Count == 0)
+                    spec.Options = [];
+                spec.Options.Add(option);
+                return spec;
+            },
+            splitOn: "optionId",
+            param: new { ids = categoryId, lang_code = langCode }))
+            .GroupBy(s => s.id)
+            .Select(g =>
+            {
+                var spec = g.First();
+                spec.Options = g.SelectMany(s => s.Options).ToList();
+                return spec;
+            });
+        return specs.ToList();
+    }
 }

@@ -22,7 +22,7 @@ public class ColorSpecCreatedDomainEventHandler(
         {
             foreach (Color color in colors)
             {
-                var x = SpecificationOption.Create(spec.DataType, color.Name, notification.SpecId);
+                var x = SpecificationOption.Create(spec.DataType, color.Code, notification.SpecId);
                 specOptionRepository.Add(x);
             }
             await unitOfWork.SaveChangesAsync();

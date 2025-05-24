@@ -7,10 +7,9 @@ namespace Modules.Orders.Domain.Repositories;
 public interface ICategoryRepository : IRepository<Category>
 {
     public Task<ICollection<MainCategoryResponse>> Children(Guid Id, Language lang_code);
-    public Task<ICollection<string>> GetCategoryPath(Guid Id, Language LangCode);
-    public Task<bool> IsLeafCategory(Guid Id);
+    public Task<IDictionary<Guid, string>> GetCategoryPath(Guid Id, Language LangCode);
     public Task<ICollection<MainCategoryResponse>> GetMainCategories(Language lang_code);
-    public Task<ICollection<CategoryResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode);
+    public Task<ICollection<CategoryPaginationResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode);
     public Task<int> TotalCategories(string? nameFilter, Language LangCode);
     public void AddTranslation(CategoryTranslation categoryTranslation);
 }
@@ -25,7 +24,7 @@ public class MainCategoryResponse
     public string? ImageUrl { get; set; }
 }
 
-public class CategoryResponse
+public class CategoryPaginationResponse
 {
     public Guid Id { get; set; }
     public string CategoryName { get; set; } = string.Empty;
@@ -33,11 +32,11 @@ public class CategoryResponse
     public Guid parentCategoryId { get; set; }
     public int NumberOfProducts { get; set; }
     public int NumberOfChildren { get; set; }
-    public CategoryResponse()
+    public CategoryPaginationResponse()
     {
 
     }
-    public CategoryResponse(
+    public CategoryPaginationResponse(
         Guid id,
         string categoryName,
         int order,

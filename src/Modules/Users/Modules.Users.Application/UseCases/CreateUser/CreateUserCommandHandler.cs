@@ -14,16 +14,13 @@ namespace Modules.Users.Application.UseCases.CreateUser
         {
             if (await userRepository.GetUserByEmail(request.Email) is not null)
                 return new UserConflictEmail(request.Email);
-            if (await userRepository.GetUserByPhone(request.PhoneNumber) is not null)
-                return new UserConflictPhone(request.PhoneNumber);
 
             var user = User.Create(
                 request.FirstName,
                 request.LastName,
                 request.HashedPassword,
                 request.Role,
-                request.Email,
-                request.PhoneNumber);
+                request.Email);
             userRepository.Add(user);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -22,8 +22,6 @@ public sealed class CreateUnverifiedUserCommandHandler(
     {
         if (!String.IsNullOrEmpty(request.Email) && await userRepository.GetUserByEmail(request.Email) is not null)
             return new UserConflictEmail(request.Email);
-        if (!String.IsNullOrEmpty(request.PhoneNumber) && userRepository.GetUserByPhone(request.PhoneNumber) is not null)
-            return new UserConflictPhone(request.PhoneNumber);
         PasswordHasher<object> passwordHasher = new PasswordHasher<object>();
         string HashedPassword = passwordHasher.HashPassword(new object(), request.Password);
         var user = UnverifiedUser.Create(

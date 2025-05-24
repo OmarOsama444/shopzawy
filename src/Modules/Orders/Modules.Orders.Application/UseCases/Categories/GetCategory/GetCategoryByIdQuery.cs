@@ -17,7 +17,8 @@ public record GetCategoryByIdQuery(Guid id, Language lang_code) : IQuery<Categor
 
 public sealed class GetCategoryByIdQueryHandler(
     IDbConnectionFactory dbConnectionFactory,
-    ICategoryRepository categoryRepository) :
+    ICategoryRepository categoryRepository,
+    ISpecRepository specRepository) :
     IQueryHandler<GetCategoryByIdQuery, CategoryRespone>
 {
     public async Task<Result<CategoryRespone>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
@@ -69,26 +70,6 @@ public sealed class GetCategoryByIdQueryHandler(
             {Schemas.Orders}.category_translation as PCT ON PC.id = PCT.Category_Id
         WHERE 
             C.id = @id AND PCT.lang_code = @lang_code;
-
-        SELECT
-            s.id as id , st.name , s.data_type as dataType ,
-            so.id as optionId , so.value as value 
-        FROM
-            {Schemas.Orders}.category_spec as cs
-        LEFT JOIN
-            {Schemas.Orders}.specification as s
-        ON
-            cs.spec_id = s.id
-        LEFT JOIN
-            {Schemas.Orders}.specification_option as so
-        ON
-            so.specification_id = s.id
-        LEFT JOIN
-            {Schemas.Orders}.specification_translation as st
-        ON
-            s.id = st.spec_id
-        WHERE
-            st.lang_code = @lang_code AND cs.category_id = @id;
         """;
 
         var multiSelect = await connection.QueryMultipleAsync(Query, request);
@@ -97,26 +78,8 @@ public sealed class GetCategoryByIdQueryHandler(
             return new CategoryNotFoundException(request.id);
         var childrenCategory = await multiSelect.ReadAsync<CategoryRespone.SubCategory>();
         var parentCategory = await multiSelect.ReadFirstOrDefaultAsync<CategoryRespone.SubCategory>();
-
-        var specs = multiSelect.Read<
-            CategoryRespone.SpecResponse,
-            CategoryRespone.SpecOptionResponse,
-            CategoryRespone.SpecResponse>(
-            (spec, option) =>
-            {
-                if (spec.options is null || spec.options.Count == 0)
-                    spec.options = new List<CategoryRespone.SpecOptionResponse>();
-                spec.options.Add(option);
-                return spec;
-            },
-            splitOn: "optionId")
-            .GroupBy(s => s.id)
-            .Select(g =>
-            {
-                var spec = g.First();
-                spec.options = g.SelectMany(s => s.options).ToList();
-                return spec;
-            }).ToList();
+        var categoryPath = await categoryRepository.GetCategoryPath(request.id, request.lang_code);
+        var specs = await specRepository.GetByCategoryId(request.lang_code, categoryPath.Keys.ToArray());
         return new CategoryRespone()
         {
             Id = category.Id,
@@ -124,7 +87,7 @@ public sealed class GetCategoryByIdQueryHandler(
             description = category.description,
             order = category.order,
             imageUrl = category.imageUrl,
-            categoryPath = await categoryRepository.GetCategoryPath(request.id, request.lang_code),
+            categoryPath = categoryPath,
             parent = parentCategory,
             children = childrenCategory.ToList(),
             specifications = specs

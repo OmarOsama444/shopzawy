@@ -38,8 +38,7 @@ public sealed class VerifyEmailCommandHandler(
             unverifiedUser.LastName,
             unverifiedUser.HashedPassword,
             unverifiedUser.Role,
-            unverifiedUser.Email,
-            unverifiedUser.PhoneNumber
+            unverifiedUser.Email
         );
         userRepository.Add(user);
         await unitOfWork.SaveChangesAsync();

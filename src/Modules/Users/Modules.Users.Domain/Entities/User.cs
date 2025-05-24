@@ -9,13 +9,12 @@ public class User : Entity
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
     public string HashedPassword { get; private set; } = string.Empty;
-    public string? Email { get; private set; } = string.Empty;
-    public string? PhoneNumber { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
     public string Role { get; private set; } = string.Empty;
     public DateTime DateOfCreation { get; private set; }
     public bool VerifiedEmail { get; private set; }
     public bool VerifiedPhone { get; private set; }
-    public static User Create(string FirstName, string LastName, string HashedPassword, string Role, string Email, string PhoneNumber)
+    public static User Create(string FirstName, string LastName, string HashedPassword, string Role, string Email)
     {
 
         var user = new User()
@@ -29,8 +28,6 @@ public class User : Entity
             HashedPassword = HashedPassword
         ,
             Email = Email
-        ,
-            PhoneNumber = PhoneNumber
         ,
             DateOfCreation = DateTime.Now
         ,
@@ -57,6 +54,5 @@ public class User : Entity
             this.FirstName = FirstName;
         if (LastName is not null)
             this.LastName = LastName;
-        this.RaiseDomainEvent(new UserFirstLastNameUpdated(this.Id));
     }
 }
