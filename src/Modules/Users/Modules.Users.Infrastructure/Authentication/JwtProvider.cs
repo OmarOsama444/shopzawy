@@ -7,32 +7,25 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
-using Modules.Users.Domain.Entities;
 using Modules.Users.Application;
-using System.Threading.Tasks;
 namespace Modules.Users.Infrastructure.Authentication;
 
 public class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
-    private IRefreshRepository refreshRepository;
-    private IUnitOfWork unitOfWork;
+
     public JwtProvider(
-        IOptions<JwtOptions> options,
-        IRefreshRepository refreshRepository,
-        IUnitOfWork unitOfWork)
+        IOptions<JwtOptions> options)
     {
         _jwtOptions = options.Value;
-        this.refreshRepository = refreshRepository;
-        this.unitOfWork = unitOfWork;
+
     }
     public string GenerateAccesss(User user)
     {
         var claims = new Claim[]
         {
             new(CustomClaims.Sub, user.Id.ToString()),
-            new(CustomClaims.Email, user.Email),
-            new(CustomClaims.Role, user.Role),
+            new(CustomClaims.Email, user.Email!),
         };
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
@@ -54,23 +47,4 @@ public class JwtProvider : IJwtProvider
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
 
-    public async Task<(string accesstoken, string refreshtoken)> LoginUser(User user)
-    {
-        var refreshToken = new RefreshToken
-        {
-            ExpiresOnUtc = DateTime.UtcNow.AddDays(7),
-            Id = Guid.NewGuid(),
-            Token = GenerateReferesh(),
-            UserId = user.Id
-        };
-
-        refreshRepository.Add(refreshToken);
-        await unitOfWork.SaveChangesAsync();
-
-        return new(
-            refreshToken.Token,
-            GenerateAccesss(user)
-        );
-
-    }
 }

@@ -2,7 +2,14 @@
 
 namespace Modules.Common.Domain.Entities;
 
-public abstract class Entity
+public interface IEntity
+{
+    IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
+    void ClearDomainEvents();
+    public void RaiseDomainEvent(IDomainEvent domainEvent);
+}
+
+public abstract class Entity : IEntity
 {
     private readonly List<IDomainEvent> domainEvents = [];
     public IReadOnlyCollection<IDomainEvent> DomainEvents => domainEvents.ToList();
@@ -10,7 +17,7 @@ public abstract class Entity
     {
         domainEvents.Clear();
     }
-    protected void RaiseDomainEvent(IDomainEvent domainEvent)
+    public void RaiseDomainEvent(IDomainEvent domainEvent)
     {
         domainEvents.Add(domainEvent);
     }

@@ -3,6 +3,11 @@ using Modules.Users.Domain.Exceptions;
 
 namespace Modules.Users.Application.UseCases.CreateUser
 {
-    public sealed record CreateUserCommand(string FirstName, string LastName, string HashedPassword, string Role, string Email, string PhoneNumber) : ICommand<Guid>;
+    public sealed record CreateUserCommand(
+        string FirstName,
+        string LastName,
+        string Password,
+        string Email,
+        string PhoneNumber) : ICommand<Guid>;
 }
 

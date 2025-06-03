@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure.Inbox;
 using Modules.Common.Infrastructure.Outbox;
@@ -8,12 +9,9 @@ using Modules.Users.Infrastructure.EntityConfig;
 namespace Modules.Users.Infrastructure;
 
 public class UserDbContext(DbContextOptions<UserDbContext> Options) :
-    DbContext(Options)
+    IdentityDbContext<User, Role, Guid>(Options)
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<UnverifiedUser> unverifiedUsers { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<EmailVerificationToken> emailVerificationTokens { get; set; }
+    public DbSet<UserToken> userTokens { get; set; }
     public DbSet<OutboxMessage> outboxMessages { get; set; }
     public DbSet<OutboxConsumerMessage> outboxConsumerMessages { get; set; }
     public DbSet<InboxMessage> inboxMessages { get; set; }
@@ -22,10 +20,8 @@ public class UserDbContext(DbContextOptions<UserDbContext> Options) :
     {
         modelBuilder.HasDefaultSchema("USERS");
         modelBuilder.ApplyConfiguration<User>(new UserConfig());
-        modelBuilder.ApplyConfiguration<RefreshToken>(new RefreshTokenConfig());
-        modelBuilder.ApplyConfiguration<EmailVerificationToken>(new EmailVerificationTokenConfig());
+        modelBuilder.ApplyConfiguration<Role>(new RoleConfig());
         modelBuilder.ApplyConfiguration<OutboxMessage>(new OutboxMessageConfiguration());
-        modelBuilder.ApplyConfiguration<UnverifiedUser>(new UnverifiedUserConfig());
         modelBuilder.ApplyConfiguration<OutboxConsumerMessage>(new OutboxConsumerMessageConfiguration());
         modelBuilder.ApplyConfiguration<InboxMessage>(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration<InboxConsumerMessage>(new InboxConsumerMessageConfiguration());

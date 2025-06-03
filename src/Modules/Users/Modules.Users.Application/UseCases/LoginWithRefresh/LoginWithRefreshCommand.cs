@@ -7,39 +7,36 @@ using Modules.Users.Application.UseCases.LoginUser;
 using Modules.Users.Domain;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.Exceptions;
+using Modules.Users.Domain.Repositories;
+using Modules.Users.Domain.ValueObjects;
 
 namespace Modules.Users.Application.UseCases.LoginWithRefresh;
 
 public record LoginWithRefreshCommand(string Token) : ICommand<LoginUserCommandResponse>;
 
 public sealed class LoginWithRefreshHandler(
-    IRefreshRepository refreshReadRepository,
-    IRepository<RefreshToken> refreshRepository,
     IUserRepository userRepository,
+    IUserTokenRepository userTokenRepository,
     IJwtProvider jwtProvider,
     IUnitOfWork unitOfWork) : ICommandHandler<LoginWithRefreshCommand, LoginUserCommandResponse>
 {
     public async Task<Result<LoginUserCommandResponse>> Handle(LoginWithRefreshCommand request, CancellationToken cancellationToken)
     {
-        RefreshToken? refreshToken = await refreshReadRepository.GetByToken(request.Token);
-        if (refreshToken == null)
+        UserToken? Token = await userTokenRepository.GetToken(request.Token, TokenType.Refresh);
+        if (Token is null)
             return new TokenNotFound(request.Token);
-        if (refreshToken.ExpiresOnUtc < DateTime.UtcNow)
+        if (Token.ExpireDateUtc < DateTime.UtcNow)
             return new TokenExpired(request.Token);
-        User? user = await userRepository.GetByIdAsync(refreshToken.UserId);
+        User? user = await userRepository.GetByIdAsync(Token.UserId);
         if (user == null)
-            return new UserNotFound(refreshToken.UserId);
-        string AccessToken = jwtProvider.GenerateAccesss(user);
-        string RefreshToken = jwtProvider.GenerateReferesh();
-        refreshRepository.Add(new RefreshToken
-        {
-            Id = Guid.NewGuid(),
-            ExpiresOnUtc = DateTime.UtcNow.AddDays(7),
-            Token = RefreshToken,
-            UserId = refreshToken.UserId
-        });
+            return new UserNotFound(Token.UserId);
+        string accessToken = jwtProvider.GenerateAccesss(user);
+        string refreshToken = jwtProvider.GenerateReferesh();
+        var newToken = UserToken.Create(TokenType.Refresh, 24 * 60, user.Id, refreshToken);
+
+        userTokenRepository.Add(Token);
         await unitOfWork.SaveChangesAsync();
-        return new LoginUserCommandResponse(RefreshToken, AccessToken);
+        return new LoginUserCommandResponse(accessToken: accessToken, refreshToken: refreshToken);
     }
 }
 

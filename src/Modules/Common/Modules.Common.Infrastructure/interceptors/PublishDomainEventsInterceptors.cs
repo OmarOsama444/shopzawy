@@ -24,7 +24,7 @@ namespace Modules.Common.Infrastructure.interceptors
         {
             var domainEvents = context
                 .ChangeTracker
-                .Entries<Entity>()
+                .Entries<IEntity>()
                 .Select(entry => entry.Entity)
                 .SelectMany(entity =>
                 {

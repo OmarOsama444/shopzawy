@@ -1,19 +1,22 @@
+using Google.Protobuf.WellKnownTypes;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Common.Infrastructure.interceptors;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Users.Application;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Services;
+using Modules.Users.Domain;
+using Modules.Users.Domain.Repositories;
 using Modules.Users.Infrastructure.Authentication;
 using Modules.Users.Infrastructure.Data;
-using Modules.Users.Infrastructure.Interceptors;
 using Modules.Users.Infrastructure.Options;
 using Modules.Users.Infrastructure.OutBox;
+using Modules.Users.Infrastructure.Repositories;
 using Modules.Users.Infrastructure.Services;
 using Qdrant.Client;
 
@@ -67,6 +70,16 @@ public static class UsersModule
             options.AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptors>());
         });
 
+        services.AddIdentity<User, IdentityRole<Guid>>(Options =>
+        {
+            Options.Password.RequireDigit = true;
+            Options.Password.RequiredLength = 12;
+            Options.Password.RequireLowercase = true;
+            Options.Password.RequireUppercase = true;
+            Options.Password.RequireNonAlphanumeric = true;
+        })
+        .AddEntityFrameworkStores<UserDbContext>();
+
         // the publish outbox message interceptor configurations
 
         // services.TryAddSingleton<PublishOutboxMessagesInterceptor>();
@@ -104,6 +117,7 @@ public static class UsersModule
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IFaceModelService>(sp => new FaceModelService(FaceNetApi));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 
     }
 }
