@@ -34,7 +34,6 @@ public static class UsersModule
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string DbConnectionString = configuration.GetConnectionString("ShopizawyDb")!;
-        string FaceNetApi = configuration["Users:ConnectionStrings:FaceNetApi"]!;
 
         services.AddOptions<GmailSmtpOptions>()
             .BindConfiguration("Users:GmailConfig")
@@ -115,7 +114,6 @@ public static class UsersModule
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IFaceModelService>(sp => new FaceModelService(FaceNetApi));
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 

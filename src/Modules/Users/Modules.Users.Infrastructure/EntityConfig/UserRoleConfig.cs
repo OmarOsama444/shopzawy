@@ -4,7 +4,7 @@ using Modules.Users.Domain.Entities;
 
 namespace Modules.Users.Infrastructure.EntityConfig;
 
-public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
+public class UserRoleConfig : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)
     {
