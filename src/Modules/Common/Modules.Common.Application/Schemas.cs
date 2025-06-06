@@ -4,6 +4,6 @@ namespace Modules.Common.Infrastructure;
 
 public static class Schemas
 {
-    public static string Orders => "orders";
-    public static string Users => "users";
+    public const string Orders = "orders";
+    public const string Users = "users";
 }

@@ -2,6 +2,7 @@ using Dapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Modules.Common.Domain.DomainEvent;
+using Modules.Common.Infrastructure;
 using Modules.Common.Infrastructure.Inbox;
 using Modules.Users.Application.Abstractions;
 
@@ -13,7 +14,7 @@ public class InboxIdempotentDomainEventHandlerDecorator<TDomainEvent>(
     ILogger<InboxIdempotentDomainEventHandlerDecorator<TDomainEvent>> logger) : INotificationHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent
 {
-    public const string ModuleName = UsersModule.SchemaName;
+    public const string ModuleName = Schemas.Users;
     public async Task Handle(TDomainEvent notification, CancellationToken cancellationToken)
     {
         await using var connection = await dbConnectionFactory.CreateSqlConnection();

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
 using Modules.Users.Application;
+using Modules.Users.Domain.Entities;
 namespace Modules.Users.Infrastructure.Authentication;
 
 public class JwtProvider : IJwtProvider

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Modules.Common.Application.Clock;
 using Modules.Common.Domain.DomainEvent;
+using Modules.Common.Infrastructure;
 using Modules.Common.Infrastructure.Outbox;
 using Modules.Users.Application.Abstractions;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ public class ProcessOutboxJob(
     IDateTimeProvider dateTimeProvider,
     ILogger<ProcessOutboxJob> logger) : IJob
 {
-    private const string ModuleName = UsersModule.SchemaName;
+    private const string ModuleName = Schemas.Users;
     public async Task Execute(IJobExecutionContext context)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();

@@ -1,0 +1,8 @@
+using FluentValidation;
+using Modules.Common.Application.Messaging;
+using Modules.Common.Domain;
+using Modules.Orders.Domain.Repositories;
+
+namespace Modules.Orders.Application.UseCases.Vendors.PaginateVendors;
+
+public record PaginateVendorQuery(int PageNumber, int PageSize, string? Namefilter) : IQuery<PaginationResponse<VendorResponse>>;

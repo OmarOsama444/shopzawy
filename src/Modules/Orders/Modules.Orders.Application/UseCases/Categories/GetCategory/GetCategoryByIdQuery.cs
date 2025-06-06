@@ -9,7 +9,6 @@ using Modules.Common.Infrastructure;
 using Dapper;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.Repositories;
-using Modules.Orders.Domain.Entities;
 
 namespace Modules.Orders.Application.UseCases.Categories.GetCategory;
 

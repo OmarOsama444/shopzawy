@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -7,8 +6,8 @@ using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.CreateVendor;
-using Modules.Orders.Application.UseCases.PaginateVendors;
-using Modules.Orders.Application.UseCases.UpdateVendor;
+using Modules.Orders.Application.UseCases.Vendors.PaginateVendors;
+using Modules.Orders.Application.UseCases.Vendors.UpdateVendor;
 
 namespace Modules.Orders.Presentation.Endpoints;
 
@@ -41,10 +40,11 @@ public class VendorEndpoints : IEndpoint
                 request.Address,
                 request.LogoUrl,
                 request.ShipingZoneName,
-                request.active));
+                request.Active,
+                request.CountryCode));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         });
     }
 
-    public record VendorUpdateRequestDto(string? VendorName, string? Description, string? Email, string? PhoneNumber, string? Address, string? LogoUrl, string? ShipingZoneName, bool? active);
+    public record VendorUpdateRequestDto(string? VendorName, string? Description, string? Email, string? PhoneNumber, string? Address, string? LogoUrl, string? ShipingZoneName, bool? Active, string CountryCode);
 }

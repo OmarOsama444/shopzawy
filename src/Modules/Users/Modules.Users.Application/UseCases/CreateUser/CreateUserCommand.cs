@@ -7,7 +7,8 @@ namespace Modules.Users.Application.UseCases.CreateUser
         string FirstName,
         string LastName,
         string Password,
-        string Email,
-        string PhoneNumber) : ICommand<Guid>;
+        string? Email,
+        string? PhoneNumber,
+        string? CountryCode) : ICommand<Guid>;
 }
 

@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Modules.Common.Domain.Entities;
 
 namespace Modules.Users.Domain.Entities;
 
-public class UserRole : IdentityUserRole<Guid>
+public class UserRole : Entity
 {
-    public User User { get; set; } = default!;
-    public Role Role { get; set; } = default!;
+    public Guid UserId { get; set; }
+    public string RoleName { get; set; } = string.Empty;
+    public virtual Role Role { get; set; } = default!;
+    public virtual User User { get; set; } = default!;
 }

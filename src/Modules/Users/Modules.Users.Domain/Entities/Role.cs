@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Identity;
+using Modules.Common.Domain.Entities;
 
 namespace Modules.Users.Domain.Entities;
 
-public class Role : IdentityRole<Guid>
+public class Role : Entity
 {
-    public ICollection<UserRole> UserRoles { get; set; } = default!;
-    public ICollection<RoleClaim> RoleClaims { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
+    public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+    public virtual ICollection<RolePermission> RolePermissions { get; set; } = [];
     public static Role Create(string name)
     {
         return new Role
         {
-            Id = Guid.NewGuid(),
             Name = name,
-            NormalizedName = name.ToUpper()
         };
     }
 }

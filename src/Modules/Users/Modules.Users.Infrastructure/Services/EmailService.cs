@@ -38,7 +38,7 @@ public class EmailService(IConfiguration configuration, IOptions<GmailSmtpOption
             subject,
             Markdown.ToHtml(FillTemplate(bodyTemplate, new Dictionary<string, string> {
                 { "[FirstName]" , FirstName },
-                { "[URL]" , $"http://localhost:5185/api/auth/email/{Token}"}
+                { "[URL]" , $"http://localhost:5101/api/auth/email/{Token}"}
             })));
     }
 

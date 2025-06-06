@@ -1,8 +1,10 @@
 using Modules.Users.Application.Abstractions;
+using Modules.Users.Domain.Entities;
 
-namespace Modules.Users.Domain;
+namespace Modules.Users.Domain.Repositories;
 
 public interface IUserRepository : IRepository<User>
 {
-    Task<User?> GetUserByEmail(string Email);
+    public Task<User?> GetByConfirmedEmail(string Email);
+    public Task<User?> GetByConfirmedPhone(string PhoneNumber);
 }

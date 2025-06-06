@@ -5,16 +5,13 @@ namespace Modules.Common.Application.Validators;
 
 public class PhoneNumberValidator
 {
-    private string? region = null;
-    private string? countryName = null;
+    private readonly string? region = null;
     public PhoneNumberValidator()
     {
-
     }
-    public PhoneNumberValidator(string region, string countryName)
+    public PhoneNumberValidator(string? region)
     {
         this.region = region;
-        this.countryName = countryName;
     }
     public bool Must(string phoneNumber)
     {
@@ -29,7 +26,5 @@ public class PhoneNumberValidator
             return false;
         }
     }
-    public string Message => countryName is null ?
-        "invalid phonenumber" :
-        $"invalid {countryName} phone number";
+    public static string Message => "invalid phonenumber";
 }

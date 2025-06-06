@@ -5,7 +5,7 @@ using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
-namespace Modules.Orders.Application.UseCases.CreateCategorySpec;
+namespace Modules.Orders.Application.UseCases.Spec.CreateSpec;
 
 public class ColorSpecCreatedDomainEventHandler(
     ISpecOptionRepository specOptionRepository,
@@ -25,7 +25,7 @@ public class ColorSpecCreatedDomainEventHandler(
                 var x = SpecificationOption.Create(spec.DataType, color.Code, notification.SpecId);
                 specOptionRepository.Add(x);
             }
-            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

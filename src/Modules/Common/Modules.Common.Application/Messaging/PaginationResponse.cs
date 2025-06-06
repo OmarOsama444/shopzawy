@@ -10,11 +10,11 @@ namespace Modules.Common.Application.Messaging
     public class MetaData
     {
 
-        public int total { get; init; }
-        public int per_page { get; init; }
-        public int current_page { get; init; }
-        public int total_pages { get; init; }
-        public int total_per_page { get; init; }
+        public int Total { get; init; }
+        public int Per_page { get; init; }
+        public int Current_page { get; init; }
+        public int Total_pages { get; init; }
+        public int Total_per_page { get; init; }
     }
     public class PaginationResponse<T>
     {
@@ -23,11 +23,11 @@ namespace Modules.Common.Application.Messaging
             this.Data = Data;
             this.MetaData = new MetaData()
             {
-                total = total,
-                per_page = per_page,
-                current_page = current_page,
-                total_pages = (total / per_page) + (((total % per_page) == 0) ? 0 : 1),
-                total_per_page = this.Data.Count
+                Total = total,
+                Per_page = per_page,
+                Current_page = current_page,
+                Total_pages = (total / per_page) + (((total % per_page) == 0) ? 0 : 1),
+                Total_per_page = this.Data.Count
             };
         }
         public ICollection<T> Data { get; init; }

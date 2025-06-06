@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using shopzawy.Extensions;
 using shopzawy.Middleware;
-using Modules.Orders.Domain.ValueObjects;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Any;
 using shopzawy.Swagger;
 
 
@@ -43,7 +40,7 @@ builder.Services.AddApplication(
 // pass the reddis connection string to use it via the cache service when needed
 builder.Services.AddInfrastructure([], builder.Configuration);
 // adding module config for all the modules 
-builder.Configuration.AddModuleConfiguration("users");
+builder.Configuration.AddModuleConfiguration("users", "orders");
 // adding modules infrastructure
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddOrdersModule(builder.Configuration);

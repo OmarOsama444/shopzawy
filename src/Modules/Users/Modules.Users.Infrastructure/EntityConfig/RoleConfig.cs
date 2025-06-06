@@ -9,19 +9,20 @@ public class RoleConfig : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("roles");
-        builder.HasKey(x => x.Id);
+        builder
+            .Property(x => x.Name)
+            .HasMaxLength(100);
+        builder.HasKey(x => x.Name);
 
-        builder.HasMany(e => e.UserRoles)
-            .WithOne(e => e.Role)
-            .HasForeignKey(ur => ur.RoleId)
-            .IsRequired();
+        builder
+            .HasMany(x => x.UserRoles)
+            .WithOne(x => x.Role)
+            .HasForeignKey(x => x.RoleName);
 
-        builder.HasMany(e => e.RoleClaims)
-            .WithOne(e => e.Role)
-            .HasForeignKey(rc => rc.RoleId)
-            .IsRequired();
-
-        builder.HasIndex(x => x.Name).IsUnique();
+        builder
+            .HasMany(x => x.RolePermissions)
+            .WithOne(x => x.Role)
+            .HasForeignKey(x => x.RoleName);
     }
 
 }

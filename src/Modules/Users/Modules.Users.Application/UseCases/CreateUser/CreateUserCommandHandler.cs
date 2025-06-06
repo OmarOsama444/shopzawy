@@ -1,55 +1,68 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
-using Modules.Users.Application.Abstractions;
 using Modules.Users.Domain;
+using Modules.Common.Domain;
+using Microsoft.AspNetCore.Identity;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.Exceptions;
 using Modules.Users.Domain.Repositories;
 using Modules.Users.Domain.ValueObjects;
+using Modules.Common.Application.Messaging;
+using Modules.Users.Application.Abstractions;
 
 namespace Modules.Users.Application.UseCases.CreateUser
 {
     public class CreateUserCommandHandler(
-        IUserTokenRepository userTokenRepository,
-        UserManager<User> userManager,
         IUnitOfWork unitOfWork,
+        IUserRepository userRepository,
+        ITokenRepository tokenRepository,
         IJwtProvider jwtProvider
         ) : ICommandHandler<CreateUserCommand, Guid>
     {
         public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            if (await userManager
-                .Users
-                .AnyAsync(x => x.Email == request.Email && x.EmailConfirmed == true))
+            if (request.Email is not null &&
+                await userRepository.GetByConfirmedEmail(request.Email) is not null)
                 return new UserConflictEmail(request.Email);
-            if (await userManager
-                .Users
-                .AnyAsync(x => x.PhoneNumber == request.PhoneNumber
-                && x.PhoneNumberConfirmed == true))
+            if (request.PhoneNumber is not null &&
+                await userRepository.GetByConfirmedPhone(request.PhoneNumber) is not null)
                 return new UserConflictPhone(request.PhoneNumber);
 
             var user = User.Create(
                 request.FirstName,
                 request.LastName,
                 request.Email,
-                request.PhoneNumber);
+                request.PhoneNumber,
+                request.CountryCode);
 
-            var CreatedUser = await userManager.CreateAsync(user, request.Password);
+            var hasher = new PasswordHasher<User>();
+            var PasswordHash = hasher.HashPassword(user, request.Password);
 
-            var emailToken = UserToken
-                .Create(
-                    TokenType.Email,
-                    24 * 60,
-                    user.Id,
-                    jwtProvider.GenerateReferesh()
-                );
+            user.SetPassword(PasswordHash);
 
-            userTokenRepository.Add(emailToken);
+            userRepository.Add(user);
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                var token = Token
+                    .Create(
+                        TokenType.Email,
+                        24 * 60,
+                        user.Id,
+                        jwtProvider.GenerateReferesh()
+                    );
 
-            await unitOfWork.SaveChangesAsync();
+                tokenRepository.Add(token);
+            }
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                var token = Token
+                    .Create(
+                        TokenType.Phone,
+                        5,
+                        user.Id,
+                        jwtProvider.GenerateReferesh()
+                    );
+                tokenRepository.Add(token);
+            }
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return user.Id;
         }

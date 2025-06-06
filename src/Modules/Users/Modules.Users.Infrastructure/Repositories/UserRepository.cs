@@ -1,62 +1,21 @@
-using System.Data.Common;
-using System.Net.Http.Headers;
-using Dapper;
-using Modules.Common.Infrastructure;
-using Modules.Users.Application.Abstractions;
-using Modules.Users.Domain;
-using Modules.Users.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Modules.Users.Domain.Entities;
+using Modules.Users.Domain.Repositories;
 
-namespace Modules.Users.Infrastructure;
+namespace Modules.Users.Infrastructure.Repositories;
 
-public class UserRepository(IDbConnectionFactory dbConnectionFactory, UserDbContext userDbContext) :
-    Repository<User, UserDbContext>(userDbContext),
-    IUserRepository
+public class UserRepository(UsersDbContext usersDbContext) : Repository<User, UsersDbContext>(usersDbContext), IUserRepository
 {
-    public async Task<User?> GetUserByEmail(string Email)
+    public async Task<User?> GetByConfirmedEmail(string Email)
     {
-        await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
-        string sqlQuery =
-        $"""
-        SELECT
-        *
-        FROM 
-        {UsersModule.SchemaName}.Users
-        WHERE
-        Email = @Email
-        """;
-        User? user = await sqlConnection.QueryFirstOrDefaultAsync<User>(sqlQuery, new { Email });
-        return user;
+        return await context.users
+                .FirstOrDefaultAsync(x => x.Email == Email && x.EmailConfirmed == true);
     }
 
-    public async Task<User?> GetUserById(Guid id)
+    public async Task<User?> GetByConfirmedPhone(string PhoneNumber)
     {
-        await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
-        string sqlQuery =
-        $"""
-        SELECT
-        * 
-        FROM
-        {UsersModule.SchemaName}.Users
-        WHERE
-        id = @id 
-        """;
-        User? user = await sqlConnection.QueryFirstOrDefaultAsync<User>(sqlQuery, new { id });
-        return user;
+        return await context.users
+                .FirstOrDefaultAsync(x => x.PhoneNumber == PhoneNumber && x.PhoneNumberConfirmed == true);
     }
 
-    public async Task<User?> GetUserByPhone(string PhoneNumber)
-    {
-        await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
-        string sqlQuery =
-        $"""
-        SELECT
-        *
-        FROM 
-        {UsersModule.SchemaName}.Users
-        WHERE
-        PhoneNumber = @PhoneNumber
-        """;
-        User? user = await sqlConnection.QueryFirstOrDefaultAsync<User>(sqlQuery, new { PhoneNumber });
-        return user;
-    }
 }

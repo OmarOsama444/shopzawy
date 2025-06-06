@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Modules.Common.Application.Clock;
 using Modules.Common.Domain.DomainEvent;
+using Modules.Common.Infrastructure;
 using Modules.Common.Infrastructure.Inbox;
 using Modules.Users.Application.Abstractions;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ public class ProcessInboxJob(
     IServiceScopeFactory serviceScopeFactory,
     IDateTimeProvider dateTimeProvider) : IJob
 {
-    private const string ModuleName = UsersModule.SchemaName;
+    private const string ModuleName = Schemas.Users;
     public async Task Execute(IJobExecutionContext context)
     {
 

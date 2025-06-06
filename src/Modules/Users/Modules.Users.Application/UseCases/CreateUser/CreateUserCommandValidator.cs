@@ -1,6 +1,5 @@
-using System.Security.Cryptography.X509Certificates;
 using FluentValidation;
-using Modules.Users.Domain.ValueObjects;
+using Modules.Common.Application.Validators;
 
 
 namespace Modules.Users.Application.UseCases.CreateUser
@@ -21,13 +20,18 @@ namespace Modules.Users.Application.UseCases.CreateUser
                 .EmailAddress()
                 .When(x => !string.IsNullOrEmpty(x.Email));
             RuleFor(x => x.PhoneNumber)
-                .Matches(@"^(?:\+20|0)(10|11|12|15)\d{8}$")
-                .WithMessage("Invalid Egyptian phone number. It must start with +20 or 0, followed by 10, 11, 12, or 15, and contain 8 more digits.")
+                .Must((request, phoneNumber) => new PhoneNumberValidator(request.CountryCode).Must(phoneNumber!))
+                .WithMessage(PhoneNumberValidator.Message)
                 .When(x => !string.IsNullOrEmpty(x.PhoneNumber));
-            RuleFor(x => x.Role).NotEmpty().Must(role => UserRole.IsValidRole(role)).WithMessage("Invalid role");
             RuleFor(x => x)
                 .Must(x => !string.IsNullOrEmpty(x.Email) || !string.IsNullOrEmpty(x.PhoneNumber))
                 .WithMessage("You must provide at least an email or a phone number.");
+            RuleFor(x => x.Password)
+                .MinimumLength(12).WithMessage("Password must be at least 8 characters long.")
+                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
+                .Matches(@"\d").WithMessage("Password must contain at least one number.")
+                .Matches(@"[\W_]").WithMessage("Password must contain at least one special character.");
         }
     }
 

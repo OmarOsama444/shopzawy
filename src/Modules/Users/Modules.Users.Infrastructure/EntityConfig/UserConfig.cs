@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Users.Domain;
+using Modules.Users.Domain.Entities;
 
 namespace Modules.Users.Infrastructure;
 
@@ -19,7 +20,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .IsRequired();
         builder.HasIndex(u => u.ConfirmationToken);
 
-        builder.HasMany(e => e.UserTokens)
+        builder.HasMany(e => e.Tokens)
             .WithOne(e => e.User)
             .HasForeignKey(ut => ut.UserId)
             .IsRequired();

@@ -1,25 +1,33 @@
 
-using Microsoft.AspNetCore.Identity;
+using Modules.Common.Domain.DomainEvent;
+using Modules.Common.Domain.Entities;
 using Modules.Users.Domain.Entities;
 
-namespace Modules.Users.Domain;
+namespace Modules.Users.Domain.Entities;
 
-public class User : IdentityUser<Guid>
+public class User : Entity
 {
     public User() { }
+    public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public DateTime DateOfCreation { get; set; }
     public string ConfirmationToken { get; set; } = string.Empty;
-    public virtual ICollection<UserToken> UserTokens { get; set; } = [];
+    public virtual ICollection<Token> Tokens { get; set; } = [];
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+    public string? CountryCode { get; set; }
+    public string? Email { get; set; }
+    public bool EmailConfirmed { get; set; } = false;
+    public string? PhoneNumber { get; set; }
+    public string PasswordHash { get; set; } = string.Empty;
+    public bool PhoneNumberConfirmed { get; set; } = false;
     public static User Create(
         string FirstName,
         string LastName,
-        string Email,
-        string PhoneNumber)
+        string? Email,
+        string? PhoneNumber,
+        string? CountryCode)
     {
-
         var user = new User()
         {
             Id = Guid.NewGuid()
@@ -32,11 +40,31 @@ public class User : IdentityUser<Guid>
         ,
             Email = Email
         ,
+            EmailConfirmed = false
+        ,
             PhoneNumber = PhoneNumber
         ,
-            DateOfCreation = DateTime.Now,
+            PhoneNumberConfirmed = false
+        ,
+            DateOfCreation = DateTime.UtcNow
+        ,
+            CountryCode = CountryCode
         };
         return user;
     }
 
+    public void SetPassword(string PasswordHash)
+    {
+        this.PasswordHash = PasswordHash;
+    }
+
+    public void ConfirmEmail()
+    {
+        this.EmailConfirmed = true;
+    }
+
+    public void ConfirmPhoneNumber()
+    {
+        this.PhoneNumberConfirmed = true;
+    }
 }

@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Common.Application.Caching;
 using Modules.Common.Application.EventBus;
 using Modules.Common.Infrastructure.Caching.DistributedCache;
-using Modules.Common.Infrastructure.interceptors;
 using Modules.Common.Infrastructure.Authentication;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,8 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using Modules.Common.Infrastructure.Clock;
 using Modules.Common.Application.Clock;
-using Modules.Common.Application.Messaging;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Modules.Common.Infrastructure.Authentication.RoleRequirment;
 namespace Modules.Common.Infrastructure

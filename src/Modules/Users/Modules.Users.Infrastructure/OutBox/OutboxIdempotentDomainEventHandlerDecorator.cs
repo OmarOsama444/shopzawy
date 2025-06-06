@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Modules.Common.Domain.DomainEvent;
+using Modules.Common.Infrastructure;
 using Modules.Common.Infrastructure.Outbox;
 using Modules.Users.Application.Abstractions;
 
@@ -14,7 +15,7 @@ public class OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>(
     ILogger<OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>> logger) : INotificationHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent
 {
-    public const string ModuleName = UsersModule.SchemaName;
+    public const string ModuleName = Schemas.Users;
     public async Task Handle(TDomainEvent notification, CancellationToken cancellationToken)
     {
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
