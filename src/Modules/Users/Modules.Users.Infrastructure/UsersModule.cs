@@ -54,7 +54,10 @@ public static class UsersModule
                         Infrastructure.AssemblyRefrence.Assembly)
             )
             .UseSnakeCaseNamingConvention();
-            options.AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptors>());
+            options
+            .AddInterceptors(
+                sp.GetRequiredService<PublishDomainEventsInterceptors>())
+            .EnableSensitiveDataLogging();
         });
 
         services.Scan(

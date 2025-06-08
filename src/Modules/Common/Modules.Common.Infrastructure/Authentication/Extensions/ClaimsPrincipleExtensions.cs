@@ -22,11 +22,5 @@ namespace Modules.Common.Infrastructure.Authentication.Extensions
             string? role = principal.FindFirst(CustomClaims.Role)?.Value;
             return role ?? throw new Exception("User Role not available");
         }
-
-        public static string GetEmail(this ClaimsPrincipal principal)
-        {
-            string? Email = principal.FindFirst(CustomClaims.Email)?.Value;
-            return Email ?? throw new Exception("User Email not available");
-        }
     }
 }

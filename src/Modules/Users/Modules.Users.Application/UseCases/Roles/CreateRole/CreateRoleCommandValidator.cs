@@ -1,0 +1,11 @@
+using FluentValidation;
+
+namespace Modules.Users.Application.UseCases.Roles.CreateRole;
+
+internal class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
+{
+    public CreateRoleCommandValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().MinimumLength(3);
+    }
+}

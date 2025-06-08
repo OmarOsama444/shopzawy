@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using Modules.Common.Domain.DomainEvent;
 using Modules.Common.Domain.Entities;
 using Modules.Users.Domain.DomainEvents;
 using Modules.Users.Domain.ValueObjects;

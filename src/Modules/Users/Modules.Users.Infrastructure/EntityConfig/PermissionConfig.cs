@@ -8,11 +8,12 @@ public class PermissionConfig : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
-        builder.HasKey(x => x.Value);
-
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Name).IsRequired();
+        builder.HasIndex(x => x.Name).IsUnique();
         builder.HasMany(x => x.RolePermissions)
             .WithOne(x => x.Permission)
-            .HasForeignKey(x => x.PermissionName);
+            .HasForeignKey(x => x.PermissionId);
     }
 
 }

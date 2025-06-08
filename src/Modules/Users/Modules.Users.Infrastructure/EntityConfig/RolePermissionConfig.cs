@@ -8,11 +8,8 @@ public class RolePermissionConfig : IEntityTypeConfiguration<RolePermission>
 {
     public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
-        builder
-            .Property(x => x.RoleName)
-            .HasMaxLength(100);
 
-        builder.HasKey(x => new { x.RoleName, x.PermissionName });
+        builder.HasKey(x => new { x.RoleId, x.PermissionId });
     }
 
 }

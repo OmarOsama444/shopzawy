@@ -128,45 +128,80 @@ namespace Modules.Users.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.Permission", b =>
                 {
-                    b.Property<string>("Value")
-                        .HasColumnType("text")
-                        .HasColumnName("value");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
-                    b.HasKey("Value")
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on_utc");
+
+                    b.Property<string>("Module")
+                        .HasColumnType("text")
+                        .HasColumnName("module");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
                         .HasName("pk_permission");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permission_name");
 
                     b.ToTable("permission", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.Role", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on_utc");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
-                    b.HasKey("Name")
+                    b.HasKey("Id")
                         .HasName("pk_roles");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_roles_name");
 
                     b.ToTable("roles", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.RolePermission", b =>
                 {
-                    b.Property<string>("RoleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("role_name");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
 
-                    b.Property<string>("PermissionName")
-                        .HasColumnType("text")
-                        .HasColumnName("permission_name");
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("permission_id");
 
-                    b.HasKey("RoleName", "PermissionName")
+                    b.HasKey("RoleId", "PermissionId")
                         .HasName("pk_role_permission");
 
-                    b.HasIndex("PermissionName")
-                        .HasDatabaseName("ix_role_permission_permission_name");
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permission_permission_id");
 
                     b.ToTable("role_permission", "users");
                 });
@@ -208,26 +243,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.ToTable("token", "users");
                 });
 
-            modelBuilder.Entity("Modules.Users.Domain.Entities.UserRole", b =>
-                {
-                    b.Property<string>("RoleName")
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("role_name");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("RoleName", "UserId")
-                        .HasName("pk_user_role");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_user_role_user_id");
-
-                    b.ToTable("user_role", "users");
-                });
-
-            modelBuilder.Entity("Modules.Users.Domain.User", b =>
+            modelBuilder.Entity("Modules.Users.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -287,21 +303,40 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.ToTable("user", "users");
                 });
 
+            modelBuilder.Entity("Modules.Users.Domain.Entities.UserRole", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("RoleId", "UserId")
+                        .HasName("pk_user_role");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_role_user_id");
+
+                    b.ToTable("user_role", "users");
+                });
+
             modelBuilder.Entity("Modules.Users.Domain.Entities.RolePermission", b =>
                 {
                     b.HasOne("Modules.Users.Domain.Entities.Permission", "Permission")
                         .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionName")
+                        .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_role_permission_permission_permission_name");
+                        .HasConstraintName("fk_role_permission_permission_permission_id");
 
                     b.HasOne("Modules.Users.Domain.Entities.Role", "Role")
                         .WithMany("RolePermissions")
-                        .HasForeignKey("RoleName")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_role_permission_roles_role_name");
+                        .HasConstraintName("fk_role_permission_role_role_id");
 
                     b.Navigation("Permission");
 
@@ -310,7 +345,7 @@ namespace Modules.Users.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.Token", b =>
                 {
-                    b.HasOne("Modules.Users.Domain.User", "User")
+                    b.HasOne("Modules.Users.Domain.Entities.User", "User")
                         .WithMany("Tokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -324,12 +359,12 @@ namespace Modules.Users.Infrastructure.Migrations
                 {
                     b.HasOne("Modules.Users.Domain.Entities.Role", "Role")
                         .WithMany("UserRoles")
-                        .HasForeignKey("RoleName")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user_role_roles_role_name");
+                        .HasConstraintName("fk_user_role_role_role_id");
 
-                    b.HasOne("Modules.Users.Domain.User", "User")
+                    b.HasOne("Modules.Users.Domain.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -353,7 +388,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Modules.Users.Domain.User", b =>
+            modelBuilder.Entity("Modules.Users.Domain.Entities.User", b =>
                 {
                     b.Navigation("Tokens");
 

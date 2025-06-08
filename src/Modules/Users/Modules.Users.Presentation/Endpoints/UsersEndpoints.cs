@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Modules.Common.Application.Extensions;
-using Modules.Users.Application.UseCases.CreateUser;
+using Modules.Users.Application.UseCases.Users.CreateUser;
 
 namespace Modules.Users.Presentation.Endpoints;
 

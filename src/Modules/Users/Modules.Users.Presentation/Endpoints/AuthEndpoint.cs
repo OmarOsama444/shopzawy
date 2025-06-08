@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Users.Application.Abstractions;
-using Modules.Users.Application.UseCases.LoginUser;
-using Modules.Users.Application.UseCases.LoginWithRefresh;
+using Modules.Users.Application.UseCases.Auth.LoginUser;
+using Modules.Users.Application.UseCases.Auth.LoginWithRefresh;
 using Modules.Users.Application.UseCases.VerifyEmail;
 
 namespace Modules.Users.Presentation.Endpoints;

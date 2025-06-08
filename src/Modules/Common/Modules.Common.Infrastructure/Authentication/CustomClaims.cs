@@ -8,8 +8,8 @@ namespace Modules.Common.Infrastructure.Authentication
 {
     public static class CustomClaims
     {
-        public static string Sub = "skillhive_sub";
-        public static string Role = "skillhive_role";
-        public static string Email = "skillhive_email";
+        public static string Sub = "sub";
+        public static string Role = "role";
+        public static string Permission = "permission";
     }
 }
