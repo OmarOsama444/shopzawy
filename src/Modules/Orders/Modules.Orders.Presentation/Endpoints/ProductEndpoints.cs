@@ -24,25 +24,25 @@ public class ProductEndpoints : IEndpoint
         group.MapPost("", async ([FromBody] ProductCreateRequest request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateProductCommand(
-                request.product_names.translations,
-                request.long_descriptions.translations,
-                request.short_descriptions.translations,
-                request.tags,
-                request.weight_unit,
-                request.dimension_unit,
-                request.vendor_id,
-                request.brand_id,
-                request.category_id,
-                request.product_items
+                request.ProductNames.translations,
+                request.LongDescriptions.translations,
+                request.ShortDescriptions.translations,
+                request.Tags,
+                request.WeightUnit,
+                request.DimensionUnit,
+                request.VendorId,
+                request.BrandId,
+                request.CategoryId,
+                request.ProductItems
             ));
             return
                 result.isSuccess ?
                 Results.Ok(result.Value) :
                 result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.ProductCreate);
 
         group.MapPost("{Id}/items",
-            async ([FromRoute] Guid Id, [FromBody] ICollection<product_item> request, [FromServices] ISender sender) =>
+            async ([FromRoute] Guid Id, [FromBody] ICollection<ProductItemDto> request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateProductItemCommand(
                 Id,
@@ -51,7 +51,7 @@ public class ProductEndpoints : IEndpoint
             return result.isSuccess ?
                 Results.Ok(result.Value) :
                 result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.ProductItemCreate);
 
         group.MapPut("items/{Id}",
             async ([FromRoute] Guid Id, [FromBody] ProductItemRequest request, [FromServices] ISender sender) =>
@@ -66,7 +66,7 @@ public class ProductEndpoints : IEndpoint
                     request.height,
                     request.weight,
                     request.image_urls));
-        });
+        }).RequireAuthorization(Permissions.ProductItemUpdate);
 
         group.MapDelete("items/{Id}",
             async ([FromRoute] Guid Id, [FromServices] ISender sender) =>
@@ -76,21 +76,23 @@ public class ProductEndpoints : IEndpoint
                     result.isSuccess ?
                     Results.Ok(result.Value) :
                     result.ExceptionToResult();
-            });
+            })
+            .RequireAuthorization(Permissions.ProductItemDelete);
+
     }
 
 }
 public record ProductCreateRequest(
-    LocalizedText product_names,
-    LocalizedText long_descriptions,
-    LocalizedText short_descriptions,
-    ICollection<string> tags,
-    WeightUnit weight_unit,
-    DimensionUnit dimension_unit,
-    Guid vendor_id,
-    Guid brand_id,
-    Guid category_id,
-    ICollection<product_item> product_items);
+    LocalizedText ProductNames,
+    LocalizedText LongDescriptions,
+    LocalizedText ShortDescriptions,
+    ICollection<string> Tags,
+    WeightUnit WeightUnit,
+    DimensionUnit DimensionUnit,
+    Guid VendorId,
+    Guid BrandId,
+    Guid CategoryId,
+    ICollection<ProductItemDto> ProductItems);
 public record ProductItemRequest(
     string? stock_keeping_unit,
     int? quantity_in_stock,

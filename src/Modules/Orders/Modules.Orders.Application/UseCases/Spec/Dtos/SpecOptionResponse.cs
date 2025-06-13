@@ -7,4 +7,4 @@ using Modules.Orders.Domain.Repositories;
 
 namespace Modules.Orders.Application.UseCases.Spec.Dtos;
 
-public record SpecOptionResponse(Guid Id, Guid SpecificationId, string Value);
+public record SpecOptionResponse(Guid SpecificationId, string Value);

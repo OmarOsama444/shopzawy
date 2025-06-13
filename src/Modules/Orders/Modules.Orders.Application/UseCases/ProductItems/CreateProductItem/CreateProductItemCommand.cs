@@ -10,7 +10,7 @@ namespace Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 
 public record CreateProductItemCommand(
         Guid productId,
-        ICollection<product_item> product_items
+        ICollection<ProductItemDto> product_items
         ) : ICommand<ICollection<Guid>>;
 
 public sealed class CreateProductItemCommandHandler(

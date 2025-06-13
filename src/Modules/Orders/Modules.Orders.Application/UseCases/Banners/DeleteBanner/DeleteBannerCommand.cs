@@ -3,7 +3,7 @@ using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
 using Modules.Common.Domain.Exceptions;
 using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Application.Repositories;
 
 namespace Modules.Orders.Application.UseCases.Banners.DeleteBanner;
 

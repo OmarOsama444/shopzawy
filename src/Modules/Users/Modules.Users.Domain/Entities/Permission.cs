@@ -5,7 +5,6 @@ namespace Modules.Users.Domain.Entities;
 
 public class Permission : Entity
 {
-    public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public bool Active { get; private set; } = true;
     public DateTime CreatedOnUtc { get; set; }
@@ -18,7 +17,6 @@ public class Permission : Entity
             Name = name,
             Active = active,
             Module = module,
-            Id = Guid.NewGuid(),
             CreatedOnUtc = DateTime.UtcNow
         };
     }

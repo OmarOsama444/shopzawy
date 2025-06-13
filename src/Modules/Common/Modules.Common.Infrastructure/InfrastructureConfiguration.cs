@@ -1,19 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Modules.Common.Application.Caching;
-using Modules.Common.Application.EventBus;
-using Modules.Common.Infrastructure.Caching.DistributedCache;
-using Modules.Common.Infrastructure.Authentication;
+﻿using Quartz;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Quartz;
-using Modules.Common.Infrastructure.Clock;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Modules.Common.Application.Clock;
-using Microsoft.AspNetCore.Authorization;
-using Modules.Common.Infrastructure.Authentication.RoleRequirment;
+using Modules.Common.Application.Caching;
+using Modules.Common.Application.EventBus;
+using Modules.Common.Infrastructure.Clock;
+using Modules.Common.Infrastructure.Authentication;
+using Modules.Common.Infrastructure.Caching.DistributedCache;
 namespace Modules.Common.Infrastructure
 {
     public static class InfrastructureConfiguration
@@ -36,39 +34,7 @@ namespace Modules.Common.Infrastructure
             services.TryAddSingleton<ICacheService, CacheService>();
             #endregion
 
-            #region Jwt Configure
-            services.ConfigureOptions<JwtOptionsSetup>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new()
-                {
-                    ValidateAudience = true,
-                    ValidateIssuer = true,
-                    ValidIssuer = config["Jwt:Issuer"],
-                    ValidAudience = config["Jwt:Audience"],
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(config["Jwt:SecretKey"]!)
-                    )
-                };
-            });
-            services.AddAuthorization();
-            // .AddCookie("External")
-            // .AddGoogle(googleOptions =>
-            // {
-            //     googleOptions.ClientId = config["Authentication:Google:ClientId"]!;
-            //     googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"]!;
-            //     googleOptions.SignInScheme = "External";
-            // })
-            // .AddFacebook(facebookOptions =>
-            // {
-            //     facebookOptions.AppId = config["Authentication:Facebook:AppId"]!;
-            //     facebookOptions.AppSecret = config["Authentication:Facebook:AppSecret"]!;
-            //     facebookOptions.SignInScheme = "External";
-            // });
-
-            #endregion
+            services.AddAuthenticationInternal();
 
             // Interceptor That Publishes Domain Events
             // services.TryAddSingleton<PublishDomainEventsInterceptors>();
@@ -76,9 +42,9 @@ namespace Modules.Common.Infrastructure
             // adding DateTime Providers use diffirent datetime provider when unitTesting 
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-            // adding auth provider 
-            services.AddSingleton<IAuthorizationPolicyProvider, RoleAuthorizationPolicyProvider>();
-            services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+            // // adding auth provider 
+            // services.AddSingleton<IAuthorizationPolicyProvider, RoleAuthorizationPolicyProvider>();
+            // services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
             // Event bus interface for massTransit can be linked to RabbitMq when needed
             services.TryAddSingleton<IEventBus, EventBus>();
             services.AddMassTransit(config =>

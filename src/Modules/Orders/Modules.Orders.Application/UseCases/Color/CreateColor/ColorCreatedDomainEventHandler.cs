@@ -1,8 +1,8 @@
 using Modules.Common.Application.Messaging;
 using Modules.Orders.Application.Abstractions;
+using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.CreateColor;
@@ -17,7 +17,7 @@ public class ColorCreatedDomainEventHandler(
         var specs = await specRepository.GetByDataType(SpecDataType.Color);
         foreach (var spec in specs)
         {
-            var specOption = SpecificationOption.Create(spec.DataType, notification.code, spec.Id);
+            var specOption = SpecificationOption.Create(notification.code, spec.Id);
             specOptionRepository.Add(specOption);
         }
         await unitOfWork.SaveChangesAsync();

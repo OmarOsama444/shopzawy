@@ -20,14 +20,14 @@ public class SpecsEndpoints : IEndpoint
     {
         var group = app.MapGroup("api/specs").WithTags("Specifications");
 
-        group.MapPost("{id}", async (
+        group.MapPut("{id}", async (
             [FromRoute] Guid id,
-            [FromBody] CreateCategorySpecOptionRequestDto request,
+            [FromBody] UpdateSpecOptionRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateSpecOptionsCommand(id, request.values));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+            var result = await sender.Send(new UpdateSpecOptionsCommand(id, request.Add, request.Remove));
+            return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
+        }).RequireAuthorization(Permissions.SpecUpdate);
 
         group.MapGet("{id}", async (
             [FromRoute] Guid id,
@@ -35,13 +35,13 @@ public class SpecsEndpoints : IEndpoint
         {
             var result = await sender.Send(new GetSpecOptionQuery(id));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.SpecRead);
 
         group.MapPost("", async ([FromBody] CreateSpecRequestDto requestDto, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateSpecCommand(requestDto.spec_names, requestDto.dataType));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.SpecCreate);
 
         group.MapGet("", async (
             [FromServices] ISender sender,
@@ -53,9 +53,9 @@ public class SpecsEndpoints : IEndpoint
         {
             var result = await sender.Send(new PaginateSpecQuery(pageNumber, pageSize, name, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.SpecRead);
     }
-    public record CreateSpecRequestDto(IDictionary<Language, string> spec_names, string dataType);
-    public record CreateCategorySpecOptionRequestDto(ICollection<string> values);
+    public record CreateSpecRequestDto(IDictionary<Language, string> spec_names, SpecDataType dataType);
+    public record UpdateSpecOptionRequestDto(ICollection<string> Add, ICollection<string> Remove);
 
 }

@@ -1,4 +1,5 @@
 
+using System.Runtime.InteropServices;
 using Modules.Common.Domain.DomainEvent;
 using Modules.Common.Domain.Entities;
 using Modules.Users.Domain.Entities;
@@ -10,9 +11,8 @@ public class User : Entity
     public User() { }
     public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
+    public string? LastName { get; set; } = string.Empty;
     public DateTime DateOfCreation { get; set; }
-    public string ConfirmationToken { get; set; } = string.Empty;
     public virtual ICollection<Token> Tokens { get; set; } = [];
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
     public string? CountryCode { get; set; }
@@ -22,6 +22,7 @@ public class User : Entity
     public string PasswordHash { get; set; } = string.Empty;
     public bool PhoneNumberConfirmed { get; set; } = false;
     public static User Create(
+        Guid GuestId,
         string FirstName,
         string LastName,
         string? Email,
@@ -31,8 +32,6 @@ public class User : Entity
         var user = new User()
         {
             Id = Guid.NewGuid()
-        ,
-            ConfirmationToken = Guid.NewGuid().ToString()
         ,
             FirstName = FirstName
         ,
@@ -50,6 +49,27 @@ public class User : Entity
         ,
             CountryCode = CountryCode
         };
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, GuestId));
+        return user;
+    }
+
+    public static User Create(Guid GuestId, string Email, string FirstName, string? LastName)
+    {
+        var user = new User()
+        {
+            Id = Guid.NewGuid()
+                ,
+            FirstName = FirstName
+                ,
+            LastName = LastName
+                ,
+            Email = Email
+                ,
+            EmailConfirmed = true
+                ,
+            DateOfCreation = DateTime.UtcNow
+        };
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, GuestId));
         return user;
     }
 

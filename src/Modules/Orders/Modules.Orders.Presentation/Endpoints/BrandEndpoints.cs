@@ -21,13 +21,13 @@ public class BrandEndpoints : IEndpoint
         {
             var result = await sender.Send(request);
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BrandCreate);
 
         group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int page_number = 1, [FromQuery] int page_size = 10, [FromQuery] string? name_field = null, [FromQuery] Language lang_code = Language.en) =>
         {
             var result = await sender.Send(new PaginateBrandsQuery(page_number, page_size, name_field, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BrandRead);
 
         group.MapPut("{id}", async ([FromRoute] Guid id, [FromBody] UpdateBrandRequestDto request, [FromServices] ISender sender) =>
         {
@@ -38,7 +38,7 @@ public class BrandEndpoints : IEndpoint
             request.Featured,
             request.Active));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BrandUpdate);
     }
 
     public record UpdateBrandRequestDto(

@@ -20,21 +20,21 @@ public class PermissionEndpoint : IEndpoint
         {
             var result = await sender.Send(new GetAllPermissionsQuery());
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.ReadPermissions);
 
         group.MapGet("", async ([FromQuery] int PageSize, [FromQuery] int PageNumber, [FromQuery] string? Name, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new PaginatePermissionsQuery(PageNumber, PageSize, Name));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.ReadPermissions);
 
         group.MapPost("", async ([FromBody] CreatePermissionCommand request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(request);
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CreatePermission);
 
-        group.MapPut("/{PermissionId}", async ([FromRoute] Guid PermissionId, [FromBody] UpdatePermissionDto request, [FromServices] ISender sender) =>
+        group.MapPut("/{PermissionId}", async ([FromRoute] string PermissionId, [FromBody] UpdatePermissionDto request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new UpdatePermissionCommand(
                 PermissionId,
@@ -42,7 +42,7 @@ public class PermissionEndpoint : IEndpoint
                 request.ModuleName,
                 request.Active));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.UpdatePermission);
     }
     public record UpdatePermissionDto(string? PermissionName, string? ModuleName, bool? Active);
 }

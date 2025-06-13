@@ -4,4 +4,4 @@ using Modules.Users.Application.UseCases.Dtos;
 
 namespace Modules.Users.Application.UseCases.Roles.GetRoleById;
 
-public record GetRoleByIdQuery(Guid Id) : IQuery<RoleDetailResponse>;
+public record GetRoleByIdQuery(string name) : IQuery<RoleDetailResponse>;

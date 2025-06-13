@@ -1,7 +1,7 @@
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
+using Modules.Users.Application.Repositories;
 using Modules.Users.Domain.Exceptions;
-using Modules.Users.Domain.Repositories;
 using Modules.Users.Domain.ValueObjects;
 
 
@@ -17,7 +17,7 @@ public sealed class VerifyEmailCommandHandler(
     {
         var token = await
             tokenRepository
-            .GetByTokenTypeAndValue(TokenType.Email, request.Token);
+            .GetByTokenTypeAndValue(request.Token, TokenType.Email);
         if (token is null)
             return new TokenNotFound(request.Token);
         var user = await

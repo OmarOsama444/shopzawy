@@ -1,9 +1,9 @@
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain.Exceptions;
+using Modules.Users.Application.Repositories;
 using Modules.Users.Application.Services;
 using Modules.Users.Domain.DomainEvents;
 using Modules.Users.Domain.Entities;
-using Modules.Users.Domain.Repositories;
 using Modules.Users.Domain.ValueObjects;
 
 namespace Modules.Users.Application.UseCases.Users.CreateUser;
@@ -18,8 +18,8 @@ public class EmailTokenCreatedDomainEventHandler(
         Token? token =
             await tokenRepository
             .GetByTokenTypeAndValue(
-                TokenType.Email,
-                notification.Token
+                notification.Token,
+                TokenType.Email
             );
 
         if (token is null)

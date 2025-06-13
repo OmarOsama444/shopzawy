@@ -13,7 +13,8 @@ public class TokenConfig : IEntityTypeConfiguration<Token>
         builder
             .HasIndex(x => new { x.Value, x.TokenType })
             .IsUnique();
-
+        builder
+            .HasIndex(x => x.UserId);
     }
 
 }

@@ -1,7 +1,7 @@
 using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
-using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.PaginateBrands;

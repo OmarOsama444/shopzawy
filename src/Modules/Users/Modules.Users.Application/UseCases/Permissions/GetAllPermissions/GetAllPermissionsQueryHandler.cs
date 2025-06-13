@@ -1,8 +1,8 @@
 using MassTransit.Initializers;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
+using Modules.Users.Application.Repositories;
 using Modules.Users.Application.UseCases.Dtos;
-using Modules.Users.Domain.Repositories;
 
 namespace Modules.Users.Application.UseCases.Permissions.GetAllPermissions;
 
@@ -17,7 +17,7 @@ public class GetAllPermissionsQueryHandler(
                 await permissionRepository
                     .GetAllAsync()
             )
-            .Select(x => new PermissionResponse(x.Id, x.Name, x.Active, x.Module ?? ""))
+            .Select(x => new PermissionResponse(x.Name, x.Active, x.Module ?? ""))
             .ToList();
     }
 }

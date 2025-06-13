@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Modules.Users.Application.Repositories;
 using Modules.Users.Domain.Entities;
-using Modules.Users.Domain.Repositories;
 
 namespace Modules.Users.Infrastructure.Repositories;
 
@@ -19,7 +19,7 @@ public class PermissionRepository(UsersDbContext usersDbContext)
         return await context.permissions.FirstOrDefaultAsync(x => x.Name == name);
     }
 
-    public async Task<ICollection<Permission>> GetByRoleId(Guid Id)
+    public async Task<ICollection<Permission>> GetByRoleId(string Id)
     {
         return await context
             .rolePermissions

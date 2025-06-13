@@ -23,5 +23,9 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         .WithOne(p => p.Category)
         .HasForeignKey(p => p.CategoryId);
 
+        builder
+            .HasData(
+                new Category()
+            );
     }
 }

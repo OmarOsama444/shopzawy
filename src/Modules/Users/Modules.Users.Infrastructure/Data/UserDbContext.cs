@@ -38,6 +38,7 @@ public class UsersDbContext(DbContextOptions<UsersDbContext> Options) :
         modelBuilder.ApplyConfiguration<OutboxConsumerMessage>(new OutboxConsumerMessageConfiguration());
         modelBuilder.ApplyConfiguration<InboxMessage>(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration<InboxConsumerMessage>(new InboxConsumerMessageConfiguration());
+
     }
 
 

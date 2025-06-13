@@ -17,7 +17,7 @@ public interface IProductService
                 Guid categoryId);
         public Task<Result<ICollection<Guid>>> CreateProductItems(
          Guid productId,
-         ICollection<product_item> product_Items);
+         ICollection<ProductItemDto> product_Items);
         public Task<Result<Guid>> CreateProductWithItem(
                 IDictionary<Language, string> product_name,
                 IDictionary<Language, string> long_description,
@@ -28,19 +28,19 @@ public interface IProductService
                 Guid vendor_id,
                 Guid brand_id,
                 Guid category_id,
-                ICollection<product_item> product_items);
+                ICollection<ProductItemDto> product_items);
 
 
 
 }
 
-public record product_item(
-        string stock_keeping_unit,
-        int quantity_in_stock,
-        float price,
-        float weight,
-        float width,
-        float length,
-        float height,
-        ICollection<string> urls,
-        IDictionary<Guid, Guid> spec_options);
+public record ProductItemDto(
+        string StockKeepingUnit,
+        int QuantityInStock,
+        float Price,
+        float Weight,
+        float Width,
+        float Length,
+        float Height,
+        ICollection<string> Urls,
+        IDictionary<Guid, Guid> SpecOptions);

@@ -5,10 +5,11 @@ namespace Modules.Orders.Domain.Entities;
 
 public class Category : Entity
 {
-    public Guid Id { get; private set; }
-    public Guid? ParentCategoryId { get; private set; }
-    public int Order { get; private set; }
-    public DateTime CreatedOn { get; private set; }
+    public Category() { }
+    public Guid Id { get; private set; } = Guid.Empty;
+    public Guid? ParentCategoryId { get; private set; } = null;
+    public int Order { get; private set; } = int.MaxValue;
+    public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
     public virtual Category ParentCategory { get; set; } = default!;
     public virtual ICollection<Category> ChilrenCategories { get; set; } = [];
     public virtual ICollection<Product> Products { get; set; } = [];
@@ -30,7 +31,6 @@ public class Category : Entity
         return category;
 
     }
-
     public void Update(int? Order)
     {
         if (Order.HasValue)

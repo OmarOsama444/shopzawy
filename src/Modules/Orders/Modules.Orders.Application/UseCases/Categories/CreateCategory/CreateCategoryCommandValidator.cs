@@ -11,6 +11,9 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
         RuleFor(c => c.Spec_ids).NotNull();
         RuleForEach(x => x.Names.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
         RuleForEach(x => x.Image_urls.Values).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(c => c.Names).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
+        RuleFor(c => c.Descriptions).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
+        RuleFor(c => c.Image_urls).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
         RuleForEach(x => x.Descriptions.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
         RuleFor(c => c)
             .Must(HaveConsistentLanguageKeys)

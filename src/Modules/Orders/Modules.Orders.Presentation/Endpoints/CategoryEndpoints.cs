@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Routing;
 using Modules.Common.Application.Extensions;
 using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.Categories.CreateCategory;
-using Modules.Orders.Application.UseCases.Categories.CreateCategorySpec;
 using Modules.Orders.Application.UseCases.Categories.GetCategory;
+using Modules.Orders.Application.UseCases.Categories.UpdateCategorySpec;
 using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
 using Modules.Orders.Application.UseCases.UpdateCategory;
@@ -24,15 +24,15 @@ public class CategoryEndpoints : IEndpoint
         group.MapPost("", async ([FromBody] CreateCategoryRequestDto request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateCategoryCommand(
-                request.order,
-                request.parent_category_id,
-                request.spec_ids,
-                request.names.translations,
-                request.descriptions.translations,
-                request.image_urls.translations
+                request.Order,
+                request.ParentCategoryId ?? Guid.Empty,
+                request.SpecIds,
+                request.Names.translations,
+                request.Descriptions.translations,
+                request.ImageUrls.translations
             ));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CategoryCreate);
 
         group.MapGet("main", async ([FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
         {
@@ -49,13 +49,13 @@ public class CategoryEndpoints : IEndpoint
         {
             var result = await sender.Send(new PaginateCategoryQuery(pageNumber, pageSize, nameFilter, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CategoryRead);
 
         group.MapGet("{id}", async ([FromRoute] Guid id, [FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
         {
             var result = await sender.Send(new GetCategoryByIdQuery(id, lang_code));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CategoryRead);
 
         group.MapPut("{id}", async (
             [FromServices] ISender sender,
@@ -64,37 +64,35 @@ public class CategoryEndpoints : IEndpoint
         {
             var result = await sender.Send(new UpdateCategoryCommand(
                 id,
-                request.order,
-                request.names?.translations ?? new Dictionary<Language, string>(),
-                request.descriptions?.translations ?? new Dictionary<Language, string>(),
-                request.image_urls?.translations ?? new Dictionary<Language, string>()));
+                request.Order,
+                request.Names?.translations ?? new Dictionary<Language, string>(),
+                request.Descriptions?.translations ?? new Dictionary<Language, string>(),
+                request.ImageUrls?.translations ?? new Dictionary<Language, string>()));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CategoryUpdate);
 
-        group.MapPost("{id}/specs/", async (
-            [FromRoute] Guid id,
-            [FromBody] CreateCategorySpecRequestDto request,
+        group.MapPut("{id}/specs/", async (
+            [FromRoute] Guid Id,
+            [FromBody] UpdateCategorySpecsDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new CreateCategorySpecCommand(id, request.Ids));
+            var result = await sender.Send(new UpdateCategorySpecCommand(Id, request.Add, request.Remove));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.CategoryUpdate);
 
     }
-
-    public record CreateCategorySpecRequestDto(ICollection<Guid> Ids);
     public record CreateCategoryRequestDto(
-        int order,
-        Guid? parent_category_id,
-        ICollection<Guid> spec_ids,
-        LocalizedText names,
-        LocalizedText descriptions,
-        LocalizedText image_urls
+        int Order,
+        Guid? ParentCategoryId,
+        ICollection<Guid> SpecIds,
+        LocalizedText Names,
+        LocalizedText Descriptions,
+        LocalizedText ImageUrls
     );
     public record UpdateCategoryRequestDto(
-        int? order,
-        LocalizedText? names,
-        LocalizedText? descriptions,
-        LocalizedText? image_urls);
-
+        int? Order,
+        LocalizedText? Names,
+        LocalizedText? Descriptions,
+        LocalizedText? ImageUrls);
+    public record UpdateCategorySpecsDto(ICollection<Guid> Add, ICollection<Guid> Remove);
 }

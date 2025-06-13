@@ -21,13 +21,14 @@ public class BannersEndpoints : IEndpoint
         {
             var result = await sender.Send(request);
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        })
+        .RequireAuthorization(Permissions.BannerCreate);
 
         group.MapGet("active", async ([FromServices] ISender sender) =>
         {
             var result = await sender.Send(new GetActiveBannerQuery());
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BannerRead);
 
         group.MapGet("", async ([FromServices] ISender sender,
         [FromQuery] string? Title,
@@ -37,13 +38,13 @@ public class BannersEndpoints : IEndpoint
         {
             var result = await sender.Send(new PaginateBannersQuery(pageNumber, pageSize, Title, Active));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BannerRead);
 
         group.MapDelete("{id}", async ([FromRoute] Guid id, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new DeleteBannerCommand(id));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.BannerDelete);
     }
 
 }

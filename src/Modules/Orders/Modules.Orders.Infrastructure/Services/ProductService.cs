@@ -66,7 +66,7 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
 
     public async Task<Result<ICollection<Guid>>> CreateProductItems(
         Guid productId,
-        ICollection<product_item> product_items)
+        ICollection<ProductItemDto> product_items)
     {
         ICollection<Guid> ProductItemIds = new HashSet<Guid>();
         Product? product = await ordersDbContext
@@ -80,46 +80,46 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
 
         ICollection<Specification> specifications = product.Category.CategorySpecs.Select(x => x.Specification).ToList();
 
-        foreach (var product_item in product_items)
-        {
-            ProductItem productItem = ProductItem.Create(
-                product_item.stock_keeping_unit,
-                product_item.quantity_in_stock,
-                product_item.price,
-                product_item.width,
-                product_item.length,
-                product_item.height,
-                product_item.weight,
-                productId,
-                product_item.urls);
-            ordersDbContext.ProductItems.Add(productItem);
-            foreach (Specification specification in specifications)
-            {
-                if (product_item.spec_options.ContainsKey(specification.Id)
-                    && ordersDbContext
-                        .SpecificationOptions
-                        .Any(
-                            x => x.SpecificationId == specification.Id
-                            &&
-                            x.Id == product_item.spec_options[specification.Id]
-                            )
-                        )
-                {
-                    ProductItemOptions productItemOptions = ProductItemOptions.Create(
-                        productItem.Id,
-                        product_item.spec_options[specification.Id]
-                    );
+        // foreach (var product_item in product_items)
+        // {
+        //     ProductItem productItem = ProductItem.Create(
+        //         product_item.StockKeepingUnit,
+        //         product_item.QuantityInStock,
+        //         product_item.Price,
+        //         product_item.Width,
+        //         product_item.Length,
+        //         product_item.Height,
+        //         product_item.Weight,
+        //         productId,
+        //         product_item.Urls);
+        //     ordersDbContext.ProductItems.Add(productItem);
+        //     foreach (Specification specification in specifications)
+        //     {
+        //         if (product_item.SpecOptions.ContainsKey(specification.Id)
+        //             && ordersDbContext
+        //                 .SpecificationOptions
+        //                 .Any(
+        //                     x => x.SpecificationId == specification.Id
+        //                     &&
+        //                     x.Id == product_item.SpecOptions[specification.Id]
+        //                     )
+        //                 )
+        //         {
+        //             ProductItemOptions productItemOptions = ProductItemOptions.Create(
+        //                 productItem.Id,
+        //                 product_item.SpecOptions[specification.Id]
+        //             );
 
-                    ordersDbContext.ProductItemOptions.Add(productItemOptions);
-                }
-                else
-                {
-                    return new SpecificationNotFoundException(specification.Id);
-                }
-            }
-            await ordersDbContext.SaveChangesAsync();
-            ProductItemIds.Add(productItem.Id);
-        }
+        //             ordersDbContext.ProductItemOptions.Add(productItemOptions);
+        //         }
+        //         else
+        //         {
+        //             return new SpecificationNotFoundException(specification.Id);
+        //         }
+        //     }
+        //     await ordersDbContext.SaveChangesAsync();
+        //     ProductItemIds.Add(productItem.Id);
+        // }
 
         return Result<ICollection<Guid>>.Success(ProductItemIds);
     }
@@ -134,7 +134,7 @@ public class ProductService(OrdersDbContext ordersDbContext) : IProductService
         Guid vendor_id,
         Guid brand_id,
         Guid category_id,
-        ICollection<product_item> product_items)
+        ICollection<ProductItemDto> product_items)
     {
         await using var transaction = await ordersDbContext.Database.BeginTransactionAsync();
 

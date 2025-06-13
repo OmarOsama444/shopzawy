@@ -5,7 +5,6 @@ namespace Modules.Users.Domain.Entities;
 
 public class Role : Entity
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public DateTime CreatedOnUtc { get; set; }
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
@@ -15,7 +14,6 @@ public class Role : Entity
         return new Role
         {
             Name = name,
-            Id = Guid.NewGuid(),
             CreatedOnUtc = DateTime.UtcNow
         };
     }

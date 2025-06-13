@@ -1,10 +1,10 @@
 using System.Data.Common;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
+using Modules.Orders.Application.Dtos;
+using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Users.Infrastructure.Repositories;
@@ -21,65 +21,28 @@ public class CategoryRepository(
         context.CategoryTranslations.Add(categoryTranslation);
     }
 
-    public async Task<ICollection<MainCategoryResponse>> Children(Guid Id, Language lang_code)
+    public async Task<TranslatedCategoryResponseDto?> GetById(Guid id, Language langCode)
     {
-        await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
-        WITH RECURSIVE category_hierarchy AS (
-        SELECT 
-            id ,
-            parent_category_id ,
-            "order" 
-        FROM orders.category 
-        WHERE parent_category_id = @Id
-
-        UNION ALL
-
         SELECT
-            c.id,
-            c.parent_category_id,
-            c.order
+            C.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            CT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
+            CT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
+            C."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
+            CT.image_url as {nameof(TranslatedCategoryResponseDto.ImageUrl)}
         FROM 
-            orders.category c
-        INNER JOIN 
-            category_hierarchy ch 
-        ON 
-            c.parent_category_id = ch.id
-        )
-
-        SELECT 
-            CH.id as {nameof(MainCategoryResponse.Id)} ,
-            CH."order" as {nameof(MainCategoryResponse.order)} ,
-            CH.parent_category_id as {nameof(MainCategoryResponse.parentCategoryId)} ,
-            CT.description as {nameof(MainCategoryResponse.Description)} ,
-            CT.image_url as {nameof(MainCategoryResponse.ImageUrl)} ,
-            CT.name as {nameof(MainCategoryResponse.CategoryName)}
-        FROM 
-            category_hierarchy AS CH
+            {Schemas.Orders}.category as C 
         LEFT JOIN
-            category_translation AS CT
+            {Schemas.Orders}.category_translation as CT
         ON
-            CH.id = CT.category_id
+            C.id = CT.Category_Id
         WHERE
-            CT.lang_code = @lang_code
+            CT.lang_code = @lang_code AND C.id = @id ;
         """;
-        IEnumerable<MainCategoryResponse> categories = await dbConnection.QueryAsync<MainCategoryResponse>(Query, new { Id, lang_code });
-        return categories.ToList();
+        return await connection.QueryFirstOrDefaultAsync(Query, new { id, lang_code = langCode });
     }
-    public override async Task<Category?> GetByIdAsync(object id)
-    {
-        Guid categoryId = (Guid)id;
-
-        return await context.Categories
-            .Include(x => x.ChilrenCategories)
-            .Include(x => x.ParentCategory)
-            .Include(x => x.CategorySpecs)
-            .ThenInclude(x => x.Specification)
-            .ThenInclude(c => c.SpecificationOptions)
-            .FirstOrDefaultAsync(x => x.Id == categoryId);
-    }
-
     public async Task<IDictionary<Guid, string>> GetCategoryPath(Guid Id, Language LangCode)
     {
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
@@ -122,18 +85,48 @@ public class CategoryRepository(
         return (await dbConnection.QueryAsync<(Guid key, string value)>(Query, new { Id, LangCode })).ToDictionary();
     }
 
-    public async Task<ICollection<MainCategoryResponse>> GetMainCategories(Language lang_code)
+    public async Task<ICollection<TranslatedCategoryResponseDto>> GetChildrenById(Guid Id, Language langCode)
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
         SELECT
-            C.id AS {nameof(MainCategoryResponse.Id)} , 
-            C.parent_category_id AS {nameof(MainCategoryResponse.parentCategoryId)} ,
-            C.order AS {nameof(MainCategoryResponse.order)} ,
-            CT.name AS {nameof(MainCategoryResponse.CategoryName)} ,
-            CT.description AS {nameof(MainCategoryResponse.Description)} ,
-            CT.Image_url AS {nameof(MainCategoryResponse.ImageUrl)} 
+            PC.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            PCT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
+            PCT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
+            PC."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
+            PCT.image_url as {nameof(TranslatedCategoryResponseDto.ImageUrl)}
+        FROM 
+            {Schemas.Orders}.category as C
+        JOIN 
+            {Schemas.Orders}.category as PC ON C.parent_category_id = PC.id
+        LEFT JOIN 
+            {Schemas.Orders}.category_translation as PCT ON PC.id = PCT.Category_Id
+        WHERE 
+            C.id = @id AND PCT.lang_code = @lang_code;
+        """;
+
+        var categories = await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new
+        {
+            id = Id,
+            lang_code = langCode
+        });
+        return categories.ToList();
+
+    }
+
+    public async Task<ICollection<TranslatedCategoryResponseDto>> GetMainCategories(Language lang_code)
+    {
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
+        string Query =
+        $"""
+        SELECT
+            C.id AS {nameof(TranslatedCategoryResponseDto.Id)} , 
+            C.parent_category_id AS {nameof(TranslatedCategoryResponseDto.parentCategoryId)} ,
+            C.order AS {nameof(TranslatedCategoryResponseDto.Order)} ,
+            CT.name AS {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
+            CT.description AS {nameof(TranslatedCategoryResponseDto.Description)} ,
+            CT.Image_url AS {nameof(TranslatedCategoryResponseDto.ImageUrl)} 
         FROM
             {Schemas.Orders}.category AS C
         LEFT JOIN
@@ -144,17 +137,40 @@ public class CategoryRepository(
             CT.lang_code = @lang_code
         """;
 
-        IEnumerable<MainCategoryResponse> mainCategoryResponses =
-            await connection.QueryAsync<MainCategoryResponse>(Query, new { lang_code });
+        IEnumerable<TranslatedCategoryResponseDto> mainCategoryResponses =
+            await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new { lang_code });
         return mainCategoryResponses.ToList();
     }
 
-    public async Task<bool> IsLeafCategory(Guid Id)
+    public async Task<TranslatedCategoryResponseDto?> GetParentById(Guid id, Language langCode)
     {
-        return !await context.Categories.AnyAsync(x => x.ParentCategoryId == Id);
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
+        string Query =
+        $"""
+        SELECT
+            PC.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            PCT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
+            PCT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
+            PC."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
+            PCT.image_url as {nameof(TranslatedCategoryResponseDto.ImageUrl)}
+        FROM 
+            {Schemas.Orders}.category as C
+        JOIN 
+            {Schemas.Orders}.category as PC ON C.parent_category_id = PC.id
+        LEFT JOIN 
+            {Schemas.Orders}.category_translation as PCT ON PC.id = PCT.Category_Id
+        WHERE 
+            C.id = @id AND PCT.lang_code = @lang_code;
+        """;
+
+        return await connection.QueryFirstOrDefaultAsync<TranslatedCategoryResponseDto>(Query, new
+        {
+            id = id,
+            lang_code = langCode
+        });
     }
 
-    public async Task<ICollection<CategoryPaginationResponse>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
+    public async Task<ICollection<CategoryPaginationResponseDto>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
         if (!string.IsNullOrEmpty(nameFilter))
             nameFilter = $"{nameFilter}%";
@@ -163,12 +179,12 @@ public class CategoryRepository(
         string Query =
         $"""
         SELECT 
-            C.id as {nameof(CategoryPaginationResponse.Id)},
-            CT.name as {nameof(CategoryPaginationResponse.CategoryName)},
-            C.Order as {nameof(CategoryPaginationResponse.Order)},
-            C.parent_category_id as {nameof(CategoryPaginationResponse.parentCategoryId)} ,
-            COUNT(DISTINCT CC.id) AS {nameof(CategoryPaginationResponse.NumberOfChildren)},
-            COUNT(DISTINCT P.Id) AS {nameof(CategoryPaginationResponse.NumberOfProducts)}
+            C.id as {nameof(CategoryPaginationResponseDto.Id)},
+            CT.name as {nameof(CategoryPaginationResponseDto.CategoryName)},
+            C.Order as {nameof(CategoryPaginationResponseDto.Order)},
+            C.parent_category_id as {nameof(CategoryPaginationResponseDto.parentCategoryId)} ,
+            COUNT(DISTINCT CC.id) AS {nameof(CategoryPaginationResponseDto.NumberOfChildren)},
+            COUNT(DISTINCT P.Id) AS {nameof(CategoryPaginationResponseDto.NumberOfProducts)}
         FROM 
             {Schemas.Orders}.Category AS C
         LEFT JOIN 
@@ -195,7 +211,7 @@ public class CategoryRepository(
             @offset;
         """;
         var results = await dbConnection
-            .QueryAsync<CategoryPaginationResponse>(
+            .QueryAsync<CategoryPaginationResponseDto>(
                 Query, new
                 {
                     offset,

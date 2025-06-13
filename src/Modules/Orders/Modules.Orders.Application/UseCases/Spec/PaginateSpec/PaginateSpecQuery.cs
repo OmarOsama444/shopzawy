@@ -1,7 +1,7 @@
 using FluentValidation;
 using Modules.Common.Application.Messaging;
 using Modules.Common.Domain;
-using Modules.Orders.Domain.Repositories;
+using Modules.Orders.Application.Dtos;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Spec.PaginateSpec;

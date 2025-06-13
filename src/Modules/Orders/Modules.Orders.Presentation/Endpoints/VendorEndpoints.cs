@@ -21,13 +21,13 @@ public class VendorEndpoints : IEndpoint
         {
             var result = await sender.Send(request);
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.VendorCreate);
 
         group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? namefilter = null) =>
         {
             var result = await sender.Send(new PaginateVendorQuery(pageNumber, pageSize, namefilter));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.VendorRead);
 
         group.MapPut("{id}", async ([FromRoute] Guid id, [FromBody] VendorUpdateRequestDto request, ISender sender) =>
         {
@@ -43,7 +43,7 @@ public class VendorEndpoints : IEndpoint
                 request.Active,
                 request.CountryCode));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
-        });
+        }).RequireAuthorization(Permissions.VendorUpdate);
     }
 
     public record VendorUpdateRequestDto(string? VendorName, string? Description, string? Email, string? PhoneNumber, string? Address, string? LogoUrl, string? ShipingZoneName, bool? Active, string CountryCode);

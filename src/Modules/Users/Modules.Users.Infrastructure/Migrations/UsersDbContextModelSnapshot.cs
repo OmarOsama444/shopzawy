@@ -250,11 +250,6 @@ namespace Modules.Users.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("ConfirmationToken")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("confirmation_token");
-
                     b.Property<string>("CountryCode")
                         .HasColumnType("text")
                         .HasColumnName("country_code");
@@ -296,9 +291,6 @@ namespace Modules.Users.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_user");
-
-                    b.HasIndex("ConfirmationToken")
-                        .HasDatabaseName("ix_user_confirmation_token");
 
                     b.ToTable("user", "users");
                 });

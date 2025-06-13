@@ -9,7 +9,7 @@ public class RoleConfig : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("roles");
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Name);
         builder
             .Property(x => x.Name)
             .HasMaxLength(100);
@@ -25,6 +25,13 @@ public class RoleConfig : IEntityTypeConfiguration<Role>
             .HasMany(x => x.RolePermissions)
             .WithOne(x => x.Role)
             .HasForeignKey(x => x.RoleId);
+
+        builder
+            .HasData(
+                Role.Create("Guest"),
+                Role.Create("Admin"),
+                Role.Create("Default")
+            );
     }
 
 }

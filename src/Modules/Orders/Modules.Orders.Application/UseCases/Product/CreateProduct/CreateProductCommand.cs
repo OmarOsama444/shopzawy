@@ -17,7 +17,7 @@ public record CreateProductCommand(
     Guid vendorId,
     Guid brandId,
     Guid categoryId,
-    ICollection<product_item> productItems) : ICommand<Guid>;
+    ICollection<ProductItemDto> productItems) : ICommand<Guid>;
 
 public sealed class CreateProductCommandHandler(
     IProductService productService) : ICommandHandler<CreateProductCommand, Guid>
@@ -95,20 +95,20 @@ internal class CreateProductCommandValidator : AbstractValidator<CreateProductCo
     }
 }
 
-internal class productItemValidator : AbstractValidator<product_item>
+internal class productItemValidator : AbstractValidator<ProductItemDto>
 {
     public productItemValidator()
     {
-        RuleFor(x => x.stock_keeping_unit).NotEmpty();
-        RuleFor(x => x.quantity_in_stock);
-        RuleFor(x => x.price).GreaterThan(0);
-        RuleFor(x => x.urls).NotEmpty();
-        RuleForEach(x => x.urls).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
-        RuleFor(c => c.weight).NotEmpty().GreaterThan(0);
-        RuleFor(c => c.width).NotEmpty().GreaterThan(0);
-        RuleFor(c => c.height).NotEmpty().GreaterThan(0);
-        RuleFor(c => c.length).NotEmpty().GreaterThan(0);
-        RuleForEach(x => x.urls)
+        RuleFor(x => x.StockKeepingUnit).NotEmpty();
+        RuleFor(x => x.QuantityInStock);
+        RuleFor(x => x.Price).GreaterThan(0);
+        RuleFor(x => x.Urls).NotEmpty();
+        RuleForEach(x => x.Urls).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(c => c.Weight).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.Width).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.Height).NotEmpty().GreaterThan(0);
+        RuleFor(c => c.Length).NotEmpty().GreaterThan(0);
+        RuleForEach(x => x.Urls)
             .NotEmpty()
             .WithMessage("Urls Can't be empty")
             .Must(UrlValidator.Must)

@@ -8,6 +8,7 @@ namespace Modules.Users.Application.UseCases.Users.CreateUser
     {
         public CreateUserCommandValidator()
         {
+            RuleFor(x => x.GuestId).NotEmpty();
             RuleFor(x => x.FirstName)
                .NotEmpty().WithMessage("First name is required.")
                .MinimumLength(2).WithMessage("First name must be at least 3 characters long.")

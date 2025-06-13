@@ -1,4 +1,3 @@
-using Modules.Users.Domain;
 using Modules.Users.Application.Abstractions;
 using Modules.Common.Infrastructure.Authentication;
 using System.Security.Claims;
@@ -7,11 +6,10 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
-using Modules.Users.Application;
 using Modules.Users.Domain.Entities;
-using System.Security;
-using Modules.Users.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Modules.Common.Infrastructure;
+using MassTransit.Util;
 using System.Threading.Tasks;
 namespace Modules.Users.Infrastructure.Authentication;
 
@@ -28,27 +26,56 @@ public class JwtProvider : IJwtProvider
     }
     public async Task<string> GenerateAccesss(User user)
     {
-        var permissions = await context.users
-            .Where(u => u.Id == user.Id)
-            .Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
+        var permissions = await context.userRoles
+            .Where(u => u.UserId == user.Id)
+                .Include(ur => ur.Role)
                     .ThenInclude(r => r.RolePermissions)
                         .ThenInclude(rp => rp.Permission)
-            .SelectMany(u => u.UserRoles.SelectMany(
-                ur => ur.Role.RolePermissions.Select(rp => rp.Permission)))
+            .SelectMany(u => u.Role.RolePermissions.Select(rp => new Claim(CustomClaims.Permission, rp.Permission.Name)))
             .Distinct()
-            .ToListAsync();
-
-        var permissionClaims = permissions
-            .Select(x => new Claim(CustomClaims.Permission, x.Name))
-            .ToArray();
+            .ToArrayAsync();
 
         var claims = new Claim[]
         {
             new(CustomClaims.Sub, user.Id.ToString()),
-        }.Concat(permissionClaims)
+        }
+        .Concat(permissions)
         .ToArray();
 
+        return CreateToken(claims);
+    }
+
+    public async Task<string> GenerateGuestAccess(Guid Id)
+    {
+        var permmissions = await
+            context.roles
+            .Where(x => x.Name == "Guest")
+            .Include(x => x.RolePermissions)
+            .ThenInclude(x => x.Permission)
+            .SelectMany(
+                x =>
+                    x.RolePermissions.Select(
+                        rp => new Claim(CustomClaims.Permission, rp.Permission.Name)
+                    )
+                )
+            .Distinct()
+            .ToArrayAsync();
+
+        var claims = new Claim[]
+        {
+            new(CustomClaims.Sub, Id.ToString()),
+        }.Concat(permmissions)
+        .ToArray();
+        return CreateToken(claims);
+    }
+
+    public string GenerateReferesh()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+    }
+
+    private string CreateToken(Claim[] claims)
+    {
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
@@ -61,11 +88,6 @@ public class JwtProvider : IJwtProvider
         );
 
         return new JwtSecurityTokenHandler() { MapInboundClaims = false }.WriteToken(token);
-    }
-
-    public string GenerateReferesh()
-    {
-        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
 
 }

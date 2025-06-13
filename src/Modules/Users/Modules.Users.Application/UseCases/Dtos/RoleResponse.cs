@@ -1,3 +1,3 @@
 namespace Modules.Users.Application.UseCases.Dtos;
 
-public record RoleResponse(Guid Id, string Name, DateTime CreatedOnUtc);
+public record RoleResponse(string Name, DateTime CreatedOnUtc);

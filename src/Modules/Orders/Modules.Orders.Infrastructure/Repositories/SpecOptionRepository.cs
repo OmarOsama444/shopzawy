@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Repositories;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Users.Infrastructure.Repositories;
 

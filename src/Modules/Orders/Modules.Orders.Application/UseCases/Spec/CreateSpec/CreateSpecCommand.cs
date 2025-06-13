@@ -9,4 +9,4 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Spec.CreateSpec;
 
-public record CreateSpecCommand(IDictionary<Language, string> SpecNames, string DataType) : ICommand<Guid>;
+public record CreateSpecCommand(IDictionary<Language, string> SpecNames, SpecDataType DataType) : ICommand<Guid>;

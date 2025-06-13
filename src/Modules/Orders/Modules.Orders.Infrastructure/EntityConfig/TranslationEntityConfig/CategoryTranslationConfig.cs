@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Orders.Domain.Entities;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Infrastructure.EntityConfig.TranslationEntityConfig;
 
@@ -8,10 +10,7 @@ public class CategoryTranslationConfig : IEntityTypeConfiguration<CategoryTransl
 {
     public void Configure(EntityTypeBuilder<CategoryTranslation> builder)
     {
-        builder.HasKey(x => x.Id);
-
-        builder.HasIndex(x => x.Name)
-            .IsUnique();
+        builder.HasKey(x => new { x.CategoryId, x.LangCode });
 
         builder.Property(x => x.Name)
             .HasMaxLength(100);
@@ -27,6 +26,11 @@ public class CategoryTranslationConfig : IEntityTypeConfiguration<CategoryTransl
         builder
             .HasIndex(x => new { x.CategoryId, x.LangCode })
             .IsUnique();
+
+        builder
+            .HasData(
+                CategoryTranslation.Create(Guid.Empty, Language.en, "", "", "")
+            );
     }
 
 }

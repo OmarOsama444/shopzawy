@@ -6,6 +6,6 @@ internal class GetRoleByIdQueryValidator : AbstractValidator<GetRoleByIdQuery>
 {
     public GetRoleByIdQueryValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.name).NotEmpty();
     }
 }

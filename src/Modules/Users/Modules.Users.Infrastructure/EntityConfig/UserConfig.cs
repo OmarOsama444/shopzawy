@@ -18,13 +18,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .IsRequired();
         builder.Property(u => u.DateOfCreation)
             .IsRequired();
-        builder.HasIndex(u => u.ConfirmationToken);
-
-        builder.HasMany(e => e.Tokens)
-            .WithOne(e => e.User)
-            .HasForeignKey(ut => ut.UserId)
-            .IsRequired();
-
         builder.HasMany(e => e.UserRoles)
             .WithOne(e => e.User)
             .HasForeignKey(ur => ur.UserId)

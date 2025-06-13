@@ -1,6 +1,7 @@
 
 using FluentValidation;
 using Modules.Common.Application.Messaging;
+using Modules.Common.Application.Validators;
 using Modules.Common.Domain;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
@@ -13,9 +14,12 @@ internal class CreateSpecCommandValidator : AbstractValidator<CreateSpecCommand>
 {
     public CreateSpecCommandValidator()
     {
-        RuleFor(c => c.DataType).NotEmpty().Must(SpecDataType.ValidKey).WithMessage("invalid datatype");
+        RuleFor(c => c.DataType).NotEmpty();
         RuleForEach(c => c.SpecNames)
             .NotEmpty()
             .SetValidator(new SpecNameValidator());
+        RuleFor(c => c.SpecNames).NotEmpty()
+            .Must(LanguageValidator.Must)
+            .WithMessage(LanguageValidator.Message);
     }
 }
