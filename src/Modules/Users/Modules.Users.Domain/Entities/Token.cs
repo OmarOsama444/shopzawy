@@ -11,7 +11,6 @@ public class Token : Entity
     public Guid UserId { get; set; }
     public TokenType TokenType { get; private set; }
     public DateTime ExpireDateUtc { get; private set; }
-    public virtual User User { get; private set; } = default!;
     public static Token Create(
         TokenType tokenType,
         int lifeTimeInMinutes,

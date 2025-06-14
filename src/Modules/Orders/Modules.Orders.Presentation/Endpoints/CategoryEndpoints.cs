@@ -42,28 +42,35 @@ public class CategoryEndpoints : IEndpoint
 
         group.MapGet("", async (
             [FromServices] ISender sender,
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 50,
-            [FromQuery] Language lang_code = Language.en,
-            [FromQuery] string? nameFilter = null) =>
+            [FromQuery] int PageNumber = 1,
+            [FromQuery] int PageSize = 50,
+            [FromQuery] Language LangCode = Language.en,
+            [FromQuery] string? NameFilter = null) =>
         {
-            var result = await sender.Send(new PaginateCategoryQuery(pageNumber, pageSize, nameFilter, lang_code));
+            var result = await sender.Send(new PaginateCategoryQuery(
+                PageNumber,
+                PageSize,
+                NameFilter,
+                LangCode));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.CategoryRead);
 
-        group.MapGet("{id}", async ([FromRoute] Guid id, [FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
-        {
-            var result = await sender.Send(new GetCategoryByIdQuery(id, lang_code));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        }).RequireAuthorization(Permissions.CategoryRead);
-
-        group.MapPut("{id}", async (
+        group.MapGet("{Id}", async (
+            [FromRoute] Guid Id,
             [FromServices] ISender sender,
-            [FromRoute] Guid id,
+            [FromQuery] Language LangCode = Language.en) =>
+        {
+            var result = await sender.Send(new GetCategoryByIdQuery(Id, LangCode));
+            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
+        }).RequireAuthorization(Permissions.CategoryRead);
+
+        group.MapPut("{Id}", async (
+            [FromServices] ISender sender,
+            [FromRoute] Guid Id,
             [FromBody] UpdateCategoryRequestDto request) =>
         {
             var result = await sender.Send(new UpdateCategoryCommand(
-                id,
+                Id,
                 request.Order,
                 request.Names?.translations ?? new Dictionary<Language, string>(),
                 request.Descriptions?.translations ?? new Dictionary<Language, string>(),

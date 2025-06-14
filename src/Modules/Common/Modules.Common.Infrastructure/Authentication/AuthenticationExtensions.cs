@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,28 +12,18 @@ internal static class AuthenticationExtensions
     {
         services.AddAuthorization();
 
-        services.AddAuthentication().AddJwtBearer();
-
-        // .AddCookie("External")
-        // .AddGoogle(googleOptions =>
-        // {
-        //     googleOptions.ClientId = config["Authentication:Google:ClientId"]!;
-        //     googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"]!;
-        //     googleOptions.SignInScheme = "External";
-        // })
-        // .AddFacebook(facebookOptions =>
-        // {
-        //     facebookOptions.AppId = config["Authentication:Facebook:AppId"]!;
-        //     facebookOptions.AppSecret = config["Authentication:Facebook:AppSecret"]!;
-        //     facebookOptions.SignInScheme = "External";
-        // });
-        services.ConfigureOptions<JwtOptionsSetup>();
-        services.ConfigureOptions<JwtBearerOptionsSetup>();
+        services.AddAuthentication()
+        .AddJwtBearer()
+        .AddCookie("External")
+        .AddGoogle()
+        .AddFacebook();
 
         services.AddHttpContextAccessor();
-
-        services.ConfigureOptions<JwtBearerPostConfigureOptions>();
-
+        services.ConfigureOptions<JwtOptionsSetup>();
+        services.ConfigureOptions<JwtBearerOptionsSetup>();
+        services.ConfigureOptions<AuthenticationOptionsSetup>();
+        services.ConfigureOptions<GoogleOptionsSetup>();
+        services.ConfigureOptions<FaceBookOptionsSetup>();
         return services;
     }
 }

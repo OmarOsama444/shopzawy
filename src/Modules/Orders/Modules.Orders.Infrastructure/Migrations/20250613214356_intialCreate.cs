@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Orders.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCreate : Migration
+    public partial class intialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -89,7 +89,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    data_type = table.Column<string>(type: "text", nullable: false)
+                    data_type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +145,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false),
                     lang_code = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -154,7 +153,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_category_translation", x => x.id);
+                    table.PrimaryKey("pk_category_translation", x => new { x.category_id, x.lang_code });
                     table.ForeignKey(
                         name: "fk_category_translation_category_category_id",
                         column: x => x.category_id,
@@ -197,17 +196,13 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     specification_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    string_value = table.Column<string>(type: "text", nullable: true),
-                    number_value = table.Column<double>(type: "double precision", nullable: true),
-                    bool_value = table.Column<bool>(type: "boolean", nullable: true),
-                    data_type = table.Column<string>(type: "text", nullable: false),
-                    value = table.Column<string>(type: "text", nullable: false)
+                    value = table.Column<string>(type: "text", nullable: false),
+                    number_value = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_specification_option", x => x.id);
+                    table.PrimaryKey("pk_specification_option", x => new { x.specification_id, x.value });
                     table.ForeignKey(
                         name: "fk_specification_option_specification_specification_id",
                         column: x => x.specification_id,
@@ -338,11 +333,12 @@ namespace Modules.Orders.Infrastructure.Migrations
                 columns: table => new
                 {
                     product_item_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    category_specification_option_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    specification_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_product_item_options", x => new { x.product_item_id, x.category_specification_option_id });
+                    table.PrimaryKey("pk_product_item_options", x => new { x.product_item_id, x.specification_id, x.value });
                     table.ForeignKey(
                         name: "fk_product_item_options_product_item_product_item_id",
                         column: x => x.product_item_id,
@@ -351,13 +347,25 @@ namespace Modules.Orders.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_product_item_options_specification_option_category_specific",
-                        column: x => x.category_specification_option_id,
+                        name: "fk_product_item_options_specification_option_specification_id_",
+                        columns: x => new { x.specification_id, x.value },
                         principalSchema: "orders",
                         principalTable: "specification_option",
-                        principalColumn: "id",
+                        principalColumns: new[] { "specification_id", "value" },
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                schema: "orders",
+                table: "category",
+                columns: new[] { "id", "created_on", "order", "parent_category_id" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2147483647, null });
+
+            migrationBuilder.InsertData(
+                schema: "orders",
+                table: "category_translation",
+                columns: new[] { "category_id", "lang_code", "description", "image_url", "name" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 1, "all products", "", "products" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_banner_active",
@@ -370,13 +378,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 table: "brand_translation",
                 columns: new[] { "brand_id", "lang_code" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_category_order",
-                schema: "orders",
-                table: "category",
-                column: "order",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -402,13 +403,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 table: "category_translation",
                 columns: new[] { "category_id", "lang_code" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_category_translation_name",
-                schema: "orders",
-                table: "category_translation",
-                column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -461,10 +455,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                 column: "stock_keeping_unit");
 
             migrationBuilder.CreateIndex(
-                name: "ix_product_item_options_category_specification_option_id",
+                name: "ix_product_item_options_specification_id_value",
                 schema: "orders",
                 table: "product_item_options",
-                column: "category_specification_option_id");
+                columns: new[] { "specification_id", "value" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_product_translation_product_id_lang_code",
@@ -472,12 +466,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                 table: "product_translation",
                 columns: new[] { "product_id", "lang_code" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_specification_option_specification_id",
-                schema: "orders",
-                table: "specification_option",
-                column: "specification_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_specification_translation_name",

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Modules.Users.Application;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Repositories;
@@ -12,6 +13,7 @@ public class UserService(
     IJwtProvider jwtProvider,
     ITokenRepository tokenRepository,
     IUserRepository userRepository,
+    IUserRoleRepository userRoleRepository,
     IUnitOfWork unitOfWork) : IUserService
 {
     public async Task<LoginResponse> LoginGuest(Guid GuestId, CancellationToken cancellationToken = default)
@@ -34,9 +36,11 @@ public class UserService(
         return new LoginResponse(AccessToken: accessToken, RefreshToken: refreshToken);
     }
 
-    public async Task<User> RegisterUser(User user, CancellationToken cancellationToken)
+    public async Task<User> RegisterUser(User user, string password, CancellationToken cancellationToken)
     {
-
+        var hasher = new PasswordHasher<User>();
+        var PasswordHash = hasher.HashPassword(user, password);
+        user.SetPassword(PasswordHash);
         userRepository.Add(user);
         if (!string.IsNullOrEmpty(user.Email) && user.EmailConfirmed == false)
         {
@@ -61,6 +65,7 @@ public class UserService(
                 );
             tokenRepository.Add(token);
         }
+        userRoleRepository.Add(new UserRole { RoleId = "Default", UserId = user.Id });
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return user;
     }

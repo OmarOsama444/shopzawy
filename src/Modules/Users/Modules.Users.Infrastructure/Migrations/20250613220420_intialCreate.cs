@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Modules.Users.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCreate : Migration
+    public partial class intialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,15 +81,14 @@ namespace Modules.Users.Infrastructure.Migrations
                 schema: "users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     active = table.Column<bool>(type: "boolean", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     module = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_permission", x => x.id);
+                    table.PrimaryKey("pk_permission", x => x.name);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,13 +96,12 @@ namespace Modules.Users.Infrastructure.Migrations
                 schema: "users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_roles", x => x.id);
+                    table.PrimaryKey("pk_roles", x => x.name);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,8 +130,8 @@ namespace Modules.Users.Infrastructure.Migrations
                 schema: "users",
                 columns: table => new
                 {
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    permission_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    role_id = table.Column<string>(type: "character varying(100)", nullable: false),
+                    permission_id = table.Column<string>(type: "character varying(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,14 +141,14 @@ namespace Modules.Users.Infrastructure.Migrations
                         column: x => x.permission_id,
                         principalSchema: "users",
                         principalTable: "permission",
-                        principalColumn: "id",
+                        principalColumn: "name",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_role_permission_role_role_id",
+                        name: "fk_role_permission_roles_role_id",
                         column: x => x.role_id,
                         principalSchema: "users",
                         principalTable: "roles",
-                        principalColumn: "id",
+                        principalColumn: "name",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -181,17 +181,17 @@ namespace Modules.Users.Infrastructure.Migrations
                 columns: table => new
                 {
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    role_id = table.Column<string>(type: "character varying(100)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_user_role", x => new { x.role_id, x.user_id });
                     table.ForeignKey(
-                        name: "fk_user_role_role_role_id",
+                        name: "fk_user_role_roles_role_id",
                         column: x => x.role_id,
                         principalSchema: "users",
                         principalTable: "roles",
-                        principalColumn: "id",
+                        principalColumn: "name",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_user_role_user_user_id",
@@ -202,12 +202,96 @@ namespace Modules.Users.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "ix_permission_name",
+            migrationBuilder.InsertData(
                 schema: "users",
                 table: "permission",
-                column: "name",
-                unique: true);
+                columns: new[] { "name", "active", "created_on_utc", "module" },
+                values: new object[,]
+                {
+                    { "auth:login", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "banner:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "banner:delete", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "banner:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "brand:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "brand:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "brand:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "category:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "category:delete", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "category:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "category:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "color:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "color:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "permission:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "permission:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "permission:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "product:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "product:item:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "product:item:delete", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "product:item:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "role:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "role:permission:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "role:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "spec:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "spec:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "spec:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "user:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "user:role:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Users" },
+                    { "vendor:create", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "vendor:read", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" },
+                    { "vendor:update", true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Orders" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "users",
+                table: "roles",
+                columns: new[] { "name", "created_on_utc" },
+                values: new object[,]
+                {
+                    { "Admin", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { "Default", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { "Guest", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "users",
+                table: "role_permission",
+                columns: new[] { "permission_id", "role_id" },
+                values: new object[,]
+                {
+                    { "banner:create", "Admin" },
+                    { "banner:delete", "Admin" },
+                    { "banner:read", "Admin" },
+                    { "brand:create", "Admin" },
+                    { "brand:read", "Admin" },
+                    { "brand:update", "Admin" },
+                    { "category:create", "Admin" },
+                    { "category:delete", "Admin" },
+                    { "category:read", "Admin" },
+                    { "category:update", "Admin" },
+                    { "color:create", "Admin" },
+                    { "color:read", "Admin" },
+                    { "product:create", "Admin" },
+                    { "product:item:create", "Admin" },
+                    { "product:item:delete", "Admin" },
+                    { "product:item:read", "Admin" },
+                    { "spec:create", "Admin" },
+                    { "spec:read", "Admin" },
+                    { "spec:update", "Admin" },
+                    { "vendor:create", "Admin" },
+                    { "vendor:read", "Admin" },
+                    { "vendor:update", "Admin" },
+                    { "banner:read", "Default" },
+                    { "brand:read", "Default" },
+                    { "category:read", "Default" },
+                    { "color:read", "Default" },
+                    { "product:item:read", "Default" },
+                    { "spec:read", "Default" },
+                    { "vendor:read", "Default" },
+                    { "banner:read", "Guest" },
+                    { "brand:read", "Guest" },
+                    { "category:read", "Guest" },
+                    { "product:item:read", "Guest" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_permission_permission_id",

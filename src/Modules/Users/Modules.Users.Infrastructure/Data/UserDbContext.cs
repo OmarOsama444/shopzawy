@@ -27,9 +27,9 @@ public class UsersDbContext(DbContextOptions<UsersDbContext> Options) :
     {
         modelBuilder.HasDefaultSchema(Schemas.Users);
         modelBuilder.ApplyConfiguration<User>(new UserConfig());
-        modelBuilder.ApplyConfiguration<Role>(new RoleConfig());
         modelBuilder.ApplyConfiguration<Token>(new TokenConfig());
         modelBuilder.ApplyConfiguration<Permission>(new PermissionConfig());
+        modelBuilder.ApplyConfiguration<Role>(new RoleConfig());
         modelBuilder.ApplyConfiguration<UserRole>(new UserRoleConfig());
         modelBuilder.ApplyConfiguration<RolePermission>(new RolePermissionConfig());
 

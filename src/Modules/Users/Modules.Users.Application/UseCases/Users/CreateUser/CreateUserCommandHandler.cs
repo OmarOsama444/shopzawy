@@ -29,10 +29,8 @@ namespace Modules.Users.Application.UseCases.Users.CreateUser
                             request.PhoneNumber,
                             request.CountryCode);
 
-            var hasher = new PasswordHasher<User>();
-            var PasswordHash = hasher.HashPassword(user, request.Password);
-            user.SetPassword(PasswordHash);
-            await userService.RegisterUser(user);
+
+            user = await userService.RegisterUser(user, request.Password);
             return user.Id;
         }
     }

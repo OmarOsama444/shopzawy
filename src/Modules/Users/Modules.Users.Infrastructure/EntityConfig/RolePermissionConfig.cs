@@ -48,7 +48,9 @@ public class RolePermissionConfig : IEntityTypeConfiguration<RolePermission>
             new RolePermission { RoleId = "Guest", PermissionId = "banner:read" },
             new RolePermission { RoleId = "Guest", PermissionId = "brand:read" },
             new RolePermission { RoleId = "Guest", PermissionId = "category:read" },
-            new RolePermission { RoleId = "Guest", PermissionId = "product:item:read" }
+            new RolePermission { RoleId = "Guest", PermissionId = "product:item:read" },
+            new RolePermission { RoleId = "Guest", PermissionId = "user:create" },
+            new RolePermission { RoleId = "Guest", PermissionId = "auth:login" }
         );
 
     }

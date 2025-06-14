@@ -5,7 +5,6 @@ namespace Modules.Orders.Domain.Entities;
 
 public class Category : Entity
 {
-    public Category() { }
     public Guid Id { get; private set; } = Guid.Empty;
     public Guid? ParentCategoryId { get; private set; } = null;
     public int Order { get; private set; } = int.MaxValue;
@@ -19,7 +18,6 @@ public class Category : Entity
        int Order,
        Category? parentCategory = null)
     {
-
         var category = new Category()
         {
             Id = Guid.NewGuid(),
@@ -36,5 +34,14 @@ public class Category : Entity
         if (Order.HasValue)
             this.Order = Order.Value;
     }
-
+    public static Category Seed()
+    {
+        return new Category()
+        {
+            Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            Order = int.MaxValue,
+            CreatedOn = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            ParentCategoryId = null
+        };
+    }
 }

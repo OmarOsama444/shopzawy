@@ -11,7 +11,7 @@ public class SpecOptionConfig : IEntityTypeConfiguration<SpecificationOption>
         builder.HasKey(x => new { x.SpecificationId, x.Value });
         builder.HasMany(c => c.ProductItemOptions)
             .WithOne(p => p.SpecificationOptions)
-            .HasForeignKey(p => p.CategorySpecificationOptionId);
+            .HasForeignKey(p => new { p.SpecificationId, p.Value });
     }
 
 }

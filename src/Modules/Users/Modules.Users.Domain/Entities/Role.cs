@@ -17,4 +17,12 @@ public class Role : Entity
             CreatedOnUtc = DateTime.UtcNow
         };
     }
+    public static Role Seed(string name)
+    {
+        return new Role
+        {
+            Name = name,
+            CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        };
+    }
 }

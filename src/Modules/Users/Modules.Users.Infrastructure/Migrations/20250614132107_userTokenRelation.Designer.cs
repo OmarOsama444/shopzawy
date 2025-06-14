@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Modules.Users.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250614132107_userTokenRelation")]
+    partial class userTokenRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,16 +594,6 @@ namespace Modules.Users.Infrastructure.Migrations
                         {
                             RoleId = "Guest",
                             PermissionId = "product:item:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "user:create"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "auth:login"
                         });
                 });
 

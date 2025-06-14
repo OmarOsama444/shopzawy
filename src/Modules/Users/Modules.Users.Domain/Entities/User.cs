@@ -13,7 +13,6 @@ public class User : Entity
     public string FirstName { get; set; } = string.Empty;
     public string? LastName { get; set; } = string.Empty;
     public DateTime DateOfCreation { get; set; }
-    public virtual ICollection<Token> Tokens { get; set; } = [];
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
     public string? CountryCode { get; set; }
     public string? Email { get; set; }

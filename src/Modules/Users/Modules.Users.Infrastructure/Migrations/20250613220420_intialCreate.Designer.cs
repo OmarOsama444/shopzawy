@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Modules.Users.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250613220420_intialCreate")]
+    partial class intialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,16 +594,6 @@ namespace Modules.Users.Infrastructure.Migrations
                         {
                             RoleId = "Guest",
                             PermissionId = "product:item:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "user:create"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "auth:login"
                         });
                 });
 
@@ -733,6 +726,18 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Modules.Users.Domain.Entities.Token", b =>
+                {
+                    b.HasOne("Modules.Users.Domain.Entities.User", "User")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_token_user_user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Modules.Users.Domain.Entities.UserRole", b =>
                 {
                     b.HasOne("Modules.Users.Domain.Entities.Role", "Role")
@@ -768,6 +773,8 @@ namespace Modules.Users.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Tokens");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

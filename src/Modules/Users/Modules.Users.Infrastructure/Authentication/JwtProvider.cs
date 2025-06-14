@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Modules.Common.Infrastructure;
 using MassTransit.Util;
 using System.Threading.Tasks;
+using Modules.Users.Presentation;
 namespace Modules.Users.Infrastructure.Authentication;
 
 public class JwtProvider : IJwtProvider
@@ -47,7 +48,7 @@ public class JwtProvider : IJwtProvider
 
     public async Task<string> GenerateGuestAccess(Guid Id)
     {
-        var permmissions = await
+        var permissions = await
             context.roles
             .Where(x => x.Name == "Guest")
             .Include(x => x.RolePermissions)
@@ -55,16 +56,16 @@ public class JwtProvider : IJwtProvider
             .SelectMany(
                 x =>
                     x.RolePermissions.Select(
-                        rp => new Claim(CustomClaims.Permission, rp.Permission.Name)
+                        rp => rp.Permission.Name
                     )
                 )
             .Distinct()
-            .ToArrayAsync();
-
+            .ToListAsync();
+        var permissionClaims = permissions.Select(x => new Claim(CustomClaims.Permission, x)).ToArray();
         var claims = new Claim[]
         {
             new(CustomClaims.Sub, Id.ToString()),
-        }.Concat(permmissions)
+        }.Concat(permissionClaims)
         .ToArray();
         return CreateToken(claims);
     }

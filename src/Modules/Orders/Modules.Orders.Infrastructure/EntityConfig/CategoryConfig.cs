@@ -25,7 +25,7 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
 
         builder
             .HasData(
-                new Category()
+                Category.Seed()
             );
     }
 }

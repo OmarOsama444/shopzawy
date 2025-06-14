@@ -22,6 +22,15 @@ public class CategoryTranslation : Entity
             ImageUrl = ImageUrl
         };
     }
+    public static CategoryTranslation Seed()
+    {
+        return CategoryTranslation.Create(
+                    Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Language.en,
+                    "products",
+                    "all products",
+                    "");
+    }
     public void Update(string? name, string? description, string? imageUrl)
     {
         if (!string.IsNullOrEmpty(name))

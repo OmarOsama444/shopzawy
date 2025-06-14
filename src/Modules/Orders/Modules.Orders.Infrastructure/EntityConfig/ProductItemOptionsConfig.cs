@@ -8,7 +8,12 @@ public class ProductItemOptionsConfig : IEntityTypeConfiguration<ProductItemOpti
 {
     public void Configure(EntityTypeBuilder<ProductItemOptions> builder)
     {
-        builder.HasKey(x => new { x.ProductItemId, x.CategorySpecificationOptionId });
+        builder.HasKey(x => new
+        {
+            x.ProductItemId,
+            x.SpecificationId,
+            x.Value
+        });
     }
 
 }

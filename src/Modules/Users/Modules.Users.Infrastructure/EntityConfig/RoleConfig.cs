@@ -28,9 +28,9 @@ public class RoleConfig : IEntityTypeConfiguration<Role>
 
         builder
             .HasData(
-                Role.Create("Guest"),
-                Role.Create("Admin"),
-                Role.Create("Default")
+                Role.Seed("Guest"),
+                Role.Seed("Admin"),
+                Role.Seed("Default")
             );
     }
 

@@ -1,5 +1,6 @@
 using Markdig.Extensions.Yaml;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Users.Domain;

@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using System.Web;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -15,6 +16,7 @@ using Modules.Users.Application.UseCases.Auth.LoginGuestUser;
 using Modules.Users.Application.UseCases.Auth.LoginUser;
 using Modules.Users.Application.UseCases.Auth.LoginWithRefresh;
 using Modules.Users.Application.UseCases.VerifyEmail;
+using Modules.Users.Domain.Entities;
 
 namespace Modules.Users.Presentation.Endpoints;
 
@@ -24,17 +26,17 @@ public class AuthEndpoint : IEndpoint
     {
         var group = app.MapGroup("api/auth").WithTags("Auth");
 
-        group.MapGet("/google", () =>
+        group.MapGet("/google", (HttpContext httpContext) =>
         {
-            var redirectUrl = "external-callback";
+            var redirectUrl = $"/external-callback/{httpContext.User.GetUserId()}";
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Results.Challenge(properties, new[] { "Google" });
         })
         .RequireAuthorization(Permissions.LoginUser);
 
-        group.MapGet("/facebook", ([FromServices] HttpContext httpContext) =>
+        group.MapGet("/facebook", (HttpContext httpContext) =>
         {
-            var redirectUrl = $"external-callback/{httpContext.User.GetUserId()}";
+            var redirectUrl = $"/external-callback/{httpContext.User.GetUserId()}";
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Results.Challenge(properties, new[] { "Facebook" });
         })
@@ -47,7 +49,7 @@ public class AuthEndpoint : IEndpoint
                 [FromServices] IJwtProvider jwtProvider,
                 [FromServices] ISender sender) =>
         {
-            var user = await httpContext.AuthenticateAsync();
+            var user = await httpContext.AuthenticateAsync("External");
             if (!user.Succeeded || user.Principal is null)
                 return Results.Unauthorized();
 

@@ -158,6 +158,14 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasDatabaseName("ix_category_parent_category_id");
 
                     b.ToTable("category", "orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedOn = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Order = 2147483647
+                        });
                 });
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.CategorySpec", b =>
@@ -189,14 +197,13 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.CategoryTranslation", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
+
+                    b.Property<int>("LangCode")
+                        .HasColumnType("integer")
+                        .HasColumnName("lang_code");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -209,28 +216,30 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("image_url");
 
-                    b.Property<int>("LangCode")
-                        .HasColumnType("integer")
-                        .HasColumnName("lang_code");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
-                    b.HasKey("Id")
+                    b.HasKey("CategoryId", "LangCode")
                         .HasName("pk_category_translation");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_category_translation_name");
 
                     b.HasIndex("CategoryId", "LangCode")
                         .IsUnique()
                         .HasDatabaseName("ix_category_translation_category_id_lang_code");
 
                     b.ToTable("category_translation", "orders");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            LangCode = 1,
+                            Description = "all products",
+                            ImageUrl = "",
+                            Name = "products"
+                        });
                 });
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Color", b =>
@@ -382,15 +391,19 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_item_id");
 
-                    b.Property<Guid>("CategorySpecificationOptionId")
+                    b.Property<Guid>("SpecificationId")
                         .HasColumnType("uuid")
-                        .HasColumnName("category_specification_option_id");
+                        .HasColumnName("specification_id");
 
-                    b.HasKey("ProductItemId", "CategorySpecificationOptionId")
+                    b.Property<string>("Value")
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("ProductItemId", "SpecificationId", "Value")
                         .HasName("pk_product_item_options");
 
-                    b.HasIndex("CategorySpecificationOptionId")
-                        .HasDatabaseName("ix_product_item_options_category_specification_option_id");
+                    b.HasIndex("SpecificationId", "Value")
+                        .HasDatabaseName("ix_product_item_options_specification_id_value");
 
                     b.ToTable("product_item_options", "orders");
                 });
@@ -442,9 +455,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("DataType")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("DataType")
+                        .HasColumnType("integer")
                         .HasColumnName("data_type");
 
                     b.HasKey("Id")
@@ -455,42 +467,20 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.SpecificationOption", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool?>("BoolValue")
-                        .HasColumnType("boolean")
-                        .HasColumnName("bool_value");
-
-                    b.Property<string>("DataType")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("data_type");
-
-                    b.Property<double?>("NumberValue")
-                        .HasColumnType("double precision")
-                        .HasColumnName("number_value");
-
                     b.Property<Guid>("SpecificationId")
                         .HasColumnType("uuid")
                         .HasColumnName("specification_id");
 
-                    b.Property<string>("StringValue")
-                        .HasColumnType("text")
-                        .HasColumnName("string_value");
-
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("value");
 
-                    b.HasKey("Id")
-                        .HasName("pk_specification_option");
+                    b.Property<int?>("NumberValue")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_value");
 
-                    b.HasIndex("SpecificationId")
-                        .HasDatabaseName("ix_specification_option_specification_id");
+                    b.HasKey("SpecificationId", "Value")
+                        .HasName("pk_specification_option");
 
                     b.ToTable("specification_option", "orders");
                 });
@@ -695,19 +685,19 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.ProductItemOptions", b =>
                 {
-                    b.HasOne("Modules.Orders.Domain.Entities.SpecificationOption", "SpecificationOptions")
-                        .WithMany("ProductItemOptions")
-                        .HasForeignKey("CategorySpecificationOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_product_item_options_specification_option_category_specific");
-
                     b.HasOne("Modules.Orders.Domain.Entities.ProductItem", "ProductItem")
                         .WithMany("ProductItemOptions")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_product_item_options_product_item_product_item_id");
+
+                    b.HasOne("Modules.Orders.Domain.Entities.SpecificationOption", "SpecificationOptions")
+                        .WithMany("ProductItemOptions")
+                        .HasForeignKey("SpecificationId", "Value")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_product_item_options_specification_option_specification_id_");
 
                     b.Navigation("ProductItem");
 

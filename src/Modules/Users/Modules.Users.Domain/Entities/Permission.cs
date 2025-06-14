@@ -10,6 +10,17 @@ public class Permission : Entity
     public DateTime CreatedOnUtc { get; set; }
     public string? Module { get; private set; }
     public virtual ICollection<RolePermission> RolePermissions { get; set; } = [];
+    public static Permission Seed(string name, bool active, string? module = null)
+    {
+        return new Permission()
+        {
+            Name = name,
+            Active = active,
+            Module = module,
+            CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        };
+    }
+
     public static Permission Create(string name, bool active, string? module = null)
     {
         return new Permission()

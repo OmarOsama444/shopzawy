@@ -29,7 +29,7 @@ public class CategoryTranslationConfig : IEntityTypeConfiguration<CategoryTransl
 
         builder
             .HasData(
-                CategoryTranslation.Create(Guid.Empty, Language.en, "", "", "")
+                CategoryTranslation.Seed()
             );
     }
 

@@ -6,14 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Modules.Common.Infrastructure.Authentication.Config
+namespace Modules.Common.Infrastructure.Authentication.Config;
+
+public sealed class JwtOptionsSetup(IConfiguration configuration) : IConfigureOptions<JwtOptions>
 {
-    internal sealed class JwtOptionsSetup(IConfiguration configuration) : IConfigureOptions<JwtOptions>
+    private string SectionName = "Jwt";
+    public void Configure(JwtOptions options)
     {
-        private string SectionName = "Jwt";
-        public void Configure(JwtOptions options)
-        {
-            configuration.GetSection(SectionName).Bind(options);
-        }
+        configuration.GetSection(SectionName).Bind(options);
     }
 }

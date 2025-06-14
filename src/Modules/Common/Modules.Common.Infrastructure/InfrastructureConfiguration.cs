@@ -12,6 +12,7 @@ using Modules.Common.Application.EventBus;
 using Modules.Common.Infrastructure.Clock;
 using Modules.Common.Infrastructure.Authentication;
 using Modules.Common.Infrastructure.Caching.DistributedCache;
+using Modules.Common.Infrastructure.Authorization;
 namespace Modules.Common.Infrastructure
 {
     public static class InfrastructureConfiguration
@@ -35,7 +36,7 @@ namespace Modules.Common.Infrastructure
             #endregion
 
             services.AddAuthenticationInternal();
-
+            services.AddAuthorizationInternal();
             // Interceptor That Publishes Domain Events
             // services.TryAddSingleton<PublishDomainEventsInterceptors>();
 
