@@ -1,3 +1,8 @@
 {
-    "Orders": {}
+    "Orders": {
+        "OutboxOptions": {
+            "BatchSize": 0,
+            "TimeSpanInSeconds": 0
+        }
+    }
 }

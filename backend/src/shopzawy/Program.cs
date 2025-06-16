@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using shopzawy.Extensions;
 using shopzawy.Middleware;
 using shopzawy.Swagger;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -15,6 +16,10 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+// Configure the environment variables
+// Load environment variables from .env file if it exists
+DotNetEnv.Env.Load();
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddCors(option =>
 {

@@ -9,3 +9,4 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+.env
