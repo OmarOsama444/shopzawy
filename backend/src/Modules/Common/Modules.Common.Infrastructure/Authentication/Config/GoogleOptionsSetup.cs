@@ -19,7 +19,7 @@ public class GoogleOptionsSetup : IConfigureNamedOptions<GoogleOptions>
 
         options.ClientId = _config["Authentication:Google:ClientId"]!;
         options.ClientSecret = _config["Authentication:Google:ClientSecret"]!;
-        options.SignInScheme = "External"; // or whatever you use
+        options.SignInScheme = "External";
     }
 
     public void Configure(GoogleOptions options)

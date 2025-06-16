@@ -11,7 +11,6 @@ internal static class AuthenticationExtensions
     internal static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
         services.AddAuthorization();
-
         services.AddAuthentication()
         .AddJwtBearer()
         .AddCookie("External")

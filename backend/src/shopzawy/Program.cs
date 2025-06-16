@@ -9,7 +9,6 @@ using shopzawy.Extensions;
 using shopzawy.Middleware;
 using shopzawy.Swagger;
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.Configure<JsonOptions>(options =>
@@ -45,7 +44,6 @@ builder.Configuration.AddModuleConfiguration("users", "orders");
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddOrdersModule(builder.Configuration);
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -54,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -61,6 +60,7 @@ app.UseHttpsRedirection();
 app.MapEndpoints();
 app.UseStaticFiles();
 app.UseCors();
+
 app.MapPost("/upload", async (IFormFile image, HttpRequest request) =>
 {
     if (image == null || image.Length == 0)

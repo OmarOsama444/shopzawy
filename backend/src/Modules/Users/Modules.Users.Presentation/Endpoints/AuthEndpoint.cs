@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Web;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,16 +50,9 @@ public class AuthEndpoint : IEndpoint
                 [FromServices] IJwtProvider jwtProvider,
                 [FromServices] ISender sender) =>
         {
-            var user = await httpContext.AuthenticateAsync("External");
-            if (!user.Succeeded || user.Principal is null)
-                return Results.Unauthorized();
-
-            var externalUser = user.Principal;
-
-            var email = externalUser.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            var firstName = externalUser.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
-            var lastName = externalUser.FindFirst(ClaimTypes.Surname)?.Value;
-
+            var email = httpContext.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var firstName = httpContext.User.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            var lastName = httpContext.User.FindFirst(ClaimTypes.Surname)?.Value;
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(firstName))
                 return Results.BadRequest("External login information is incomplete.");
 
@@ -66,7 +60,7 @@ public class AuthEndpoint : IEndpoint
 
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         })
-        .AllowAnonymous();
+        .RequireAuthorization(new AuthorizeAttribute { AuthenticationSchemes = "External" });
 
         group.MapPost("/refresh", async (LoginWithRefreshCommand request, ISender sender) =>
         {
