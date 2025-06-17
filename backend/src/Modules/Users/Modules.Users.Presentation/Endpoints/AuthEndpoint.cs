@@ -1,6 +1,7 @@
 using System.Security.Claims;
-using System.Text.Json;
-using System.Web;
+using Common.Application.Extensions;
+using Common.Infrastructure.Authentication;
+using Common.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -8,16 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Application.Extensions;
-using Modules.Common.Infrastructure.Authentication;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.UseCases.Auth.ExternalLogin;
 using Modules.Users.Application.UseCases.Auth.LoginGuestUser;
 using Modules.Users.Application.UseCases.Auth.LoginUser;
 using Modules.Users.Application.UseCases.Auth.LoginWithRefresh;
 using Modules.Users.Application.UseCases.VerifyEmail;
-using Modules.Users.Domain.Entities;
 
 namespace Modules.Users.Presentation.Endpoints;
 
@@ -46,7 +43,7 @@ public class AuthEndpoint : IEndpoint
         group.MapGet("/external-callback/{GuestId}",
             async (
                 [FromRoute] Guid GuestId,
-                [FromServices] HttpContext httpContext,
+                HttpContext httpContext,
                 [FromServices] IJwtProvider jwtProvider,
                 [FromServices] ISender sender) =>
         {
@@ -69,16 +66,21 @@ public class AuthEndpoint : IEndpoint
         })
         .RequireAuthorization(Permissions.LoginUser);
 
-        group.MapPost("/login", async (LoginUserCommand request, ISender sender) =>
+        group.MapPost("/login", async ([FromBody] LoginUserDto request, [FromServices] ISender sender, HttpContext httpContext) =>
         {
-            var result = await sender.Send(request);
+            var result = await sender.Send(new LoginUserCommand(
+                request.Email,
+                request.PhoneNumber,
+                request.CountryCode,
+                request.Password,
+                httpContext.User.GetUserId()));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         })
         .RequireAuthorization(Permissions.LoginUser);
 
         group.MapGet("/email/{token}", async ([FromRoute] string token, ISender sender) =>
         {
-            token = HttpUtility.UrlDecode(token); ;
+            token = Uri.UnescapeDataString(token); ;
             var result = await sender.Send(new VerifyEmailCommand(token));
             return result.isSuccess ? Results.Redirect("/home") : result.ExceptionToResult();
         })
@@ -92,4 +94,5 @@ public class AuthEndpoint : IEndpoint
         .AllowAnonymous();
     }
 
+    public record LoginUserDto(string Email, string PhoneNumber, string CountryCode, string Password);
 }

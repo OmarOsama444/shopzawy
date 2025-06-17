@@ -1,5 +1,4 @@
 using Modules.Users.Application.Abstractions;
-using Modules.Common.Infrastructure.Authentication;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -8,10 +7,11 @@ using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
 using Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Infrastructure;
 using MassTransit.Util;
 using System.Threading.Tasks;
 using Modules.Users.Presentation;
+using Common.Infrastructure.Authentication;
+using Common.Infrastructure;
 namespace Modules.Users.Infrastructure.Authentication;
 
 public class JwtProvider : IJwtProvider
@@ -32,15 +32,16 @@ public class JwtProvider : IJwtProvider
                 .Include(ur => ur.Role)
                     .ThenInclude(r => r.RolePermissions)
                         .ThenInclude(rp => rp.Permission)
-            .SelectMany(u => u.Role.RolePermissions.Select(rp => new Claim(CustomClaims.Permission, rp.Permission.Name)))
+            .SelectMany(u => u.Role.RolePermissions.Select(rp => rp.Permission.Name))
             .Distinct()
             .ToArrayAsync();
+        var permissionClaims = permissions.Select(x => new Claim(CustomClaims.Permission, x)).ToArray();
 
         var claims = new Claim[]
         {
             new(CustomClaims.Sub, user.Id.ToString()),
         }
-        .Concat(permissions)
+        .Concat(permissionClaims)
         .ToArray();
 
         return CreateToken(claims);

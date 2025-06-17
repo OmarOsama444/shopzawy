@@ -26,10 +26,12 @@ public class UserService(
         return new LoginResponse(AccessToken: accessToken, RefreshToken: refreshToken);
     }
 
-    public async Task<LoginResponse> LoginUser(User user, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> LoginUser(User user, Guid? guestId, CancellationToken cancellationToken = default)
     {
         string accessToken = await jwtProvider.GenerateAccesss(user);
         string refreshToken = jwtProvider.GenerateReferesh();
+        if (guestId.HasValue)
+            user.UpdateLastLoginDate(guestId.Value);
         var token = Token.Create(TokenType.Refresh, 24 * 60, user.Id, refreshToken);
         tokenRepository.Add(token);
         await unitOfWork.SaveChangesAsync(cancellationToken);

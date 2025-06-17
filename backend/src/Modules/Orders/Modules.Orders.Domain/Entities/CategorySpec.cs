@@ -1,5 +1,5 @@
 using System.Net.Http.Headers;
-using Modules.Common.Domain.Entities;
+using Common.Domain.Entities;
 
 namespace Modules.Orders.Domain.Entities;
 

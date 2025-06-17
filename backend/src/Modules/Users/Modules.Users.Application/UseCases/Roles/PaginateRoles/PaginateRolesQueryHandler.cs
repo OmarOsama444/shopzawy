@@ -1,6 +1,6 @@
+using Common.Application.Messaging;
+using Common.Domain;
 using MassTransit.Initializers;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Application.UseCases.Dtos;
 

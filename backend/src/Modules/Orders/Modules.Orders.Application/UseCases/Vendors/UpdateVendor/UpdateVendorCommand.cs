@@ -1,8 +1,4 @@
-using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
-using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
+using Common.Application.Messaging;
 namespace Modules.Orders.Application.UseCases.Vendors.UpdateVendor;
 
 public record UpdateVendorCommand(Guid Id, string? VendorName, string? Description, string? Email, string? PhoneNumber, string? Address, string? LogoUrl, string? ShipingZoneName, bool? Active, string CountryCode) : ICommand;

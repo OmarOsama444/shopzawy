@@ -1,7 +1,7 @@
 using System.Data;
+using Common.Application.Messaging;
+using Common.Domain;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Application.UseCases.CreateProduct;
 

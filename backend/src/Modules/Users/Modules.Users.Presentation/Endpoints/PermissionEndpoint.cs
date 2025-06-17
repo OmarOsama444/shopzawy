@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Presentation.Endpoints;
 using MediatR;
-using Modules.Common.Application.Extensions;
 using Modules.Users.Application.UseCases.Permissions.GetAllPermissions;
 using Modules.Users.Application.UseCases.Permissions.UpdatePermission;
 using Modules.Users.Application.UseCases.Permissions.PaginatePermissions;
 using Modules.Users.Application.UseCases.Permissions.CreatePermission;
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 namespace Modules.Users.Presentation.Endpoints;
 
 public class PermissionEndpoint : IEndpoint

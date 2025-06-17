@@ -1,10 +1,10 @@
-using Modules.Common.Domain;
 using Microsoft.AspNetCore.Identity;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.Exceptions;
-using Modules.Common.Application.Messaging;
 using Modules.Users.Application.Services;
 using Modules.Users.Application.Repositories;
+using Common.Domain;
+using Common.Application.Messaging;
 
 namespace Modules.Users.Application.UseCases.Users.CreateUser
 {
@@ -28,7 +28,6 @@ namespace Modules.Users.Application.UseCases.Users.CreateUser
                             request.Email,
                             request.PhoneNumber,
                             request.CountryCode);
-
 
             user = await userService.RegisterUser(user, request.Password);
             return user.Id;

@@ -1,12 +1,12 @@
 {
     "Users": {
         "GmailConfig": {
-            "SmtpServer": "smtp.gmail.com",
-            "Port": 587,
+            "SmtpServer": "",
+            "Port": 0,
             "SSL": true,
-            "AppName": "SkillHive",
-            "SenderEmail": "omarosos912@gmail.com",
-            "SenderPassword": "ehzk tazz zuyp rlql"
+            "AppName": "",
+            "SenderEmail": "",
+            "SenderPassword": ""
         },
         "EmailTemplates": {
             "VerificationMail": {

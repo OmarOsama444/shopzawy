@@ -1,8 +1,5 @@
 
-using System.Runtime.InteropServices;
-using Modules.Common.Domain.DomainEvent;
-using Modules.Common.Domain.Entities;
-using Modules.Users.Domain.Entities;
+using Common.Domain.Entities;
 
 namespace Modules.Users.Domain.Entities;
 
@@ -20,6 +17,13 @@ public class User : Entity
     public string? PhoneNumber { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public bool PhoneNumberConfirmed { get; set; } = false;
+    public DateTime? LastLoginDate { get; set; } = null;
+    public void UpdateLastLoginDate(Guid GuestId)
+    {
+        this.LastLoginDate = DateTime.UtcNow;
+        this.RaiseDomainEvent(new UserLoggedDomainEvent(this.Id, GuestId));
+    }
+
     public static User Create(
         Guid GuestId,
         string FirstName,

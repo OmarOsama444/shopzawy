@@ -1,8 +1,8 @@
+using Common.Application.Messaging;
+using Common.Domain;
+using Common.Domain.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
-using Modules.Common.Domain.Exceptions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Application.UseCases.Spec.Dtos;
 

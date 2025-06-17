@@ -1,5 +1,5 @@
+using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Infrastructure;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Infrastructure.EntityConfig;
 using Modules.Orders.Infrastructure.EntityConfig.TranslationEntityConfig;

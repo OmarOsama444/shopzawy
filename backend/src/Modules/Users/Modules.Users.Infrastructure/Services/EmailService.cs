@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Mail;
+using System.Web;
 using FluentEmail.Core;
 using Markdig;
-using MassTransit.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Modules.Users.Application.Services;
@@ -33,12 +33,15 @@ public class EmailService(IConfiguration configuration, IOptions<GmailSmtpOption
     {
         string bodyTemplate = configuration.GetValue<string>("Users:EmailTemplates:VerificationMail:body")!;
         string subject = configuration.GetValue<string>("Users:EmailTemplates:VerificationMail:subject")!;
+        string encodedToken = WebUtility.UrlEncode(Token);
+        System.Console.WriteLine($"Sending verification email to {Email} with token: {Token}");
+        System.Console.WriteLine($"Encoded Token: {encodedToken}");
         await sendMail(
             Email,
             subject,
             Markdown.ToHtml(FillTemplate(bodyTemplate, new Dictionary<string, string> {
                 { "[FirstName]" , FirstName },
-                { "[URL]" , $"http://localhost:5101/api/auth/email/{Token}"}
+                { "[URL]" , $"https://localhost:8081/api/auth/email/{encodedToken}"}
             })));
     }
 

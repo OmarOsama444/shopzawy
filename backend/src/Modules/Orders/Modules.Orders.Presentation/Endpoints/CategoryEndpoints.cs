@@ -1,17 +1,17 @@
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Application.Extensions;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.Categories.CreateCategory;
 using Modules.Orders.Application.UseCases.Categories.GetCategory;
 using Modules.Orders.Application.UseCases.Categories.UpdateCategorySpec;
 using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
 using Modules.Orders.Application.UseCases.UpdateCategory;
-using Modules.Orders.Domain.ValueObjects;
+using Common.Domain.ValueObjects;
 
 namespace Modules.Orders.Presentation.Endpoints;
 

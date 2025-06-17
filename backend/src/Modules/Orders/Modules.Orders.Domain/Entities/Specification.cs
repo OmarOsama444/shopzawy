@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using Modules.Common.Domain.Entities;
+using Common.Domain.Entities;
 using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.ValueObjects;
 

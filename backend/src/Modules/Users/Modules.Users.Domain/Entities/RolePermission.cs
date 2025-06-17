@@ -1,4 +1,4 @@
-using Modules.Common.Domain.Entities;
+using Common.Domain.Entities;
 
 namespace Modules.Users.Domain.Entities;
 

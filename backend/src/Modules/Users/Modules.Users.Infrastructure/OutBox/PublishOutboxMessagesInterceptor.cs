@@ -1,9 +1,9 @@
 using System.Text.Json;
+using Common.Domain.DomainEvent;
+using Common.Domain.Entities;
+using Common.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Modules.Common.Domain.DomainEvent;
-using Modules.Common.Domain.Entities;
-using Modules.Common.Infrastructure.Outbox;
 using Newtonsoft.Json;
 
 namespace Modules.Users.Infrastructure.Interceptors;

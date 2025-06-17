@@ -1,6 +1,6 @@
 using System.ComponentModel;
+using Common.Application.Messaging;
 using Microsoft.AspNetCore.Http;
-using Modules.Common.Application.Messaging;
 
 namespace Modules.Users.Application.UseCases.Users.UpdateUserRoles;
 

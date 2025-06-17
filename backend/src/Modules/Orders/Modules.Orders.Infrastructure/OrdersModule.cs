@@ -1,16 +1,16 @@
+using Common.Application;
+using Common.Domain;
+using Common.Infrastructure.interceptors;
+using Common.Presentation.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Modules.Common.Infrastructure;
-using Modules.Common.Infrastructure.interceptors;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Orders.Infrastructure.Services;
-using Modules.Users.Application.Abstractions;
 
 namespace Modules.Orders.Infrastructure;
 

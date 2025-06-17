@@ -23,7 +23,7 @@ namespace Modules.Users.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Modules.Common.Infrastructure.Inbox.InboxConsumerMessage", b =>
+            modelBuilder.Entity("Common.Infrastructure.Inbox.InboxConsumerMessage", b =>
                 {
                     b.Property<Guid>("id")
                         .HasColumnType("uuid")
@@ -39,7 +39,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.ToTable("inbox_consumer_message", "users");
                 });
 
-            modelBuilder.Entity("Modules.Common.Infrastructure.Inbox.InboxMessage", b =>
+            modelBuilder.Entity("Common.Infrastructure.Inbox.InboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +75,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.ToTable("inbox_messages", "users");
                 });
 
-            modelBuilder.Entity("Modules.Common.Infrastructure.Outbox.OutboxConsumerMessage", b =>
+            modelBuilder.Entity("Common.Infrastructure.Outbox.OutboxConsumerMessage", b =>
                 {
                     b.Property<Guid>("id")
                         .HasColumnType("uuid")
@@ -91,7 +91,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.ToTable("outbox_consumer_message", "users");
                 });
 
-            modelBuilder.Entity("Modules.Common.Infrastructure.Outbox.OutboxMessage", b =>
+            modelBuilder.Entity("Common.Infrastructure.Outbox.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -668,6 +668,10 @@ namespace Modules.Users.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("first_name");
+
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_login_date");
 
                     b.Property<string>("LastName")
                         .IsRequired()

@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Presentation.Endpoints;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Modules.Common.Application.Extensions;
 using Modules.Users.Application.UseCases.Users.CreateUser;
 using Modules.Users.Application.UseCases.Users.UpdateUserRoles;
-using Modules.Common.Infrastructure.Authentication;
+using Common.Application.Extensions;
+using Common.Infrastructure.Authentication;
+using Common.Presentation.Endpoints;
 
 namespace Modules.Users.Presentation.Endpoints;
 
@@ -20,7 +20,7 @@ public class UsersEndpoints : IEndpoint
         group.MapPost("", async (
             [FromBody] CreateUserDto request,
             [FromServices] ISender sender,
-            [FromServices] HttpContext context) =>
+            HttpContext context) =>
         {
             var result = await sender.Send(
                 new CreateUserCommand(

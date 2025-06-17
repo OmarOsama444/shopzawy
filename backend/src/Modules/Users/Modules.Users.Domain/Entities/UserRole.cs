@@ -1,5 +1,5 @@
+using Common.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Modules.Common.Domain.Entities;
 
 namespace Modules.Users.Domain.Entities;
 

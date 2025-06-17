@@ -1,9 +1,10 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Common.Domain;
+using Common.Domain.Exceptions;
+using Common.Domain.ValueObjects;
 using MassTransit.SagaStateMachine;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Domain;
-using Modules.Common.Domain.Exceptions;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;

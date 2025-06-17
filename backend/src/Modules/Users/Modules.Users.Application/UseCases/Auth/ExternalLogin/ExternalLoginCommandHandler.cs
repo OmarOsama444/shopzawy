@@ -1,5 +1,5 @@
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
+using Common.Application.Messaging;
+using Common.Domain;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Application.Services;
 using Modules.Users.Application.UseCases.Dtos;
@@ -16,10 +16,10 @@ public class ExternalLoginCommandHandler(
     {
         var user = await userRepository.GetByConfirmedEmail(request.Email);
         if (user is not null)
-            return await userService.LoginUser(user, cancellationToken);
+            return await userService.LoginUser(user, request.GuestId, cancellationToken);
         user = User.Create(request.GuestId, request.Email, request.FirstName, request.LastName);
         userRepository.Add(user);
         await unitOfWork.SaveChangesAsync();
-        return await userService.LoginUser(user, cancellationToken);
+        return await userService.LoginUser(user, request.GuestId, cancellationToken);
     }
 }

@@ -1,5 +1,5 @@
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
+using Common.Application.Messaging;
+using Common.Domain;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Application.Services;
@@ -33,6 +33,6 @@ public sealed class LoginWithRefreshHandler(
         User? user = await userRepository.GetByIdAsync(token.UserId);
         if (user == null)
             return new UserNotFound(token.UserId);
-        return await userService.LoginUser(user);
+        return await userService.LoginUser(user, null, cancellationToken);
     }
 }

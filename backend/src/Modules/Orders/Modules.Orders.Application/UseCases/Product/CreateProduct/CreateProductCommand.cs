@@ -1,7 +1,8 @@
+using Common.Application.Messaging;
+using Common.Application.Validators;
+using Common.Domain;
+using Common.Domain.ValueObjects;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.ValueObjects;
 

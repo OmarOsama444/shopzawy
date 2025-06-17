@@ -1,4 +1,4 @@
-using Modules.Common.Application.Messaging;
+using Common.Application.Messaging;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Banners.CreateBanner;

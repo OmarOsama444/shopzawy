@@ -1,10 +1,10 @@
+using Common.Application;
+using Common.Domain.DomainEvent;
+using Common.Infrastructure.Outbox;
 using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Modules.Common.Domain.DomainEvent;
-using Modules.Common.Infrastructure;
-using Modules.Common.Infrastructure.Outbox;
 using Modules.Users.Application.Abstractions;
 
 namespace Modules.Users.Infrastructure.OutBox;

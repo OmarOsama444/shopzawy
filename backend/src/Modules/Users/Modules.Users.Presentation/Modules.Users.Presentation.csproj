@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Modules.Common.Presentation\Modules.Common.Presentation.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Presentation\Common.Presentation.csproj" />
     <ProjectReference Include="..\Modules.Users.Application\Modules.Users.Application.csproj" />
-    <ProjectReference Include="..\..\Common\Modules.Common.Infrastructure\Modules.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Infrastructure\Common.Infrastructure.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

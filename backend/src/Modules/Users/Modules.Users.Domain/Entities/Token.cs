@@ -1,4 +1,4 @@
-using Modules.Common.Domain.Entities;
+using Common.Domain.Entities;
 using Modules.Users.Domain.DomainEvents;
 using Modules.Users.Domain.ValueObjects;
 
@@ -26,6 +26,7 @@ public class Token : Entity
         };
         if (TokenType.Email == token.TokenType)
             token.RaiseDomainEvent(new EmailTokenCreatedDomainEvent(value));
+
         return token;
     }
 }

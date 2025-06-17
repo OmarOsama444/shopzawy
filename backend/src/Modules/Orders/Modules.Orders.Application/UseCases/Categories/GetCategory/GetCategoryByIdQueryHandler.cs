@@ -1,8 +1,8 @@
-using Modules.Common.Domain;
-using Modules.Common.Application.Messaging;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Application.UseCases.Categories.Dtos;
 using Modules.Orders.Application.Repositories;
+using Common.Domain;
+using Common.Application.Messaging;
 
 namespace Modules.Orders.Application.UseCases.Categories.GetCategory;
 

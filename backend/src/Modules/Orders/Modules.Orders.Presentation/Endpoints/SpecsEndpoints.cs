@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Presentation.Endpoints;
 using Microsoft.AspNetCore.Http;
-using Modules.Common.Application.Extensions;
 using MediatR;
 using Modules.Orders.Application.UseCases;
 using Modules.Orders.Application.UseCases.Spec.PaginateSpec;
@@ -11,6 +9,9 @@ using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Application.UseCases.Spec.CreateSpecOption;
 using Modules.Orders.Application.UseCases.Spec.GetSpecOption;
 using Modules.Orders.Application.UseCases.Spec.CreateSpec;
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
+using Common.Domain.ValueObjects;
 
 namespace Modules.Orders.Presentation.Endpoints;
 

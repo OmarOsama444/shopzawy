@@ -1,6 +1,3 @@
-using Modules.Common.Application;
-using Modules.Common.Presentation.Endpoints;
-using Modules.Common.Infrastructure;
 using Modules.Users.Infrastructure;
 using Modules.Orders.Infrastructure;
 using Microsoft.AspNetCore.Http.Json;
@@ -9,6 +6,9 @@ using shopzawy.Extensions;
 using shopzawy.Middleware;
 using shopzawy.Swagger;
 using DotNetEnv;
+using Common.Application;
+using Common.Infrastructure;
+using Common.Presentation.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();

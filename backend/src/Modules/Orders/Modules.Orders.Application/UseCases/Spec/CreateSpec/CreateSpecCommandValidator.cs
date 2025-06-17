@@ -1,8 +1,6 @@
 
+using Common.Application.Validators;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;

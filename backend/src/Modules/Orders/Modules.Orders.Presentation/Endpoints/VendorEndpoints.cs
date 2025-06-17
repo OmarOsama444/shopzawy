@@ -1,10 +1,10 @@
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Application.Extensions;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.CreateVendor;
 using Modules.Orders.Application.UseCases.Vendors.PaginateVendors;
 using Modules.Orders.Application.UseCases.Vendors.UpdateVendor;

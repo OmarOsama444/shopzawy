@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Application.Extensions;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.GetColors;
 using Modules.Orders.Application.UseCases.CreateColor;
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 
 namespace Modules.Orders.Presentation.Endpoints;
 

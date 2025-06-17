@@ -1,6 +1,5 @@
+using Common.Application.Messaging;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Repositories;
 
 namespace Modules.Orders.Application.UseCases.Vendors.PaginateVendors;

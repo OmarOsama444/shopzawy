@@ -1,9 +1,9 @@
+using Common.Application;
+using Common.Domain.DomainEvent;
+using Common.Infrastructure.Inbox;
 using Dapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Modules.Common.Domain.DomainEvent;
-using Modules.Common.Infrastructure;
-using Modules.Common.Infrastructure.Inbox;
 using Modules.Users.Application.Abstractions;
 
 namespace Modules.Users.Infrastructure.Inbox;

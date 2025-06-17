@@ -1,4 +1,5 @@
-using Modules.Common.Application.Messaging;
+using Common.Application.Messaging;
+using Common.Domain.ValueObjects;
 using Modules.Orders.Application.Dtos;
 using Modules.Orders.Domain.ValueObjects;
 

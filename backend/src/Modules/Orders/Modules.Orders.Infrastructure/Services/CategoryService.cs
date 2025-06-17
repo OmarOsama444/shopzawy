@@ -1,5 +1,6 @@
+using Common.Domain;
+using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.Entities;

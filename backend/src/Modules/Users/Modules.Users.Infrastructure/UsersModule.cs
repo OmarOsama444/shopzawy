@@ -1,9 +1,10 @@
+using Common.Domain;
+using Common.Infrastructure.interceptors;
+using Common.Presentation.Endpoints;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Common.Infrastructure.interceptors;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Users.Application;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Services;

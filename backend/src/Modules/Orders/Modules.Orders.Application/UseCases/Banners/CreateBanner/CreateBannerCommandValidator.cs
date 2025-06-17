@@ -1,5 +1,5 @@
+using Common.Application.Validators;
 using FluentValidation;
-using Modules.Common.Application.Validators;
 
 namespace Modules.Orders.Application.UseCases.Banners.CreateBanner;
 

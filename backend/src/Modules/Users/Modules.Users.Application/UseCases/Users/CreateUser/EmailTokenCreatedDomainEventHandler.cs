@@ -1,5 +1,5 @@
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain.Exceptions;
+using Common.Application.Messaging;
+using Common.Domain.Exceptions;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Application.Services;
 using Modules.Users.Domain.DomainEvents;

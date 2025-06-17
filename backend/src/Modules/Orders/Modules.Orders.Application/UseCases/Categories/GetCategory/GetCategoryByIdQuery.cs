@@ -1,6 +1,7 @@
-using Modules.Common.Application.Messaging;
 using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Application.UseCases.Categories.Dtos;
+using Common.Application.Messaging;
+using Common.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Categories.GetCategory;
 

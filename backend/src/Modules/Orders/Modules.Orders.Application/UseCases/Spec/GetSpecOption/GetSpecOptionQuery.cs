@@ -1,4 +1,4 @@
-using Modules.Common.Application.Messaging;
+using Common.Application.Messaging;
 using Modules.Orders.Application.UseCases.Spec.Dtos;
 
 namespace Modules.Orders.Application.UseCases.Spec.GetSpecOption;

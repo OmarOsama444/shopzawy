@@ -1,11 +1,4 @@
-using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
-using Modules.Common.Domain;
-using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Exceptions;
-using Modules.Orders.Domain.Repositories;
+using Common.Application.Messaging;
 
 namespace Modules.Orders.Application.UseCases.CreateVendor;
 

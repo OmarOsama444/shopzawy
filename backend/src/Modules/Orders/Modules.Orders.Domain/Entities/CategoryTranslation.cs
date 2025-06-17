@@ -1,5 +1,5 @@
-using Modules.Common.Domain.Entities;
-using Modules.Orders.Domain.ValueObjects;
+using Common.Domain.Entities;
+using Common.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
 

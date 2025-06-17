@@ -1,5 +1,5 @@
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
+using Common.Application.Messaging;
+using Common.Domain;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.Exceptions;

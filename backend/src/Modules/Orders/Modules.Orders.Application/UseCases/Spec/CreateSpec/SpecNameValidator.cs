@@ -1,7 +1,6 @@
 
+using Common.Domain.ValueObjects;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Repositories;

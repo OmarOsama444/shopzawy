@@ -1,7 +1,7 @@
+using Common.Infrastructure;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Infrastructure.Data;
-using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure.Repositories;
 

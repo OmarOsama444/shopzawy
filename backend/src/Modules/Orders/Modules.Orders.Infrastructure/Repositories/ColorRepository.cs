@@ -1,14 +1,14 @@
 using System.Data;
 using System.Data.Common;
+using Common.Application;
+using Common.Infrastructure;
 using Dapper;
 using MassTransit.SagaStateMachine;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Infrastructure;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Infrastructure.Data;
-using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Orders.Infrastructure.Repositories;
 

@@ -1,7 +1,7 @@
+using Common.Application;
+using Common.Infrastructure.Inbox;
+using Common.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
-using Modules.Common.Infrastructure;
-using Modules.Common.Infrastructure.Inbox;
-using Modules.Common.Infrastructure.Outbox;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Infrastructure.EntityConfig;
 

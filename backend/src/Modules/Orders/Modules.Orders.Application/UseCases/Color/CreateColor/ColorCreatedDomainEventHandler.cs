@@ -1,4 +1,4 @@
-using Modules.Common.Application.Messaging;
+using Common.Application.Messaging;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.DomainEvents;

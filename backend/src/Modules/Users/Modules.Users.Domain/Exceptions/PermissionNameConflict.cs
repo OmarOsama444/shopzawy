@@ -1,4 +1,4 @@
-using Modules.Common.Domain.Exceptions;
+using Common.Domain.Exceptions;
 
 namespace Modules.Users.Domain.Exceptions
 {

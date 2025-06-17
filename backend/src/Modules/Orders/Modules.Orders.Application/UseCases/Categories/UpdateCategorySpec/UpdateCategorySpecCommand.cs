@@ -1,4 +1,4 @@
-using Modules.Common.Application.Messaging;
+using Common.Application.Messaging;
 
 namespace Modules.Orders.Application.UseCases.Categories.UpdateCategorySpec;
 

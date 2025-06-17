@@ -1,4 +1,5 @@
-using Modules.Common.Domain;
+using Common.Domain;
+using Common.Domain.ValueObjects;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.Services;

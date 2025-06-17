@@ -1,4 +1,4 @@
-using Modules.Users.Application.Abstractions;
+using Common.Domain;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.ValueObjects;
 

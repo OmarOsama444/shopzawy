@@ -1,4 +1,4 @@
-using Modules.Common.Domain.DomainEvent;
+using Common.Domain.DomainEvent;
 
 namespace Modules.Orders.Domain.DomainEvents;
 

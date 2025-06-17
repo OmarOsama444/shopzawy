@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.CreateBrand;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Modules.Common.Application.Extensions;
 using Modules.Orders.Application.UseCases.PaginateBrands;
 using Modules.Orders.Application.UseCases.UpdateBrand;
-using Modules.Orders.Domain.ValueObjects;
+using Common.Domain.ValueObjects;
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 
 namespace Modules.Orders.Presentation.Endpoints;
 

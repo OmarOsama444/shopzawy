@@ -1,14 +1,12 @@
+using Common.Application.Messaging;
+using Common.Domain;
+using Common.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
-using Modules.Common.Domain.Exceptions;
-using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Application.Services;
 using Modules.Users.Application.UseCases.Dtos;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.Exceptions;
-using Modules.Users.Domain.ValueObjects;
 
 namespace Modules.Users.Application.UseCases.Auth.LoginUser;
 
@@ -30,6 +28,6 @@ public class LoginUserCommandHandler(
         if (result == PasswordVerificationResult.Failed)
             return new NotAuthorizedException("User.NotAuthorized", "False credintials");
 
-        return await userService.LoginUser(user);
+        return await userService.LoginUser(user, request.GuestId, cancellationToken);
     }
 }

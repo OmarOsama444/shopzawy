@@ -1,4 +1,4 @@
-using Modules.Common.Domain.Entities;
+using Common.Domain.Entities;
 using Modules.Orders.Domain.DomainEvents;
 
 namespace Modules.Orders.Domain.Entities;

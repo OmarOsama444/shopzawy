@@ -1,5 +1,5 @@
+using Common.Application.Validators;
 using FluentValidation;
-using Modules.Common.Application.Validators;
 using Modules.Orders.Application.UseCases.CreateVendor;
 
 namespace Modules.Orders.Application.UseCases.Vendors.CreateVendor;

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Modules.Common.Presentation\Modules.Common.Presentation.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Presentation\Common.Presentation.csproj" />
     <ProjectReference Include="..\Modules.Orders.Application\Modules.Orders.Application.csproj" />
   </ItemGroup>
   <PropertyGroup>

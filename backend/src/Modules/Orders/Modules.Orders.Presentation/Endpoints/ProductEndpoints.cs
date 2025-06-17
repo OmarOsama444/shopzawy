@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Common.Presentation.Endpoints;
 using Modules.Orders.Application.UseCases.CreateProduct;
 using MediatR;
-using Modules.Common.Application.Extensions;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.UpdateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.DeleteProductItem;
 using Modules.Orders.Domain.ValueObjects;
+using Common.Application.Extensions;
+using Common.Presentation.Endpoints;
 
 
 namespace Modules.Orders.Presentation.Endpoints;

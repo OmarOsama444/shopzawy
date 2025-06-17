@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Modules.Users.Application.Repositories;
 using Modules.Users.Domain.Entities;

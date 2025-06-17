@@ -1,9 +1,9 @@
 
+using Common.Application.Messaging;
+using Common.Application.Validators;
+using Common.Domain;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Application.Validators;
-using Modules.Common.Domain;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;

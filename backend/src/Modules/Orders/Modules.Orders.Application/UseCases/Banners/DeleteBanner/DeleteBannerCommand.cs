@@ -1,7 +1,7 @@
+using Common.Application.Messaging;
+using Common.Domain;
+using Common.Domain.Exceptions;
 using FluentValidation;
-using Modules.Common.Application.Messaging;
-using Modules.Common.Domain;
-using Modules.Common.Domain.Exceptions;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 
