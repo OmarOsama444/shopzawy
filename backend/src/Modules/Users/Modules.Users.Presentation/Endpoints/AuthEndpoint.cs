@@ -64,7 +64,7 @@ public class AuthEndpoint : IEndpoint
             var result = await sender.Send(request);
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         })
-        .RequireAuthorization(Permissions.LoginUser);
+        .AllowAnonymous();
 
         group.MapPost("/login", async ([FromBody] LoginUserDto request, [FromServices] ISender sender, HttpContext httpContext) =>
         {

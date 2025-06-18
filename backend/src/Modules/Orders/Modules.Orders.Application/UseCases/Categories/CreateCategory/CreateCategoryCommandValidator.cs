@@ -8,12 +8,12 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
     public CreateCategoryCommandValidator()
     {
         RuleFor(c => c.Order).NotEmpty();
-        RuleFor(c => c.Spec_ids).NotNull();
+        RuleFor(c => c.SpecIds).NotNull();
         RuleForEach(x => x.Names.Values).NotEmpty().MinimumLength(3).MaximumLength(100);
-        RuleForEach(x => x.Image_urls.Values).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleForEach(x => x.ImageUrls.Values).NotEmpty().Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
         RuleFor(c => c.Names).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
         RuleFor(c => c.Descriptions).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
-        RuleFor(c => c.Image_urls).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
+        RuleFor(c => c.ImageUrls).Must(LanguageValidator.Must).WithMessage(LanguageValidator.Message);
         RuleForEach(x => x.Descriptions.Values).NotEmpty().MinimumLength(10).MaximumLength(500);
         RuleFor(c => c)
             .Must(HaveConsistentLanguageKeys)
@@ -24,7 +24,7 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
     {
         var keys1 = cmd.Names?.Keys?.OrderBy(k => k).ToArray();
         var keys2 = cmd.Descriptions?.Keys?.OrderBy(k => k).ToArray();
-        var keys3 = cmd.Image_urls?.Keys?.OrderBy(k => k).ToArray();
+        var keys3 = cmd.ImageUrls?.Keys?.OrderBy(k => k).ToArray();
 
         if (keys1 == null || keys2 == null || keys3 == null)
             return false;

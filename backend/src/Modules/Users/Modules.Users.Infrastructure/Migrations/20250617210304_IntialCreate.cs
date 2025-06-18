@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Users.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class intialCreate : Migration
+    public partial class IntialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -105,6 +105,22 @@ namespace Modules.Users.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "token",
+                schema: "users",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    token_type = table.Column<int>(type: "integer", nullable: false),
+                    expire_date_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_token", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "user",
                 schema: "users",
                 columns: table => new
@@ -118,7 +134,8 @@ namespace Modules.Users.Infrastructure.Migrations
                     email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
                     phone_number = table.Column<string>(type: "text", nullable: true),
                     password_hash = table.Column<string>(type: "text", nullable: false),
-                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false)
+                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    last_login_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,29 +166,6 @@ namespace Modules.Users.Infrastructure.Migrations
                         principalSchema: "users",
                         principalTable: "roles",
                         principalColumn: "name",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "token",
-                schema: "users",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    value = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    token_type = table.Column<int>(type: "integer", nullable: false),
-                    expire_date_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_token", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_token_user_user_id",
-                        column: x => x.user_id,
-                        principalSchema: "users",
-                        principalTable: "user",
-                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -254,6 +248,12 @@ namespace Modules.Users.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "users",
+                table: "user",
+                columns: new[] { "id", "country_code", "date_of_creation", "email", "email_confirmed", "first_name", "last_login_date", "last_name", "password_hash", "phone_number", "phone_number_confirmed" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@gmail.com", true, "Admin", null, "User", "AQAAAAIAAYagAAAAEJOqYyDPiMJFm1mVQx3qEAyLF9qqYyRZQamJuHF11binnXBQGuCSBJu+8T4lDkxPxg==", null, false });
+
+            migrationBuilder.InsertData(
+                schema: "users",
                 table: "role_permission",
                 columns: new[] { "permission_id", "role_id" },
                 values: new object[,]
@@ -287,11 +287,19 @@ namespace Modules.Users.Infrastructure.Migrations
                     { "product:item:read", "Default" },
                     { "spec:read", "Default" },
                     { "vendor:read", "Default" },
+                    { "auth:login", "Guest" },
                     { "banner:read", "Guest" },
                     { "brand:read", "Guest" },
                     { "category:read", "Guest" },
-                    { "product:item:read", "Guest" }
+                    { "product:item:read", "Guest" },
+                    { "user:create", "Guest" }
                 });
+
+            migrationBuilder.InsertData(
+                schema: "users",
+                table: "user_role",
+                columns: new[] { "role_id", "user_id" },
+                values: new object[] { "Admin", new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_permission_permission_id",

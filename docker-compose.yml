@@ -27,3 +27,13 @@ services:
             - ./.containers/db:/var/lib/postgresql/data
         ports:
             - 5432:5432
+    shopzawy.elastic:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+        container_name: shopzawy.elastic
+        environment:
+        - discovery.type=single-node
+        - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        - xpack.security.enabled=false  # optional: disables built-in security
+        ports:
+        - 9200:9200
+        - 9300:9300

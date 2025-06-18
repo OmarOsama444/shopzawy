@@ -7,6 +7,7 @@ using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Dtos;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
+using Modules.Orders.Domain.Entities.Views;
 using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 
@@ -42,7 +43,7 @@ public class CategoryRepository(
         WHERE
             CT.lang_code = @lang_code AND C.id = @id ;
         """;
-        return await connection.QueryFirstOrDefaultAsync(Query, new { id, lang_code = langCode });
+        return await connection.QueryFirstOrDefaultAsync<TranslatedCategoryResponseDto>(Query, new { id, lang_code = langCode });
     }
     public async Task<IDictionary<Guid, string>> GetCategoryPath(Guid Id, Language LangCode)
     {
@@ -71,7 +72,7 @@ public class CategoryRepository(
             c.id = cp.parent_category_id
         )
         SELECT 
-            CP.id as key
+            CP.id as key,
             CT.name as value
         FROM 
             category_path AS CP
@@ -116,33 +117,6 @@ public class CategoryRepository(
 
     }
 
-    public async Task<ICollection<TranslatedCategoryResponseDto>> GetMainCategories(Language lang_code)
-    {
-        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
-        string Query =
-        $"""
-        SELECT
-            C.id AS {nameof(TranslatedCategoryResponseDto.Id)} , 
-            C.parent_category_id AS {nameof(TranslatedCategoryResponseDto.parentCategoryId)} ,
-            C.order AS {nameof(TranslatedCategoryResponseDto.Order)} ,
-            CT.name AS {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
-            CT.description AS {nameof(TranslatedCategoryResponseDto.Description)} ,
-            CT.Image_url AS {nameof(TranslatedCategoryResponseDto.ImageUrl)} 
-        FROM
-            {Schemas.Orders}.category AS C
-        LEFT JOIN
-            {Schemas.Orders}.category_translation AS CT
-        ON
-            C.id = Ct.Category_id
-        WHERE
-            CT.lang_code = @lang_code
-        """;
-
-        IEnumerable<TranslatedCategoryResponseDto> mainCategoryResponses =
-            await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new { lang_code });
-        return mainCategoryResponses.ToList();
-    }
-
     public async Task<TranslatedCategoryResponseDto?> GetParentById(Guid id, Language langCode)
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
@@ -173,39 +147,35 @@ public class CategoryRepository(
 
     public async Task<ICollection<CategoryPaginationResponseDto>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
-        if (!string.IsNullOrEmpty(nameFilter))
+        if (nameFilter != null)
             nameFilter = $"{nameFilter}%";
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
         $"""
         SELECT 
-            C.id as {nameof(CategoryPaginationResponseDto.Id)},
-            CT.name as {nameof(CategoryPaginationResponseDto.CategoryName)},
-            C.Order as {nameof(CategoryPaginationResponseDto.Order)},
-            C.parent_category_id as {nameof(CategoryPaginationResponseDto.parentCategoryId)} ,
-            COUNT(DISTINCT CC.id) AS {nameof(CategoryPaginationResponseDto.NumberOfChildren)},
-            COUNT(DISTINCT P.Id) AS {nameof(CategoryPaginationResponseDto.NumberOfProducts)}
+            CS.id AS {nameof(CategoryPaginationResponseDto.Id)},
+            CT.name AS {nameof(CategoryPaginationResponseDto.CategoryName)},
+            CS.Order AS {nameof(CategoryPaginationResponseDto.Order)},
+            CS.parent_category_id AS {nameof(CategoryPaginationResponseDto.ParentCategoryId)},
+            CTT.name AS {nameof(CategoryPaginationResponseDto.ParentCategoryName)}, 
+            CS.total_children AS {nameof(CategoryPaginationResponseDto.TotalChildren)},
+            CS.total_products AS {nameof(CategoryPaginationResponseDto.TotalProducts)},
+            CS.total_specs AS {nameof(CategoryPaginationResponseDto.TotalSpecs)}
         FROM 
-            {Schemas.Orders}.Category AS C
-        LEFT JOIN 
-            {Schemas.Orders}.Category AS CC 
-        ON 
-            CC.parent_category_id = C.id
-        LEFT JOIN 
-            {Schemas.Orders}.Product AS P 
-        ON 
-            P.category_id = C.id
+            {Schemas.Orders}.category_statistics AS CS
         LEFT JOIN
             {Schemas.Orders}.category_translation AS CT
         ON
-            CT.category_id = C.id AND CT.lang_code = @langCode
+            CT.category_id = CS.id AND CT.lang_code = @langCode
+        LEFT JOIN
+            {Schemas.Orders}.category_translation AS CTT
+        ON
+            CTT.category_id = CS.parent_category_id AND CTT.lang_code = @langCode
         WHERE 
             (@nameFilter IS NULL OR CT.name ILIKE @nameFilter )
-        GROUP BY 
-            C.id , C.Order, C.Parent_Category_id , CT.name
         ORDER BY 
-            C.order , C.id
+            CS.created_on DESC
         LIMIT 
             @pageSize 
         OFFSET 

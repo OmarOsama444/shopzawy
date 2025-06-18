@@ -12,10 +12,10 @@ public class CreateCategoryCommandHandler(
     {
         return await categoryService.CreateCategory(
             request.Order,
-            request.Parent_category_id,
-            request.Spec_ids,
+            request.ParentCategoryId,
+            request.SpecIds,
             request.Names,
             request.Descriptions,
-            request.Image_urls);
+            request.ImageUrls);
     }
 }

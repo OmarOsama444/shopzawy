@@ -6,7 +6,7 @@ using Modules.Users.Domain.DomainEvents;
 using Modules.Users.Domain.Entities;
 using Modules.Users.Domain.ValueObjects;
 
-namespace Modules.Users.Application.UseCases.Users.CreateUser;
+namespace Modules.Users.Application.UseCases.Users.Projections;
 
 public class EmailTokenCreatedDomainEventHandler(
     ITokenRepository tokenRepository,

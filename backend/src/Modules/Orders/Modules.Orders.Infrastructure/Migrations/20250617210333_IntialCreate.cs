@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Orders.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class intialCreate : Migration
+    public partial class IntialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,6 +68,25 @@ namespace Modules.Orders.Infrastructure.Migrations
                         principalSchema: "orders",
                         principalTable: "category",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "category_statistics",
+                schema: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order = table.Column<int>(type: "integer", nullable: false),
+                    parent_category_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    child_category_ids = table.Column<List<Guid>>(type: "uuid[]", nullable: false),
+                    total_children = table.Column<int>(type: "integer", nullable: false),
+                    total_products = table.Column<int>(type: "integer", nullable: false),
+                    total_specs = table.Column<int>(type: "integer", nullable: false),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_category_statistics", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -399,6 +419,12 @@ namespace Modules.Orders.Infrastructure.Migrations
                 column: "spec_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_category_statistics_created_on",
+                schema: "orders",
+                table: "category_statistics",
+                column: "created_on");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_category_translation_category_id_lang_code",
                 schema: "orders",
                 table: "category_translation",
@@ -514,6 +540,10 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "category_spec",
+                schema: "orders");
+
+            migrationBuilder.DropTable(
+                name: "category_statistics",
                 schema: "orders");
 
             migrationBuilder.DropTable(

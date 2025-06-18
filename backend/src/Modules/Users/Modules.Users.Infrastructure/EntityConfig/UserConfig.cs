@@ -23,6 +23,9 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .WithOne(e => e.User)
             .HasForeignKey(ur => ur.UserId)
             .IsRequired();
+        builder.HasData(
+            User.AdminSeed()
+        );
     }
 
 }

@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Modules.Orders.Application.UseCases.Categories.CreateCategory;
 using Modules.Orders.Application.UseCases.Categories.GetCategory;
-using Modules.Orders.Application.UseCases.Categories.UpdateCategorySpec;
-using Modules.Orders.Application.UseCases.GetMainCategories;
 using Modules.Orders.Application.UseCases.PaginateCategories;
 using Modules.Orders.Application.UseCases.UpdateCategory;
 using Common.Domain.ValueObjects;
@@ -33,12 +31,6 @@ public class CategoryEndpoints : IEndpoint
             ));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.CategoryCreate);
-
-        group.MapGet("main", async ([FromServices] ISender sender, [FromQuery] Language lang_code = Language.en) =>
-        {
-            var result = await sender.Send(new GetMainCategoriesQuery(lang_code));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        });
 
         group.MapGet("", async (
             [FromServices] ISender sender,
@@ -72,18 +64,11 @@ public class CategoryEndpoints : IEndpoint
             var result = await sender.Send(new UpdateCategoryCommand(
                 Id,
                 request.Order,
+                request.Specs.Add,
+                request.Specs.Remove,
                 request.Names?.translations ?? new Dictionary<Language, string>(),
                 request.Descriptions?.translations ?? new Dictionary<Language, string>(),
                 request.ImageUrls?.translations ?? new Dictionary<Language, string>()));
-            return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
-        }).RequireAuthorization(Permissions.CategoryUpdate);
-
-        group.MapPut("{id}/specs/", async (
-            [FromRoute] Guid Id,
-            [FromBody] UpdateCategorySpecsDto request,
-            [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(new UpdateCategorySpecCommand(Id, request.Add, request.Remove));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.CategoryUpdate);
 
@@ -98,6 +83,7 @@ public class CategoryEndpoints : IEndpoint
     );
     public record UpdateCategoryRequestDto(
         int? Order,
+        UpdateCategorySpecsDto Specs,
         LocalizedText? Names,
         LocalizedText? Descriptions,
         LocalizedText? ImageUrls);

@@ -6,9 +6,9 @@ namespace Modules.Orders.Application.UseCases.Categories.CreateCategory;
 
 public record CreateCategoryCommand(
     int Order,
-    Guid Parent_category_id,
-    ICollection<Guid> Spec_ids,
+    Guid ParentCategoryId,
+    ICollection<Guid> SpecIds,
     IDictionary<Language, string> Names,
     IDictionary<Language, string> Descriptions,
-    IDictionary<Language, string> Image_urls
+    IDictionary<Language, string> ImageUrls
 ) : ICommand<Guid>;

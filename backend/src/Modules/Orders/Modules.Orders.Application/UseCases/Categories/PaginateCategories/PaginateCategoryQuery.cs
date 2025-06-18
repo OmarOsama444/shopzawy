@@ -6,7 +6,7 @@ using Modules.Orders.Domain.ValueObjects;
 namespace Modules.Orders.Application.UseCases.PaginateCategories;
 
 public record PaginateCategoryQuery(
-    int pageNumber,
-    int pageSize,
-    string? nameFilter,
-    Language lang_code) : IQuery<PaginationResponse<CategoryPaginationResponseDto>>;
+    int PageNumber,
+    int PageSize,
+    string? NameFilter,
+    Language LangCode) : IQuery<PaginationResponse<CategoryPaginationResponseDto>>;

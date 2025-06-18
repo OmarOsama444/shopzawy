@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using Common.Domain.Entities;
+using Modules.Orders.Domain.DomainEvents;
 
 namespace Modules.Orders.Domain.Entities;
 
@@ -12,11 +13,13 @@ public class CategorySpec : Entity
     public virtual Specification Specification { get; set; } = default!;
     public static CategorySpec Create(Guid CategoryId, Guid specId)
     {
-        return new CategorySpec()
+        var categorySpec = new CategorySpec()
         {
             Id = Guid.NewGuid(),
             SpecId = specId,
             CategoryId = CategoryId
         };
+        categorySpec.RaiseDomainEvent(new CategorySpecCreatedDomainEvent(categorySpec.Id));
+        return categorySpec;
     }
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20250616215149_TrackLogin")]
-    partial class TrackLogin
+    [Migration("20250617210304_IntialCreate")]
+    partial class IntialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -698,6 +698,19 @@ namespace Modules.Users.Infrastructure.Migrations
                         .HasName("pk_user");
 
                     b.ToTable("user", "users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            DateOfCreation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Admin",
+                            LastName = "User",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJOqYyDPiMJFm1mVQx3qEAyLF9qqYyRZQamJuHF11binnXBQGuCSBJu+8T4lDkxPxg==",
+                            PhoneNumberConfirmed = false
+                        });
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.UserRole", b =>
@@ -717,6 +730,13 @@ namespace Modules.Users.Infrastructure.Migrations
                         .HasDatabaseName("ix_user_role_user_id");
 
                     b.ToTable("user_role", "users");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = "Admin",
+                            UserId = new Guid("11111111-1111-1111-1111-111111111111")
+                        });
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Entities.RolePermission", b =>

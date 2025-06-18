@@ -1,4 +1,5 @@
 using Common.Domain.Entities;
+using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
@@ -37,6 +38,7 @@ public class Product : Entity
             BrandId = brandId,
             CategoryId = categoryId
         };
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id));
         return product;
     }
 

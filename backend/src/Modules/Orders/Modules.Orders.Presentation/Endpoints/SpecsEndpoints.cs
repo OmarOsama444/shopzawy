@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using MediatR;
-using Modules.Orders.Application.UseCases;
 using Modules.Orders.Application.UseCases.Spec.PaginateSpec;
 using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Application.UseCases.Spec.CreateSpecOption;

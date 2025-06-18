@@ -89,12 +89,12 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         string query =
-        $"""
+        $@"
         SELECT DISTINCT
             s.id as {nameof(TranslatedSpecResponseDto.Id)} , 
             st.name {nameof(TranslatedSpecResponseDto.Name)} , 
             s.data_type as {nameof(TranslatedSpecResponseDto.DataType)} ,
-            so.id as {nameof(SpecOptionsResponse.OptionId)} , 
+            so.specification_id as {nameof(SpecOptionsResponse.OptionId)} , 
             so.value as {nameof(SpecOptionsResponse.Value)} 
         FROM
             {Schemas.Orders}.category_spec as cs
@@ -111,8 +111,8 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
         ON
             s.id = st.spec_id
         WHERE
-            st.lang_code = @lang_code AND cs.category_id IN @ids;
-        """;
+            st.lang_code = @lang_code AND cs.category_id = ANY(@ids);
+        ";
         var specs = (await connection.QueryAsync<TranslatedSpecResponseDto, SpecOptionsResponse, TranslatedSpecResponseDto>(
             sql: query,
             map: (spec, option) =>

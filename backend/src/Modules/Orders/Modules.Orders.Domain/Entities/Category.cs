@@ -15,15 +15,15 @@ public class Category : Entity
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
     public virtual ICollection<CategoryTranslation> CategoryTranslations { get; set; } = [];
     public static Category Create(
-       int Order,
-       Category? parentCategory = null)
+       int order,
+       Guid? parentCategoryId = null)
     {
         var category = new Category()
         {
             Id = Guid.NewGuid(),
-            Order = Order,
+            Order = order,
             CreatedOn = DateTime.UtcNow,
-            ParentCategoryId = parentCategory?.Id
+            ParentCategoryId = parentCategoryId
         };
         category.RaiseDomainEvent(new CategoryCreatedDomainEvent(category.Id));
         return category;

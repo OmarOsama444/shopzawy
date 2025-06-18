@@ -23,7 +23,18 @@ public class User : Entity
         this.LastLoginDate = DateTime.UtcNow;
         this.RaiseDomainEvent(new UserLoggedDomainEvent(this.Id, GuestId));
     }
-
+    public static User AdminSeed()
+    {
+        return new User()
+        {
+            Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            FirstName = "Admin",
+            LastName = "User",
+            Email = "admin@gmail.com",
+            EmailConfirmed = true,
+            PasswordHash = "AQAAAAIAAYagAAAAEJOqYyDPiMJFm1mVQx3qEAyLF9qqYyRZQamJuHF11binnXBQGuCSBJu+8T4lDkxPxg=="
+        };
+    }
     public static User Create(
         Guid GuestId,
         string FirstName,

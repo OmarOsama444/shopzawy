@@ -6,8 +6,8 @@ internal class PaginateCategoryQueryValidator : AbstractValidator<PaginateCatego
 {
     public PaginateCategoryQueryValidator()
     {
-        RuleFor(p => p.pageNumber).NotEmpty().GreaterThan(0);
-        RuleFor(p => p.pageSize).NotEmpty().InclusiveBetween(1, 50);
-        RuleFor(p => p.lang_code).NotEmpty();
+        RuleFor(p => p.PageNumber).NotEmpty().GreaterThan(0);
+        RuleFor(p => p.PageSize).NotEmpty().InclusiveBetween(1, 50);
+        RuleFor(p => p.LangCode).NotEmpty();
     }
 }

@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Domain.Entities;
+using Modules.Orders.Domain.Entities.Views;
 using Modules.Orders.Domain.Exceptions;
-using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 namespace Modules.Orders.Infrastructure.Services;
 
 public class CategoryService
 (
     OrdersDbContext context,
-    ICategoryRepository categoryRepository
+    ICategoryRepository categoryRepository,
+    ICategoryTranslationRepository categoryTranslationRepository,
+    ICategoryStatisticsRepository categoryStatisticsRepository
 ) : ICategoryService
 {
     public async Task<Result<Guid>> CreateCategory(
@@ -32,36 +34,42 @@ public class CategoryService
                 )
                 return new CategoryNameConflictException(names[langCode]);
         }
-        try
+        if (parentCategoryId.HasValue &&
+            !await context.Categories.AnyAsync(x => x.Id == parentCategoryId.Value))
         {
-            await context.Database.BeginTransactionAsync();
-            Category? parentCategory = null;
+            return new CategoryNotFoundException(parentCategoryId.Value);
+        }
 
-            var category = Category.Create(
-                    Order,
-                    parentCategory
-                );
-            categoryRepository.Add(category);
-            await context.SaveChangesAsync();
-            foreach (Language langCode in names.Keys)
-            {
-                var categoryTranslation = CategoryTranslation.Create(
-                    category.Id,
-                    langCode,
-                    names[langCode],
-                    descriptions[langCode],
-                    imageUrls[langCode]);
-                context.CategoryTranslations.Add(categoryTranslation);
-            }
-            await context.SaveChangesAsync();
-            await context.Database.CommitTransactionAsync();
-            return category.Id;
-        }
-        catch (Exception ex)
+        var category = Category.Create(
+                Order,
+                parentCategoryId
+            );
+        categoryRepository.Add(category);
+        await context.SaveChangesAsync();
+        foreach (Language langCode in names.Keys)
         {
-            await context.Database.RollbackTransactionAsync();
-            return ex;
+            var categoryTranslation = CategoryTranslation.Create(
+                category.Id,
+                langCode,
+                names[langCode],
+                descriptions[langCode],
+                imageUrls[langCode]);
+            categoryTranslationRepository.Add(categoryTranslation);
         }
+        categoryStatisticsRepository.Add(
+            CategoryStatistics.Create(
+                category.Id,
+                parentCategoryId,
+                [],
+                0,
+                0,
+                0,
+                category.Order,
+                category.CreatedOn
+            )
+        );
+        await context.SaveChangesAsync();
+        return category.Id;
     }
 
 }
