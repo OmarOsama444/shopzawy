@@ -1,35 +1,11 @@
 using System.Data;
 using Common.Application.Messaging;
-using Common.Domain;
-using FluentValidation;
-using Modules.Orders.Application.Services;
-using Modules.Orders.Application.UseCases.CreateProduct;
+using Modules.Orders.Application.Services.Dtos;
 
 
 namespace Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 
 public record CreateProductItemCommand(
-        Guid productId,
-        ICollection<ProductItemDto> product_items
+        Guid ProductId,
+        ICollection<ProductItemDto> ProductItems
         ) : ICommand<ICollection<Guid>>;
-
-public sealed class CreateProductItemCommandHandler(
-    IProductService productService
-) : ICommandHandler<CreateProductItemCommand, ICollection<Guid>>
-{
-    public async Task<Result<ICollection<Guid>>> Handle(CreateProductItemCommand request, CancellationToken cancellationToken)
-    {
-        var productItemIds = await productService.CreateProductItems(request.productId, request.product_items);
-        return productItemIds;
-    }
-}
-
-internal class CreateProductItemCommandValidator : AbstractValidator<CreateProductItemCommand>
-{
-    public CreateProductItemCommandValidator()
-    {
-        RuleFor(x => x.productId).NotEmpty();
-        RuleForEach(x => x.product_items)
-            .SetValidator(new productItemValidator());
-    }
-}

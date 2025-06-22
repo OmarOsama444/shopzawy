@@ -8,7 +8,7 @@ public class ProductItem : Entity
     public Guid Id { get; set; }
     public string StockKeepingUnit { get; set; } = string.Empty;
     public int QuantityInStock { get; set; }
-    public ICollection<string> ImageUrls { get; set; } = [];
+    public List<string> ImageUrls { get; set; } = [];
     public float Weight { get; set; }
     public float Width { get; set; }
     public float Length { get; set; }
@@ -35,7 +35,7 @@ public class ProductItem : Entity
             Id = Guid.NewGuid(),
             StockKeepingUnit = sku,
             QuantityInStock = QuantityInStock,
-            ImageUrls = urls,
+            ImageUrls = urls.ToList(),
             Price = price,
             Width = width,
             Length = length,
@@ -55,7 +55,8 @@ public class ProductItem : Entity
         float? length,
         float? height,
         float? weight,
-        ICollection<string>? urls
+        ICollection<string>? AddUrls = null,
+        ICollection<string>? RemoveUrls = null
     )
     {
         if (sku != null)
@@ -72,7 +73,15 @@ public class ProductItem : Entity
             this.Height = height.Value;
         if (weight.HasValue)
             this.Weight = weight.Value;
-        if (urls != null)
-            this.ImageUrls = urls;
+        if (AddUrls != null && AddUrls.Count > 0)
+            this.ImageUrls.AddRange(AddUrls);
+        if (RemoveUrls != null && RemoveUrls.Count > 0)
+            foreach (var url in RemoveUrls)
+            {
+                if (this.ImageUrls.Contains(url))
+                {
+                    this.ImageUrls.Remove(url);
+                }
+            }
     }
 }

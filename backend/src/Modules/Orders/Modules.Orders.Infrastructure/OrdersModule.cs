@@ -61,7 +61,6 @@ public static class OrdersModule
             );
 
         services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
         // decorates all the notification handlers in the application layer only

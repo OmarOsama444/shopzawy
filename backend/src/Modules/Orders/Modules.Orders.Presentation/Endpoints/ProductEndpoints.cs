@@ -1,16 +1,16 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Orders.Application.UseCases.CreateProduct;
-using MediatR;
-using Modules.Orders.Application.Services;
 using Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.UpdateProductItem;
 using Modules.Orders.Application.UseCases.ProductItems.DeleteProductItem;
 using Modules.Orders.Domain.ValueObjects;
 using Common.Application.Extensions;
 using Common.Presentation.Endpoints;
+using Modules.Orders.Application.Services.Dtos;
+using Modules.Orders.Application.UseCases.Products.CreateProduct;
 
 
 namespace Modules.Orders.Presentation.Endpoints;
@@ -58,14 +58,15 @@ public class ProductEndpoints : IEndpoint
         {
             var result = await sender.Send(new UpdateProductItemCommand(
                     Id,
-                    request.stock_keeping_unit,
-                    request.quantity_in_stock,
-                    request.price,
-                    request.width,
-                    request.length,
-                    request.height,
-                    request.weight,
-                    request.image_urls));
+                    request.StockKeepingUnit,
+                    request.QuantityInStock,
+                    request.Price,
+                    request.Width,
+                    request.Length,
+                    request.Height,
+                    request.Weight,
+                    request.AddImageUrls,
+                    request.RemoveImageUrls));
         }).RequireAuthorization(Permissions.ProductItemUpdate);
 
         group.MapDelete("items/{Id}",
@@ -94,11 +95,12 @@ public record ProductCreateRequest(
     Guid CategoryId,
     ICollection<ProductItemDto> ProductItems);
 public record ProductItemRequest(
-    string? stock_keeping_unit,
-    int? quantity_in_stock,
-    float? price,
-    float? width,
-    float? length,
-    float? height,
-    float? weight,
-    ICollection<string>? image_urls);
+    string? StockKeepingUnit,
+    int? QuantityInStock,
+    float? Price,
+    float? Width,
+    float? Length,
+    float? Height,
+    float? Weight,
+    ICollection<string>? AddImageUrls,
+    ICollection<string>? RemoveImageUrls);

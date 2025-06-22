@@ -32,6 +32,7 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
     #endregion
     #region Views
     public DbSet<CategoryStatistics> CategoryStatistics { get; set; }
+    public DbSet<SpecificationStatistics> SpecificationStatistics { get; set; }
     #endregion
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,5 +53,6 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
         modelBuilder.ApplyConfiguration<CategoryTranslation>(new CategoryTranslationConfig());
         modelBuilder.ApplyConfiguration<SpecificationTranslation>(new SpecificationTranslationConfig());
         modelBuilder.ApplyConfiguration<CategoryStatistics>(new CategoryStatisticsConfig());
+        modelBuilder.ApplyConfiguration<SpecificationStatistics>(new SpecificationStatisticsConfig());
     }
 }

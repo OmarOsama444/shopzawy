@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Common.Application;
 using Common.Application.Messaging;
 using Common.Domain.Exceptions;

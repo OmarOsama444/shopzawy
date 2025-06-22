@@ -32,7 +32,6 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
             s.id as {nameof(TranslatedSpecResponseDto.Id)} , 
             s.data_type as {nameof(TranslatedSpecResponseDto.DataType)},
             st.name as name as {nameof(TranslatedSpecResponseDto.Name)}, 
-            sp.id as option_id as {nameof(SpecOptionsResponse.OptionId)}, 
             sp.value as value as {nameof(SpecOptionsResponse.Value)}
         FROM
             {Schemas.Orders}.specification as s 
@@ -48,7 +47,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
             @name IS NULL OR st.name ILike @name
         """;
 
-        var ret = await connection.QueryAsync<TranslatedSpecResponseDto, SpecOptionsResponse, TranslatedSpecResponseDto>(
+        return (await connection.QueryAsync<TranslatedSpecResponseDto, SpecOptionsResponse, TranslatedSpecResponseDto>(
                 sql: query,
                 map: (specResponse, specOptionsResponse) =>
                 {
@@ -58,15 +57,14 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
                 },
                 param: new { name, lang_code },
                 splitOn: "option_id"
-                );
-        return ret
-            .GroupBy(sr => sr.Id)
-            .Select(s =>
-            {
-                TranslatedSpecResponseDto spec = s.First();
-                spec.Options = s.SelectMany(x => x.Options).ToList();
-                return spec;
-            }).ToList();
+                ))
+                .GroupBy(sr => sr.Id)
+                .Select(s =>
+                {
+                    TranslatedSpecResponseDto spec = s.First();
+                    spec.Options = s.SelectMany(x => x.Options).ToList();
+                    return spec;
+                }).ToList();
     }
     public async Task<int> Total(string? name, Language lang_code)
     {
@@ -94,7 +92,6 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
             s.id as {nameof(TranslatedSpecResponseDto.Id)} , 
             st.name {nameof(TranslatedSpecResponseDto.Name)} , 
             s.data_type as {nameof(TranslatedSpecResponseDto.DataType)} ,
-            so.specification_id as {nameof(SpecOptionsResponse.OptionId)} , 
             so.value as {nameof(SpecOptionsResponse.Value)} 
         FROM
             {Schemas.Orders}.category_spec as cs
@@ -119,7 +116,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
             {
                 if (spec.Options is null || spec.Options.Count == 0)
                     spec.Options = [];
-                spec.Options.Add(option);
+                spec.Options.Add(option.Value);
                 return spec;
             },
             splitOn: "optionId",

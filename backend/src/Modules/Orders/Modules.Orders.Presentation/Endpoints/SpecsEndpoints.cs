@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using MediatR;
-using Modules.Orders.Application.UseCases.Spec.PaginateSpec;
 using Modules.Orders.Domain.ValueObjects;
-using Modules.Orders.Application.UseCases.Spec.CreateSpecOption;
-using Modules.Orders.Application.UseCases.Spec.GetSpecOption;
-using Modules.Orders.Application.UseCases.Spec.CreateSpec;
+using Modules.Orders.Application.UseCases.Specs.PaginateSpec;
+using Modules.Orders.Application.UseCases.Specs.CreateSpec;
+using Modules.Orders.Application.UseCases.Specs.UpdateSpec;
 using Common.Application.Extensions;
 using Common.Presentation.Endpoints;
 using Common.Domain.ValueObjects;
@@ -25,17 +24,9 @@ public class SpecsEndpoints : IEndpoint
             [FromBody] UpdateSpecOptionRequestDto request,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new UpdateSpecOptionsCommand(id, request.Add, request.Remove));
+            var result = await sender.Send(new UpdateSpecCommand(id, request.SpecNames.translations, request.Add, request.Remove));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.SpecUpdate);
-
-        group.MapGet("{id}", async (
-            [FromRoute] Guid id,
-            [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(new GetSpecOptionQuery(id));
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        }).RequireAuthorization(Permissions.SpecRead);
 
         group.MapPost("", async ([FromBody] CreateSpecRequestDto requestDto, [FromServices] ISender sender) =>
         {
@@ -56,6 +47,9 @@ public class SpecsEndpoints : IEndpoint
         }).RequireAuthorization(Permissions.SpecRead);
     }
     public record CreateSpecRequestDto(IDictionary<Language, string> spec_names, SpecDataType dataType);
-    public record UpdateSpecOptionRequestDto(ICollection<string> Add, ICollection<string> Remove);
+    public record UpdateSpecOptionRequestDto(
+        LocalizedText SpecNames,
+        ICollection<string> Add,
+        ICollection<string> Remove);
 
 }
