@@ -16,7 +16,7 @@ public class UpdatePermissionCommandHandler(
         var permission = await permissionRepository.GetByIdAsync(request.Id);
         if (permission is null)
             return new PermissionNotFound(request.Id);
-        permission.Update(request.Name, request.Active, request.Module);
+        permission.Update(request.Active, request.Module);
         permissionRepository.Update(permission);
         await unitOfWork.SaveChangesAsync();
         return permission.Name;

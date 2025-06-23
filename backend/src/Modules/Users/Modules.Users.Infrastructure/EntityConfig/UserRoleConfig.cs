@@ -13,7 +13,7 @@ public class UserRoleConfig : IEntityTypeConfiguration<UserRole>
             new UserRole
             {
                 UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                RoleId = "Admin",
+                RoleId = "admin",
             }
         );
     }

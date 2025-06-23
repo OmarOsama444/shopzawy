@@ -11,46 +11,54 @@ public class RolePermissionConfig : IEntityTypeConfiguration<RolePermission>
         builder.HasKey(x => new { x.RoleId, x.PermissionId });
 
         builder.HasData(
-            // Admin permissions (full access)
-            new RolePermission { RoleId = "Admin", PermissionId = "banner:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "banner:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "banner:delete" },
-            new RolePermission { RoleId = "Admin", PermissionId = "brand:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "brand:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "brand:update" },
-            new RolePermission { RoleId = "Admin", PermissionId = "category:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "category:update" },
-            new RolePermission { RoleId = "Admin", PermissionId = "category:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "category:delete" },
-            new RolePermission { RoleId = "Admin", PermissionId = "color:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "color:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "product:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "product:item:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "product:item:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "product:item:delete" },
-            new RolePermission { RoleId = "Admin", PermissionId = "spec:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "spec:read" },
-            new RolePermission { RoleId = "Admin", PermissionId = "spec:update" },
-            new RolePermission { RoleId = "Admin", PermissionId = "vendor:create" },
-            new RolePermission { RoleId = "Admin", PermissionId = "vendor:update" },
-            new RolePermission { RoleId = "Admin", PermissionId = "vendor:read" },
+            // admin permissions (full access)
+            new RolePermission { RoleId = "admin", PermissionId = "banner:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "banner:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "banner:delete" },
+            new RolePermission { RoleId = "admin", PermissionId = "brand:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "brand:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "brand:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "category:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "category:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "category:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "category:delete" },
+            new RolePermission { RoleId = "admin", PermissionId = "color:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "color:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "product:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "product:item:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "product:item:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "product:item:delete" },
+            new RolePermission { RoleId = "admin", PermissionId = "spec:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "spec:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "spec:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "vendor:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "vendor:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "vendor:read" },
+            // User management permissions
+            new RolePermission { RoleId = "admin", PermissionId = "role:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "role:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "role:permission:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "user:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "user:role:update" },
+            new RolePermission { RoleId = "admin", PermissionId = "permission:read" },
+            new RolePermission { RoleId = "admin", PermissionId = "permission:create" },
+            new RolePermission { RoleId = "admin", PermissionId = "permission:update" },
+            // default user permissions (read-only for key entities)
+            new RolePermission { RoleId = "default", PermissionId = "banner:read" },
+            new RolePermission { RoleId = "default", PermissionId = "brand:read" },
+            new RolePermission { RoleId = "default", PermissionId = "category:read" },
+            new RolePermission { RoleId = "default", PermissionId = "color:read" },
+            new RolePermission { RoleId = "default", PermissionId = "product:item:read" },
+            new RolePermission { RoleId = "default", PermissionId = "spec:read" },
+            new RolePermission { RoleId = "default", PermissionId = "vendor:read" },
 
-            // Default user permissions (read-only for key entities)
-            new RolePermission { RoleId = "Default", PermissionId = "banner:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "brand:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "category:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "color:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "product:item:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "spec:read" },
-            new RolePermission { RoleId = "Default", PermissionId = "vendor:read" },
-
-            // Guest user permissions (limited public access)
-            new RolePermission { RoleId = "Guest", PermissionId = "banner:read" },
-            new RolePermission { RoleId = "Guest", PermissionId = "brand:read" },
-            new RolePermission { RoleId = "Guest", PermissionId = "category:read" },
-            new RolePermission { RoleId = "Guest", PermissionId = "product:item:read" },
-            new RolePermission { RoleId = "Guest", PermissionId = "user:create" },
-            new RolePermission { RoleId = "Guest", PermissionId = "auth:login" }
+            // guest user permissions (limited public access)
+            new RolePermission { RoleId = "guest", PermissionId = "banner:read" },
+            new RolePermission { RoleId = "guest", PermissionId = "brand:read" },
+            new RolePermission { RoleId = "guest", PermissionId = "category:read" },
+            new RolePermission { RoleId = "guest", PermissionId = "product:item:read" },
+            new RolePermission { RoleId = "guest", PermissionId = "user:create" },
+            new RolePermission { RoleId = "guest", PermissionId = "auth:login" }
         );
 
     }

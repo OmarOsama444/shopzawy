@@ -3,12 +3,12 @@ using Common.Application.Messaging;
 namespace Modules.Orders.Application.UseCases.CreateVendor;
 
 public record CreateVendorCommand(
-    string vendorName,
-    string email,
-    string phoneNumber,
-    string address,
-    string logoUrl,
-    string shippingZoneName,
-    string description,
-    bool? active,
-    string countryCode) : ICommand<Guid>;
+    string VendorName,
+    string Email,
+    string PhoneNumber,
+    string Address,
+    string LogoUrl,
+    string ShippingZoneName,
+    string Description,
+    bool? Active,
+    string CountryCode) : ICommand<Guid>;

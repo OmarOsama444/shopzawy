@@ -51,7 +51,7 @@ public class JwtProvider : IJwtProvider
     {
         var permissions = await
             context.roles
-            .Where(x => x.Name == "Guest")
+            .Where(x => x.Name == "guest")
             .Include(x => x.RolePermissions)
             .ThenInclude(x => x.Permission)
             .SelectMany(

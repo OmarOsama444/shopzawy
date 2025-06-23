@@ -32,10 +32,8 @@ public class Permission : Entity
         };
     }
 
-    public void Update(string? name = null, bool? active = null, string? module = null)
+    public void Update(bool? active = null, string? module = null)
     {
-        if (!string.IsNullOrEmpty(name))
-            this.Name = name;
         if (active.HasValue)
             this.Active = active.Value;
         if (!string.IsNullOrEmpty(module))

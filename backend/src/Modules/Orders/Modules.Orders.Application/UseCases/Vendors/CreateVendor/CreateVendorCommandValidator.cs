@@ -9,12 +9,12 @@ internal class CreateVendorCommandValidator : AbstractValidator<CreateVendorComm
     public CreateVendorCommandValidator()
     {
         var phoneValidator = new PhoneNumberValidator("EG");
-        RuleFor(v => v.vendorName).NotEmpty().MinimumLength(3);
-        RuleFor(v => v.email).NotEmpty().EmailAddress();
-        RuleFor(v => v.phoneNumber).NotEmpty().Must(phoneValidator.Must).WithMessage(PhoneNumberValidator.Message)
+        RuleFor(v => v.VendorName).NotEmpty().MinimumLength(3);
+        RuleFor(v => v.Email).NotEmpty().EmailAddress();
+        RuleFor(v => v.PhoneNumber).NotEmpty().Must(phoneValidator.Must).WithMessage(PhoneNumberValidator.Message)
         .WithMessage(PhoneNumberValidator.Message);
-        RuleFor(v => v.address).NotEmpty();
-        RuleFor(v => v.description).NotEmpty().MinimumLength(3);
-        RuleFor(v => v.logoUrl).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
+        RuleFor(v => v.Address).NotEmpty();
+        RuleFor(v => v.Description).NotEmpty().MinimumLength(3);
+        RuleFor(v => v.LogoUrl).Must(UrlValidator.Must).WithMessage(UrlValidator.Message);
     }
 }

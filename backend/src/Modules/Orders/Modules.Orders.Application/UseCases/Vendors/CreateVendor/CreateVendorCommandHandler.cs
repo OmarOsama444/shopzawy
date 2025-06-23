@@ -13,21 +13,21 @@ public class CreateVendorCommandHandler(IVendorRepository vendorRepository, IUni
     public async Task<Result<Guid>> Handle(CreateVendorCommand request, CancellationToken cancellationToken)
     {
         // TODO validate the uniqueness of the email and the phonenumebr conflict
-        Vendor? vendor = await vendorRepository.GetVendorByEmail(request.email);
+        Vendor? vendor = await vendorRepository.GetVendorByEmail(request.Email);
         if (vendor is not null)
-            return new VendorConflictException(request.email, "Email");
-        vendor = await vendorRepository.GetVendorByPhone(request.phoneNumber);
+            return new VendorConflictException(request.Email, "Email");
+        vendor = await vendorRepository.GetVendorByPhone(request.PhoneNumber);
         if (vendor is not null)
-            return new VendorConflictException(request.phoneNumber, "Phone");
+            return new VendorConflictException(request.PhoneNumber, "Phone");
         vendor = Vendor.Create(
-            request.vendorName,
-            request.email,
-            request.phoneNumber,
-            request.address,
-            request.logoUrl,
-            request.shippingZoneName,
-            request.description,
-            request.active);
+            request.VendorName,
+            request.Email,
+            request.PhoneNumber,
+            request.Address,
+            request.LogoUrl,
+            request.ShippingZoneName,
+            request.Description,
+            request.Active);
         vendorRepository.Add(vendor);
         await unitOfWork.SaveChangesAsync();
         return vendor.Id;

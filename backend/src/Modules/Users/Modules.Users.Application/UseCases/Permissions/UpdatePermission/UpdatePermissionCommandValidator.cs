@@ -6,8 +6,9 @@ public class UpdatePermissionCommandValidator : AbstractValidator<UpdatePermissi
 {
     public UpdatePermissionCommandValidator()
     {
-        RuleFor(x => x.Module).MinimumLength(4).When(x => !string.IsNullOrEmpty(x.Module));
-        RuleFor(x => x.Name).MinimumLength(4).When(x => !string.IsNullOrEmpty(x.Name));
+        RuleFor(x => x.Module).MinimumLength(4).Must(s => s == s.ToLower())
+    .WithMessage("The value must be all lowercase.").When(x => !string.IsNullOrEmpty(x.Module));
+        RuleFor(x => x.Id).NotEmpty(); ;
     }
 }
 

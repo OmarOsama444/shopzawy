@@ -20,42 +20,42 @@ public class PermissionConfig : IEntityTypeConfiguration<Permission>
         // seeding
         builder.HasData(
             // ===================Users=================== //
-            Permission.Seed("user:create", true, "Users"),
-            Permission.Seed("user:role:update", true, "Users"),
+            Permission.Seed("user:create", true, "users"),
+            Permission.Seed("user:role:update", true, "users"),
             // roles endpoint
-            Permission.Seed("role:read", true, "Users"),
-            Permission.Seed("role:create", true, "Users"),
-            Permission.Seed("role:permission:update", true, "Users"),
+            Permission.Seed("role:read", true, "users"),
+            Permission.Seed("role:create", true, "users"),
+            Permission.Seed("role:permission:update", true, "users"),
             // permission endpoint
-            Permission.Seed("permission:read", true, "Users"),
-            Permission.Seed("permission:create", true, "Users"),
-            Permission.Seed("permission:update", true, "Users"),
+            Permission.Seed("permission:read", true, "users"),
+            Permission.Seed("permission:create", true, "users"),
+            Permission.Seed("permission:update", true, "users"),
             // auth endpoint
-            Permission.Seed("auth:login", true, "Users"),
+            Permission.Seed("auth:login", true, "users"),
 
             // ==================Orders=================== //
-            Permission.Seed("banner:create", true, "Orders"),
-            Permission.Seed("banner:read", true, "Orders"),
-            Permission.Seed("banner:delete", true, "Orders"),
-            Permission.Seed("brand:create", true, "Orders"),
-            Permission.Seed("brand:read", true, "Orders"),
-            Permission.Seed("brand:update", true, "Orders"),
-            Permission.Seed("category:create", true, "Orders"),
-            Permission.Seed("category:update", true, "Orders"),
-            Permission.Seed("category:read", true, "Orders"),
-            Permission.Seed("category:delete", true, "Orders"),
-            Permission.Seed("color:create", true, "Orders"),
-            Permission.Seed("color:read", true, "Orders"),
-            Permission.Seed("product:create", true, "Orders"),
-            Permission.Seed("product:item:create", true, "Orders"),
-            Permission.Seed("product:item:read", true, "Orders"),
-            Permission.Seed("product:item:delete", true, "Orders"),
-            Permission.Seed("spec:create", true, "Orders"),
-            Permission.Seed("spec:read", true, "Orders"),
-            Permission.Seed("spec:update", true, "Orders"),
-            Permission.Seed("vendor:create", true, "Orders"),
-            Permission.Seed("vendor:update", true, "Orders"),
-            Permission.Seed("vendor:read", true, "Orders")
+            Permission.Seed("banner:create", true, "orders"),
+            Permission.Seed("banner:read", true, "orders"),
+            Permission.Seed("banner:delete", true, "orders"),
+            Permission.Seed("brand:create", true, "orders"),
+            Permission.Seed("brand:read", true, "orders"),
+            Permission.Seed("brand:update", true, "orders"),
+            Permission.Seed("category:create", true, "orders"),
+            Permission.Seed("category:update", true, "orders"),
+            Permission.Seed("category:read", true, "orders"),
+            Permission.Seed("category:delete", true, "orders"),
+            Permission.Seed("color:create", true, "orders"),
+            Permission.Seed("color:read", true, "orders"),
+            Permission.Seed("product:create", true, "orders"),
+            Permission.Seed("product:item:create", true, "orders"),
+            Permission.Seed("product:item:read", true, "orders"),
+            Permission.Seed("product:item:delete", true, "orders"),
+            Permission.Seed("spec:create", true, "orders"),
+            Permission.Seed("spec:read", true, "orders"),
+            Permission.Seed("spec:update", true, "orders"),
+            Permission.Seed("vendor:create", true, "orders"),
+            Permission.Seed("vendor:update", true, "orders"),
+            Permission.Seed("vendor:read", true, "orders")
 
         );
     }
