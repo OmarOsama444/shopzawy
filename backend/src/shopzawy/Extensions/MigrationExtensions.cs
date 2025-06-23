@@ -1,10 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Infrastructure.Data;
-using Modules.Users.Domain;
-using Modules.Users.Domain.Entities;
 using Modules.Users.Infrastructure;
-using Modules.Users.Infrastructure.Services;
 
 namespace shopzawy.Extensions;
 

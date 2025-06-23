@@ -56,7 +56,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
                     return specResponse;
                 },
                 param: new { name, lang_code },
-                splitOn: "option_id"
+                splitOn: "Value"
                 ))
                 .GroupBy(sr => sr.Id)
                 .Select(s =>
@@ -119,7 +119,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
                 spec.Options.Add(option.Value);
                 return spec;
             },
-            splitOn: "optionId",
+            splitOn: "Value",
             param: new { ids = categoryId, lang_code = langCode }))
             .GroupBy(s => s.Id)
             .Select(g =>

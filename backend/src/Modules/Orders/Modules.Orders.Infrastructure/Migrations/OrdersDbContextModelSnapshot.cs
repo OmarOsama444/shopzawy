@@ -337,9 +337,9 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("real")
                         .HasColumnName("height");
 
-                    b.Property<string>("ImageUrls")
+                    b.PrimitiveCollection<List<string>>("ImageUrls")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("text[]")
                         .HasColumnName("image_urls");
 
                     b.Property<float>("Length")
@@ -388,9 +388,9 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Orders.Domain.Entities.ProductItemOptions", b =>
                 {
-                    b.Property<Guid>("ProductItemId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("product_item_id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("SpecificationId")
                         .HasColumnType("uuid")
@@ -400,7 +400,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("value");
 
-                    b.HasKey("ProductItemId", "SpecificationId", "Value")
+                    b.HasKey("Id", "SpecificationId", "Value")
                         .HasName("pk_product_item_options");
 
                     b.HasIndex("SpecificationId", "Value")
@@ -475,10 +475,6 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("text")
                         .HasColumnName("value");
-
-                    b.Property<int?>("NumberValue")
-                        .HasColumnType("integer")
-                        .HasColumnName("number_value");
 
                     b.HasKey("SpecificationId", "Value")
                         .HasName("pk_specification_option");
@@ -632,6 +628,37 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.ToTable("category_statistics", "orders");
                 });
 
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.Views.SpecificationStatistics", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<int>("DataType")
+                        .HasColumnType("integer")
+                        .HasColumnName("data_type");
+
+                    b.Property<int>("TotalProducts")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_products");
+
+                    b.HasKey("Id", "Value")
+                        .HasName("pk_specification_statistics");
+
+                    b.HasIndex("CreatedOn")
+                        .HasDatabaseName("ix_specification_statistics_created_on");
+
+                    b.ToTable("specification_statistics", "orders");
+                });
+
             modelBuilder.Entity("Modules.Orders.Domain.Entities.BrandTranslation", b =>
                 {
                     b.HasOne("Modules.Orders.Domain.Entities.Brand", "Brand")
@@ -733,10 +760,10 @@ namespace Modules.Orders.Infrastructure.Migrations
                 {
                     b.HasOne("Modules.Orders.Domain.Entities.ProductItem", "ProductItem")
                         .WithMany("ProductItemOptions")
-                        .HasForeignKey("ProductItemId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_product_item_options_product_item_product_item_id");
+                        .HasConstraintName("fk_product_item_options_product_item_id");
 
                     b.HasOne("Modules.Orders.Domain.Entities.SpecificationOption", "SpecificationOptions")
                         .WithMany("ProductItemOptions")

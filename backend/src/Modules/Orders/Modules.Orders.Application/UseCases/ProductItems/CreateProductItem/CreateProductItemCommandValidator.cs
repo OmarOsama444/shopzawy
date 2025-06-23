@@ -1,5 +1,5 @@
 using FluentValidation;
-using Modules.Orders.Application.UseCases.CreateProduct;
+using Modules.Orders.Application.UseCases.Products.CreateProduct;
 
 
 namespace Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;

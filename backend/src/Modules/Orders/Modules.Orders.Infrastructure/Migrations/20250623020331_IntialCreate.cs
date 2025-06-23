@@ -117,6 +117,22 @@ namespace Modules.Orders.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "specification_statistics",
+                schema: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false),
+                    data_type = table.Column<int>(type: "integer", nullable: false),
+                    total_products = table.Column<int>(type: "integer", nullable: false),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_specification_statistics", x => new { x.id, x.value });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "vendor",
                 schema: "orders",
                 columns: table => new
@@ -217,8 +233,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                 columns: table => new
                 {
                     specification_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    value = table.Column<string>(type: "text", nullable: false),
-                    number_value = table.Column<int>(type: "integer", nullable: true)
+                    value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -302,7 +317,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     stock_keeping_unit = table.Column<string>(type: "text", nullable: false),
                     quantity_in_stock = table.Column<int>(type: "integer", nullable: false),
-                    image_urls = table.Column<string>(type: "text", nullable: false),
+                    image_urls = table.Column<List<string>>(type: "text[]", nullable: false),
                     weight = table.Column<float>(type: "real", nullable: false),
                     width = table.Column<float>(type: "real", nullable: false),
                     length = table.Column<float>(type: "real", nullable: false),
@@ -352,16 +367,16 @@ namespace Modules.Orders.Infrastructure.Migrations
                 schema: "orders",
                 columns: table => new
                 {
-                    product_item_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     specification_id = table.Column<Guid>(type: "uuid", nullable: false),
                     value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_product_item_options", x => new { x.product_item_id, x.specification_id, x.value });
+                    table.PrimaryKey("pk_product_item_options", x => new { x.id, x.specification_id, x.value });
                     table.ForeignKey(
-                        name: "fk_product_item_options_product_item_product_item_id",
-                        column: x => x.product_item_id,
+                        name: "fk_product_item_options_product_item_id",
+                        column: x => x.id,
                         principalSchema: "orders",
                         principalTable: "product_item",
                         principalColumn: "id",
@@ -494,6 +509,12 @@ namespace Modules.Orders.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_specification_statistics_created_on",
+                schema: "orders",
+                table: "specification_statistics",
+                column: "created_on");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_specification_translation_name",
                 schema: "orders",
                 table: "specification_translation",
@@ -560,6 +581,10 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "product_translation",
+                schema: "orders");
+
+            migrationBuilder.DropTable(
+                name: "specification_statistics",
                 schema: "orders");
 
             migrationBuilder.DropTable(

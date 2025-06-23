@@ -14,16 +14,9 @@ public class ProductItemConfig : IEntityTypeConfiguration<ProductItem>
         builder
             .HasMany(p => p.ProductItemOptions)
             .WithOne(po => po.ProductItem)
-            .HasForeignKey(po => po.ProductItemId);
+            .HasForeignKey(po => po.Id);
         builder
             .HasIndex(p => p.StockKeepingUnit);
-        builder.Property(p => p.ImageUrls)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .ToList()
-            );
-
         builder
             .HasIndex(p => p.CreatedOn);
     }
