@@ -39,3 +39,13 @@ services:
             - 9300:9300
         volumes:
             - ./.containers/elastic:/usr/share/elasticsearch/data
+
+    shopzawy.kibana:
+        image: docker.elastic.co/kibana/kibana:8.13.0
+        container_name: shopzawy.kibana
+        ports:
+            - "5601:5601"
+        environment:
+            - ELASTICSEARCH_HOSTS=http://shopzawy.elastic:9200
+        depends_on:
+            - shopzawy.elastic

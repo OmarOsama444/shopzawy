@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Services;
+using Modules.Orders.Infrastructure.Config;
 using Modules.Orders.Infrastructure.Data;
+using Modules.Orders.Infrastructure.Elastic;
 using Modules.Orders.Infrastructure.Services;
 
 namespace Modules.Orders.Infrastructure;
@@ -63,6 +65,11 @@ public static class OrdersModule
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
+        services.AddScoped<IElasticClientFactory, ElasticClientFactory>();
+
+        #region Elastic Options
+        services.ConfigureOptions<ElasticOptionsSetup>();
+        #endregion 
         // decorates all the notification handlers in the application layer only
         // services.Decorate(typeof(INotificationHandler<>)
         //     , (inner, serviceProvider) =>

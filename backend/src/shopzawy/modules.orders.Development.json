@@ -3,6 +3,9 @@
         "OutboxOptions": {
             "BatchSize": 50,
             "TimeSpanInSeconds": 5
+        },
+        "ElasticClientOptions": {
+            "ConnectionString": "http://localhost:9200"
         }
     }
 }
