@@ -23,29 +23,43 @@ public sealed class UpdateCategoryCommandHandler(
         if (category is null)
             return new CategoryNotFoundException(request.Id);
         category.Update(request.Order);
-        var keyMix =
-            request.Names.Keys
-            .Union(request.Descriptions.Keys)
-            .Union(request.ImageUrls.Keys);
 
-        foreach (Language langCode in keyMix)
+        foreach (Language langCode in request.Names.Keys.Union(request.Descriptions.Keys).Union(request.ImageUrls.Keys))
         {
-            CategoryTranslation? categoryTranslation = await
-                categoryTranslationRepository
-                    .GetByIdAndLang(request.Id, langCode);
+            var categoryTranslation = await categoryTranslationRepository.GetByIdAndLang(request.Id, langCode);
             if (categoryTranslation == null)
                 return new CategoryTranslationNotFound(request.Id, langCode);
-            else
-            {
-                categoryTranslation.Update(
-                    request.Names.TryGetValue(langCode, out string? name) ? name : null,
-                    request.Descriptions.TryGetValue(langCode, out string? description) ? description : null,
-                    request.ImageUrls.TryGetValue(langCode, out string? imageUrl) ? imageUrl : null
-                    );
-                categoryTranslationRepository.Update(categoryTranslation);
-            }
+            string? name = request.Names.TryGetValue(langCode, out var Name) ? Name : Name;
+            string? description = request.Descriptions.TryGetValue(langCode, out var Description) ? Description : Description;
+            string? imageUrl = request.ImageUrls.TryGetValue(langCode, out var ImageUrl) ? ImageUrl : ImageUrl;
+            categoryTranslation.Update(name, description, imageUrl);
+            categoryTranslationRepository.Update(categoryTranslation);
         }
+
         categoryRepository.Update(category);
+
+        // Adding Translation
+        foreach (var key in request.Names.Keys)
+        {
+            if (await categoryTranslationRepository.GetByIdAndLang(request.Id, key) is not null)
+            {
+                return new CategoryNameConflictException(request.Names[key]);
+            }
+            var categoryTranslation =
+                CategoryTranslation
+                .Create(request.Id, key, request.Names[key], request.Descriptions[key], request.ImageUrls[key]);
+            categoryTranslationRepository.Add(categoryTranslation);
+        }
+
+        // Remove Translation 
+        foreach (var key in request.RemoveTranslation)
+        {
+            var categoryTranslation =
+                await categoryTranslationRepository.GetByIdAndLang(request.Id, key);
+            if (categoryTranslation == null)
+                continue;
+            categoryTranslationRepository.Remove(categoryTranslation);
+        }
 
         foreach (Guid specId in request.Add.Except(request.Remove).ToList())
         {

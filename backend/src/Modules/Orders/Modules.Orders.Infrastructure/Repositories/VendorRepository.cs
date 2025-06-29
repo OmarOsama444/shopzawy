@@ -24,8 +24,11 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
 
     public async Task<ICollection<VendorResponse>> Paginate(int pageNumber, int pageSize, string? namefilter)
     {
+        if (!String.IsNullOrEmpty(namefilter))
+            namefilter += "%";
+        else
+            namefilter = null;
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
-
         int offset = (pageNumber - 1) * pageSize;
 
         string query = $"""
@@ -46,8 +49,7 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
             Orders.Product AS P 
         ON 
             P.Vendor_Id = V.Id
-        WHERE 
-            (@namefilter IS NULL OR V.Vendor_Name ILIKE @namefilter || '%')
+        {(string.IsNullOrWhiteSpace(namefilter) ? "" : "WHERE V.Vendor_Name ILIKE @namefilter")}
         GROUP BY 
             V.Id, V.Vendor_Name, V.Description, V.Email, V.Phone_Number, V.Address, V.Logo_Url, v.Shiping_Zone_Name
         ORDER BY 
@@ -65,11 +67,15 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
             offset
         });
 
-        return vendors.ToList();
+        return [.. vendors];
     }
 
     public async Task<int> TotalVendors(string? namefilter)
     {
+        if (!String.IsNullOrEmpty(namefilter))
+            namefilter += "%";
+        else
+            namefilter = null;
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
@@ -77,8 +83,7 @@ public class VendorRepository(OrdersDbContext ordersDbContext, IDbConnectionFact
         COUNT(*)
         FROM 
         {Schemas.Orders}.Vendor as V
-        WHERE 
-        (@namefilter IS NULL OR V.Vendor_Name ILIKE @namefilter || '%')
+        {(string.IsNullOrWhiteSpace(namefilter) ? "" : "WHERE V.Vendor_Name ILIKE @namefilter")}
         """;
         return await sqlConnection.ExecuteScalarAsync<int>(Query, new { namefilter });
     }

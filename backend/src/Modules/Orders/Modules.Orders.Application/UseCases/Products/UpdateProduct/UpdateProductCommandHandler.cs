@@ -14,26 +14,26 @@ public sealed class UpdateProductCommandHandler(
 {
     public async Task<Result<Guid>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.product_id);
+        var product = await productRepository.GetByIdAsync(request.ProductId);
         if (product is null)
-            return new ProductNotFoundException(request.product_id);
+            return new ProductNotFoundException(request.ProductId);
         product.Update(
-            request.weight_unit,
-            request.dimension_unit,
-            request.tags);
+            request.WeightUnit,
+            request.DimensionUnit,
+            request.Tags);
         var keys =
-            request.product_names.translations.Keys
-            .Union(request.long_descriptions.translations.Keys)
-            .Union(request.short_descriptions.translations.Keys);
+            request.ProductNames.translations.Keys
+            .Union(request.LongDescriptions.translations.Keys)
+            .Union(request.ShortDescriptions.translations.Keys);
         foreach (Language langCode in keys)
         {
-            var productTranslation = await productTranslationsRepository.GetByIdAndLang(request.product_id, langCode);
+            var productTranslation = await productTranslationsRepository.GetByIdAndLang(request.ProductId, langCode);
             if (productTranslation is null)
-                return new ProductTranslationNotFound(request.product_id, langCode);
+                return new ProductTranslationNotFound(request.ProductId, langCode);
             productTranslation.Update(
-                request.product_names.translations.TryGetValue(langCode, out string? name) ? name : null,
-                request.long_descriptions.translations.TryGetValue(langCode, out string? long_description) ? long_description : null,
-                request.short_descriptions.translations.TryGetValue(langCode, out string? short_description) ? short_description : null
+                request.ProductNames.translations.TryGetValue(langCode, out string? name) ? name : null,
+                request.LongDescriptions.translations.TryGetValue(langCode, out string? long_description) ? long_description : null,
+                request.ShortDescriptions.translations.TryGetValue(langCode, out string? short_description) ? short_description : null
                 );
             productTranslationsRepository.Update(productTranslation);
         }

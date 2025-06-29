@@ -9,7 +9,7 @@ public static class ElasticSearchIndexIntializer
     public static async void InitializeElasticSearchIndex(IElasticClient elasticClient)
     {
         // the document for the product
-        var indexName = "product-items";
+        var indexName = "products";
         var exists = await elasticClient.Indices.ExistsAsync(indexName);
         if (!exists.Exists)
         {
@@ -20,33 +20,48 @@ public static class ElasticSearchIndexIntializer
                 )
                 .Map<ProductDocument>(m => m
                     .Properties(p => p
-                        .Keyword(k => k.Name(d => d.Id))
+                        .Keyword(x => x.Name(c => c.Id))
+                        .Keyword(x => x.Name(c => c.VendorId))
+                        .Keyword(x => x.Name(c => c.BrandId))
+                        .Keyword(x => x.Name(c => c.CategoryIds))
                         .Object<LocalizedField>(
                             o => o
                             .Name(d => d.Name)
                             .Properties(op => op
                                 .Text(t => t.Name(x => x.En).Analyzer("standard"))
-                                .Text(t => t.Name(x => x.Ar).Analyzer("arabic"))
-                            )
+                                .Text(t => t.Name(x => x.Ar).Analyzer("arabic")))
                         )
                         .Object<LocalizedField>(
                             o => o
-                            .Name(d => d.Description)
+                            .Name(d => d.ShortDescription)
                             .Properties(lp => lp
                                 .Text(t => t.Name(x => x.En).Analyzer("standard"))
                                 .Text(t => t.Name(x => x.Ar).Analyzer("arabic")))
                         )
-                        .Keyword(k => k.Name(c => c.CategoryIds))
-                        .Nested<Variation<string>>(n => n.Name(x => x.StringVariations)
-                            .Properties(np => np
-                                .Keyword(x => x.Name(s => s.SpecId))
-                                .Keyword(x => x.Name(s => s.Value))
-                            )
+                        .Object<LocalizedField>(
+                            o => o
+                            .Name(d => d.LongDescription)
+                            .Properties(lp => lp
+                                .Text(t => t.Name(x => x.En).Analyzer("standard"))
+                                .Text(t => t.Name(x => x.Ar).Analyzer("arabic")))
                         )
-                        .Nested<Variation<float>>(n => n.Name(x => x.NumericVariations)
-                            .Properties(np => np
-                                .Keyword(x => x.Name(s => s.SpecId))
-                                .Keyword(x => x.Name(s => s.Value))
+                        .Nested<ProductItemDocument>(x => x
+                            .Name(c => c.ProductItemDocuments)
+                            .Properties(p => p
+                                .Keyword(k => k.Name(d => d.Id))
+                                .Number(k => k.Name(d => d.Price).Type(NumberType.Float))
+                                .Nested<Variation<string>>(n => n.Name(x => x.StringVariations)
+                                    .Properties(np => np
+                                        .Keyword(x => x.Name(s => s.SpecId))
+                                        .Keyword(x => x.Name(s => s.Value))
+                                    )
+                                )
+                                .Nested<Variation<float>>(n => n.Name(x => x.NumericVariations)
+                                    .Properties(np => np
+                                        .Keyword(x => x.Name(s => s.SpecId))
+                                        .Keyword(x => x.Name(s => s.Value))
+                                    )
+                                )
                             )
                         )
                     )

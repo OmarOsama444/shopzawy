@@ -1,5 +1,8 @@
 using Common.Application;
+using Common.Infrastructure.Inbox;
+using Common.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Entities.Views;
 using Modules.Orders.Infrastructure.EntityConfig;
@@ -9,7 +12,7 @@ using Modules.Orders.Infrastructure.EntityConfig.ViewsEntityConfig;
 namespace Modules.Orders.Infrastructure.Data;
 
 public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
-    DbContext(Options)
+    DbContext(Options), IOrdersDbContext
 {
     #region Entities
     public DbSet<Product> Products { get; set; }
@@ -34,6 +37,12 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
     public DbSet<CategoryStatistics> CategoryStatistics { get; set; }
     public DbSet<SpecificationStatistics> SpecificationStatistics { get; set; }
     #endregion
+    #region OutBox - Inbox Messages
+    public DbSet<OutboxMessage> outboxMessages { get; set; }
+    public DbSet<OutboxConsumerMessage> outboxConsumerMessages { get; set; }
+    public DbSet<InboxMessage> inboxMessages { get; set; }
+    public DbSet<InboxConsumerMessage> inboxConsumerMessages { get; set; }
+    #endregion
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Orders);
@@ -54,5 +63,10 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
         modelBuilder.ApplyConfiguration<SpecificationTranslation>(new SpecificationTranslationConfig());
         modelBuilder.ApplyConfiguration<CategoryStatistics>(new CategoryStatisticsConfig());
         modelBuilder.ApplyConfiguration<SpecificationStatistics>(new SpecificationStatisticsConfig());
+        // outbox-inbox messages config
+        modelBuilder.ApplyConfiguration<OutboxMessage>(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration<OutboxConsumerMessage>(new OutboxConsumerMessageConfiguration());
+        modelBuilder.ApplyConfiguration<InboxMessage>(new InboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration<InboxConsumerMessage>(new InboxConsumerMessageConfiguration());
     }
 }

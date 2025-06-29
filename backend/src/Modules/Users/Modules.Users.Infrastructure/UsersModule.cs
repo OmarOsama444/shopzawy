@@ -5,6 +5,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Users.Application;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.Services;
@@ -60,6 +61,9 @@ public static class UsersModule
                 sp.GetRequiredService<PublishDomainEventsInterceptors>())
             .EnableSensitiveDataLogging();
         });
+
+        services.TryAddSingleton<PublishDomainEventsInterceptors>();
+
 
         services.Scan(
             scan => scan

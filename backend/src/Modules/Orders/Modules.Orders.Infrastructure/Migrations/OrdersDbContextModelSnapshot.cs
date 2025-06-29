@@ -24,6 +24,109 @@ namespace Modules.Orders.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Common.Infrastructure.Inbox.InboxConsumerMessage", b =>
+                {
+                    b.Property<Guid>("id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("HandlerName")
+                        .HasColumnType("text")
+                        .HasColumnName("handler_name");
+
+                    b.HasKey("id", "HandlerName")
+                        .HasName("pk_inbox_consumer_message");
+
+                    b.ToTable("inbox_consumer_message", "orders");
+                });
+
+            modelBuilder.Entity("Common.Infrastructure.Inbox.InboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("content");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurred_on_utc");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_inbox_messages");
+
+                    b.ToTable("inbox_messages", "orders");
+                });
+
+            modelBuilder.Entity("Common.Infrastructure.Outbox.OutboxConsumerMessage", b =>
+                {
+                    b.Property<Guid>("id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("HandlerName")
+                        .HasColumnType("text")
+                        .HasColumnName("handler_name");
+
+                    b.HasKey("id", "HandlerName")
+                        .HasName("pk_outbox_consumer_message");
+
+                    b.ToTable("outbox_consumer_message", "orders");
+                });
+
+            modelBuilder.Entity("Common.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurred_on_utc");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_outbox_messages");
+
+                    b.ToTable("outbox_messages", "orders");
+                });
+
             modelBuilder.Entity("Modules.Orders.Domain.Entities.Banner", b =>
                 {
                     b.Property<Guid>("Id")
@@ -152,6 +255,11 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("parent_category_id");
 
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("path");
+
                     b.HasKey("Id")
                         .HasName("pk_category");
 
@@ -165,7 +273,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedOn = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Order = 2147483647
+                            Order = 2147483647,
+                            Path = "[]"
                         });
                 });
 
@@ -237,9 +346,9 @@ namespace Modules.Orders.Infrastructure.Migrations
                         {
                             CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
                             LangCode = 1,
-                            Description = "all products",
+                            Description = "",
                             ImageUrl = "",
-                            Name = "products"
+                            Name = ""
                         });
                 });
 
@@ -287,20 +396,20 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on");
 
-                    b.Property<string>("Tags")
+                    b.Property<int>("DimensionUnit")
+                        .HasColumnType("integer")
+                        .HasColumnName("dimension_unit");
+
+                    b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Tags");
+                        .HasColumnType("text[]")
+                        .HasColumnName("tags");
 
                     b.Property<Guid>("VendorId")
                         .HasColumnType("uuid")
                         .HasColumnName("vendor_id");
 
-                    b.Property<int>("dimensionUnit")
-                        .HasColumnType("integer")
-                        .HasColumnName("dimension_unit");
-
-                    b.Property<int>("weightUnit")
+                    b.Property<int>("WeightUnit")
                         .HasColumnType("integer")
                         .HasColumnName("weight_unit");
 
@@ -377,11 +486,12 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.HasIndex("CreatedOn")
                         .HasDatabaseName("ix_product_item_created_on");
 
-                    b.HasIndex("ProductId")
-                        .HasDatabaseName("ix_product_item_product_id");
-
                     b.HasIndex("StockKeepingUnit")
                         .HasDatabaseName("ix_product_item_stock_keeping_unit");
+
+                    b.HasIndex("ProductId", "StockKeepingUnit")
+                        .IsUnique()
+                        .HasDatabaseName("ix_product_item_product_id_stock_keeping_unit");
 
                     b.ToTable("product_item", "orders");
                 });
@@ -638,9 +748,9 @@ namespace Modules.Orders.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("value");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_on");
+                        .HasColumnName("created_on_utc");
 
                     b.Property<int>("DataType")
                         .HasColumnType("integer")
@@ -653,8 +763,17 @@ namespace Modules.Orders.Infrastructure.Migrations
                     b.HasKey("Id", "Value")
                         .HasName("pk_specification_statistics");
 
-                    b.HasIndex("CreatedOn")
-                        .HasDatabaseName("ix_specification_statistics_created_on");
+                    b.HasIndex("CreatedOnUtc")
+                        .HasDatabaseName("ix_specification_statistics_created_on_utc");
+
+                    b.HasIndex("Id")
+                        .HasDatabaseName("ix_specification_statistics_id");
+
+                    b.HasIndex("TotalProducts")
+                        .HasDatabaseName("ix_specification_statistics_total_products");
+
+                    b.HasIndex("Value")
+                        .HasDatabaseName("ix_specification_statistics_value");
 
                     b.ToTable("specification_statistics", "orders");
                 });

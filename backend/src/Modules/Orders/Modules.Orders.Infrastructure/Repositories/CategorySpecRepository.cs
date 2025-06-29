@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Domain.Entities;

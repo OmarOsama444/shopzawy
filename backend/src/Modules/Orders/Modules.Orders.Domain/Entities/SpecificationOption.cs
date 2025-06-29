@@ -1,5 +1,6 @@
 using Common.Domain.Entities;
 using Modules.Orders.Domain.DomainEvents;
+using Modules.Orders.Domain.Entities.Views;
 
 namespace Modules.Orders.Domain.Entities;
 

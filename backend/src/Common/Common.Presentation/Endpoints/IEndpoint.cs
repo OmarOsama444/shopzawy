@@ -6,6 +6,23 @@ namespace Common.Presentation.Endpoints
     {
         void MapEndpoint(IEndpointRouteBuilder app);
     }
-    public record LocalizedText(IDictionary<Language, string> translations);
+    public class LocalizedText()
+    {
+        private IDictionary<Language, string> Translations = new Dictionary<Language, string>();
+        public IDictionary<Language, string> translations
+        {
+            get
+            {
+                return Translations?
+             .Where(kv => kv.Value != null)
+             .ToDictionary(kv => kv.Key, kv => kv.Value)
+             ?? [];
+            }
+            set
+            {
+                Translations = value;
+            }
+        }
+    }
 
 }

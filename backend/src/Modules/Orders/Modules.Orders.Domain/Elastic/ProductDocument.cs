@@ -1,25 +1,27 @@
-using Modules.Orders.Domain.ValueObjects;
-
 namespace Modules.Orders.Domain.Elastic;
 
 public class ProductDocument
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string VendorId { get; set; } = string.Empty;
+    public string BrandId { get; set; } = string.Empty;
+    public List<string> CategoryIds { get; set; } = [];
     public LocalizedField Name { get; set; } = default!;
-    public LocalizedField Description { get; set; } = default!;
-    public List<Guid> CategoryIds { get; set; } = [];
-    public List<Variation<float>> NumericVariations { get; set; } = [];
-    public List<Variation<string>> StringVariations { get; set; } = [];
-}
-
-public class LocalizedField
-{
-    public string En { get; set; } = string.Empty;
-    public string Ar { get; set; } = string.Empty;
-}
-
-public class Variation<T>
-{
-    public Guid SpecId { get; set; }
-    public T Value { get; set; } = default!;
+    public LocalizedField LongDescription { get; set; } = default!;
+    public LocalizedField ShortDescription { get; set; } = default!;
+    public List<ProductItemDocument> ProductItemDocuments { get; set; } = [];
+    public static ProductDocument Create(Guid Id, Guid VendorId, Guid BrandId, List<Guid> CategoryIds, LocalizedField Name, LocalizedField LongDescription, LocalizedField ShortDescription, List<ProductItemDocument> ProductItemDocuments)
+    {
+        return new ProductDocument()
+        {
+            Id = Id.ToString(),
+            VendorId = VendorId.ToString(),
+            BrandId = BrandId.ToString(),
+            CategoryIds = [.. CategoryIds.Select(x => x.ToString())],
+            ProductItemDocuments = ProductItemDocuments,
+            Name = Name,
+            LongDescription = LongDescription,
+            ShortDescription = ShortDescription
+        };
+    }
 }

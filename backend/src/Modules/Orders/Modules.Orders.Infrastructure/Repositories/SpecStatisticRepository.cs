@@ -1,5 +1,11 @@
+using System.Data.Common;
+using Common.Application;
+using Common.Domain.ValueObjects;
 using Common.Infrastructure;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Modules.Orders.Application.Abstractions;
+using Modules.Orders.Application.Dtos;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities.Views;
 using Modules.Orders.Infrastructure.Data;
@@ -7,9 +13,40 @@ using Modules.Orders.Infrastructure.Data;
 namespace Modules.Orders.Infrastructure.Repositories;
 
 public class SpecStatisticRepository
-    (OrdersDbContext ordersDbContext) :
+    (OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) :
     Repository<SpecificationStatistics, OrdersDbContext>(ordersDbContext), ISpecStatisticRepository
 {
+    public async Task<ICollection<TranslatedSpecStatisticsDto>> GetByCategoryId(Guid Id, Guid[] Path, Language langCode)
+    {
+        await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
+        string query =
+        $@"
+        SELECT DISTINCT
+            ss.id as {nameof(TranslatedSpecStatisticsDto.Id)} , 
+            st.name {nameof(TranslatedSpecStatisticsDto.Name)} , 
+            ss.data_type as {nameof(TranslatedSpecStatisticsDto.DataType)} ,
+            ss.value as {nameof(TranslatedSpecStatisticsDto.Value)} ,
+            ss.total_products as {nameof(TranslatedSpecStatisticsDto.TotalProducts)} ,
+            ss.created_on_utc as {nameof(TranslatedSpecStatisticsDto.CreatedOnUtc)}
+        FROM
+            {Schemas.Orders}.category_spec as cs
+        LEFT JOIN
+            {Schemas.Orders}.specification_statistic as ss
+        ON
+            cs.spec_id = ss.id
+        LEFT JOIN
+            {Schemas.Orders}.specification_translation as st
+        ON
+            ss.id = st.spec_id
+        WHERE
+            st.lang_code = @langCode AND cs.category_id = ANY(@ids) AND ss.total_products != 0
+        ORDER BY 
+            ss.created_on_utc
+        ";
+        return [.. await connection.QueryAsync<TranslatedSpecStatisticsDto>(query, new { langCode, ids = Path })];
+    }
+
+
     public Task<SpecificationStatistics?> GetByIdAndValueAsync(Guid id, string value, CancellationToken cancellationToken = default)
     {
         return context.SpecificationStatistics

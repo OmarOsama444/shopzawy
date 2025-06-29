@@ -1,5 +1,7 @@
+using System.Data.Common;
 using Common.Domain.Entities;
 using Common.Domain.ValueObjects;
+using Modules.Orders.Domain.Exceptions;
 
 namespace Modules.Orders.Domain.Entities;
 
@@ -24,12 +26,14 @@ public class CategoryTranslation : Entity
     }
     public static CategoryTranslation Seed()
     {
-        return CategoryTranslation.Create(
-                    Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                    Language.en,
-                    "products",
-                    "all products",
-                    "");
+        return new CategoryTranslation
+        {
+            CategoryId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            LangCode = Language.en,
+            Name = "",
+            Description = "",
+            ImageUrl = ""
+        };
     }
     public void Update(string? name, string? description, string? imageUrl)
     {

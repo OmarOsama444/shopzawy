@@ -11,18 +11,18 @@ public class Brand : Entity
     public DateTime CreatedOn { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
     public virtual ICollection<BrandTranslation> BrandTranslations { get; set; } = [];
-    public static Brand Create(string logoUrl, bool? featured, bool? active)
+    public static Brand Create(string logoUrl, bool featured, bool active)
     {
         return new Brand
         {
             LogoUrl = logoUrl,
-            Featured = featured ?? false,
-            Active = active ?? true,
+            Featured = featured,
+            Active = active,
             CreatedOn = DateTime.UtcNow
         };
     }
 
-    public void Update(string? description, string? logoUrl, bool? featured, bool? active)
+    public void Update(string? logoUrl, bool? featured, bool? active)
     {
         if (!string.IsNullOrWhiteSpace(logoUrl))
             LogoUrl = logoUrl;

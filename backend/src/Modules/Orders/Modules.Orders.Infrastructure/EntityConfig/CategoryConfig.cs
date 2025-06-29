@@ -1,6 +1,8 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Orders.Domain.Entities;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Infrastructure.EntityConfig;
 
@@ -22,7 +24,13 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         builder.HasMany(c => c.Products)
         .WithOne(p => p.Category)
         .HasForeignKey(p => p.CategoryId);
-
+        builder
+        .Property(c => c.Path)
+        .HasConversion(
+            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null) ?? "[]",
+            v => JsonSerializer.Deserialize<List<Guid>>(v, (JsonSerializerOptions)null) ?? new List<Guid>()
+        )
+        .HasColumnType("jsonb");
         builder
             .HasData(
                 Category.Seed()

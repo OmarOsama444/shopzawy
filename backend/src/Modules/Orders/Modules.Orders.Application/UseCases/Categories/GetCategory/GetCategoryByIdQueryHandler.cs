@@ -14,12 +14,12 @@ public sealed class GetCategoryByIdQueryHandler(
     public async Task<Result<CategoryResponeDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
     {
         var category = await categoryRepository.GetById(request.Id, request.LangCode);
-        if (category is null)
+        if (category == null)
             return new CategoryNotFoundException(request.Id);
         var parent = await categoryRepository.GetParentById(request.Id, request.LangCode);
         var children = await categoryRepository.GetChildrenById(request.Id, request.LangCode);
         var categoryPath = await categoryRepository.GetCategoryPath(request.Id, request.LangCode);
-        var specs = await specRepository.GetByCategoryId(request.LangCode, categoryPath.Keys.ToArray());
+        var specs = await specRepository.GetByCategoryId(category.Id, [.. category.Path, category.Id], request.LangCode);
         return new CategoryResponeDto()
         {
             Current = category,

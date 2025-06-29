@@ -14,50 +14,58 @@ namespace Modules.Orders.Infrastructure.Repositories;
 public class BrandRepository(OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) : Repository<Brand, OrdersDbContext>(ordersDbContext), IBrandRepository
 {
     // todo add translation here
-    public async Task<ICollection<BrandResponse>> Paginate(int pageNumber, int pageSize, string? nameField, Language langCode)
+    public async Task<ICollection<TranslatedBrandResponseDto>> Paginate(int pageNumber, int pageSize, string? nameField, Language langCode)
     {
         if (!string.IsNullOrEmpty(nameField))
-            nameField = nameField + "%";
+            nameField += "%";
+        else
+            nameField = null;
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
         $"""
         SELECT
-            B.Brand_Name as BrandName ,
-            B.Logo_Url as LogoUrl,
-            B.Description as Description,
-            B.Featured as Featured,
-            B.Active as Active ,
-            COUNT(P.Id) AS NumberOfProducts
+            B.id as {nameof(TranslatedBrandResponseDto.Id)} ,
+            B.Logo_Url as {nameof(TranslatedBrandResponseDto.LogoUrl)} ,
+            B.active as {nameof(TranslatedBrandResponseDto.Active)} ,
+            B.featured as {nameof(TranslatedBrandResponseDto.Featured)} ,
+            BT.name as {nameof(TranslatedBrandResponseDto.Name)} ,
+            BT.description as {nameof(TranslatedBrandResponseDto.Description)}
         FROM
             {Schemas.Orders}.Brand AS B
         LEFT JOIN
-            Orders.Product AS P
-        ON P.Brand_Name = B.Brand_Name
+            {Schemas.Orders}.Brand_Translation as BT
+        ON 
+            B.id = BT.Brand_id
         WHERE
-            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField )
-        GROUP BY
-            B.Brand_Name, B.Logo_Url, B.Description, B.Featured, B.Active
+            BT.lang_code = @langCode
         ORDER BY
-            B.Brand_Name
+            BT.name
         LIMIT @pageSize OFFSET @offset;
+        {(nameField is null ? " ; " : " WHERE B.Brand_Name ILIKE @nameField ;")}
         """;
-        IEnumerable<BrandResponse> brands = await sqlConnection.QueryAsync<BrandResponse>(Query, new { nameField, offset, pageSize });
+        IEnumerable<TranslatedBrandResponseDto> brands = await sqlConnection.QueryAsync<TranslatedBrandResponseDto>(Query, new { nameField, offset, pageSize, langCode });
         return brands.ToList();
     }
 
-    public async Task<int> TotalBrands(string? nameField)
+    public async Task<int> TotalBrands(string? nameField, Language langCode)
     {
-
+        if (!string.IsNullOrEmpty(nameField))
+            nameField += "%";
+        else
+            nameField = null;
         await using DbConnection sqlConnection = await dbConnectionFactory.CreateSqlConnection();
         string countQuery = $"""
         SELECT 
             COUNT(*) 
         FROM 
             {Schemas.Orders}.Brand as B
-        WHERE 
-            (@nameField IS NULL OR B.Brand_Name ILIKE @nameField || '%')
+        LEFT JOIN
+            {Schemas.Orders}.Brand_Translation as BT
+        ON
+            b.id = bt.Brand_id AND bt.lang_code = @langCode
+        {(nameField is null ? " ; " : "WHERE bt.name ILIKE @nameField ;")}
         """;
-        return await sqlConnection.ExecuteScalarAsync<int>(countQuery, new { nameField = nameField });
+        return await sqlConnection.ExecuteScalarAsync<int>(countQuery, new { nameField = nameField, langCode });
     }
 }

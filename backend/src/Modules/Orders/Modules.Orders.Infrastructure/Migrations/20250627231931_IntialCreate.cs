@@ -57,7 +57,8 @@ namespace Modules.Orders.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     parent_category_id = table.Column<Guid>(type: "uuid", nullable: true),
                     order = table.Column<int>(type: "integer", nullable: false),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    path = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,7 +126,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                     value = table.Column<string>(type: "text", nullable: false),
                     data_type = table.Column<int>(type: "integer", nullable: false),
                     total_products = table.Column<int>(type: "integer", nullable: false),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,7 +276,7 @@ namespace Modules.Orders.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Tags = table.Column<string>(type: "TEXT", nullable: false),
+                    tags = table.Column<List<string>>(type: "text[]", nullable: false),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     weight_unit = table.Column<int>(type: "integer", nullable: false),
                     dimension_unit = table.Column<int>(type: "integer", nullable: false),
@@ -393,14 +394,14 @@ namespace Modules.Orders.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 schema: "orders",
                 table: "category",
-                columns: new[] { "id", "created_on", "order", "parent_category_id" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2147483647, null });
+                columns: new[] { "id", "created_on", "order", "parent_category_id", "path" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2147483647, null, "[]" });
 
             migrationBuilder.InsertData(
                 schema: "orders",
                 table: "category_translation",
                 columns: new[] { "category_id", "lang_code", "description", "image_url", "name" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 1, "all products", "", "products" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 1, "", "", "" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_banner_active",
@@ -484,10 +485,11 @@ namespace Modules.Orders.Infrastructure.Migrations
                 column: "created_on");
 
             migrationBuilder.CreateIndex(
-                name: "ix_product_item_product_id",
+                name: "ix_product_item_product_id_stock_keeping_unit",
                 schema: "orders",
                 table: "product_item",
-                column: "product_id");
+                columns: new[] { "product_id", "stock_keeping_unit" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_product_item_stock_keeping_unit",
@@ -509,10 +511,28 @@ namespace Modules.Orders.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_specification_statistics_created_on",
+                name: "ix_specification_statistics_created_on_utc",
                 schema: "orders",
                 table: "specification_statistics",
-                column: "created_on");
+                column: "created_on_utc");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_specification_statistics_id",
+                schema: "orders",
+                table: "specification_statistics",
+                column: "id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_specification_statistics_total_products",
+                schema: "orders",
+                table: "specification_statistics",
+                column: "total_products");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_specification_statistics_value",
+                schema: "orders",
+                table: "specification_statistics",
+                column: "value");
 
             migrationBuilder.CreateIndex(
                 name: "ix_specification_translation_name",

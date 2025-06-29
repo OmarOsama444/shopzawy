@@ -1,5 +1,6 @@
 using Common.Domain.Entities;
 using Modules.Orders.Domain.DomainEvents;
+using Modules.Orders.Domain.Elastic;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
@@ -7,10 +8,10 @@ namespace Modules.Orders.Domain.Entities;
 public class Product : Entity
 {
     public Guid Id { get; private set; }
-    public ICollection<string> Tags { get; set; } = [];
+    public List<string> Tags { get; set; } = [];
     public DateTime CreatedOn { get; set; }
-    public WeightUnit weightUnit { get; set; }
-    public DimensionUnit dimensionUnit { get; set; }
+    public WeightUnit WeightUnit { get; set; }
+    public DimensionUnit DimensionUnit { get; set; }
     public Guid VendorId { get; private set; }
     public Guid BrandId { get; set; }
     public Guid CategoryId { get; set; }
@@ -22,7 +23,7 @@ public class Product : Entity
     public static Product Create(
     WeightUnit weightUnit,
     DimensionUnit dimensionUnit,
-    ICollection<string> tags,
+    List<string> tags,
     Guid vendorId,
     Guid brandId,
     Guid categoryId)
@@ -31,8 +32,8 @@ public class Product : Entity
         {
             Id = Guid.NewGuid(),
             CreatedOn = DateTime.UtcNow,
-            weightUnit = weightUnit,
-            dimensionUnit = dimensionUnit,
+            WeightUnit = weightUnit,
+            DimensionUnit = dimensionUnit,
             Tags = tags,
             VendorId = vendorId,
             BrandId = brandId,
@@ -45,14 +46,14 @@ public class Product : Entity
     public void Update(
         WeightUnit? weightUnit,
         DimensionUnit? dimensionUnit,
-        ICollection<string>? tags)
+        List<string>? tags)
     {
 
         if (weightUnit is not null)
-            this.weightUnit = weightUnit.Value;
+            this.WeightUnit = weightUnit.Value;
 
         if (dimensionUnit is not null)
-            this.dimensionUnit = dimensionUnit.Value;
+            this.DimensionUnit = dimensionUnit.Value;
 
         if (tags is not null)
             Tags = tags;

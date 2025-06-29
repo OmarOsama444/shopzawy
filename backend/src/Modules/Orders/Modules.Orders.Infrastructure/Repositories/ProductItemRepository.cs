@@ -1,4 +1,5 @@
 using Common.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Infrastructure.Data;
@@ -11,11 +12,11 @@ public class ProductItemRepository(
     Repository<ProductItem, OrdersDbContext>(ordersDbContext),
     IProductItemRepository
 {
-    public ProductItem? GetByProductIdAndSku(Guid productId, string sku)
+    public Task<ProductItem?> GetByProductIdAndSku(Guid productId, string sku)
     {
         return context
             .ProductItems
-            .FirstOrDefault(
+            .FirstOrDefaultAsync(
                 x =>
                 x.ProductId == productId
                 &&

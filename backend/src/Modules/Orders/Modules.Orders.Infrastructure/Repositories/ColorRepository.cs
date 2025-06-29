@@ -31,8 +31,7 @@ public class ColorRepository : Repository<Color, OrdersDbContext>, IColorReposit
         name as {nameof(Color.Name)}
         FROM
         {Schemas.Orders}.Color
-        WHERE
-        {nameof(Color.Name)} = @name
+        {(string.IsNullOrWhiteSpace(name) ? "" : "WHERE name ILIKE @name")}
         """;
         return connection.QueryFirstOrDefault<Color>(Query, new { name });
     }
@@ -48,8 +47,7 @@ public class ColorRepository : Repository<Color, OrdersDbContext>, IColorReposit
         name as {nameof(ColorResponse.name)}
         FROM
         {Schemas.Orders}.Color
-        WHERE
-            ( @name is NULL ) OR ( name ILIKE @name )
+        {(string.IsNullOrWhiteSpace(name) ? "" : "WHERE name ILIKE @name")}
         LIMIT 
             @pageSize 
         OFFSET 

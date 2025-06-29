@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using Common.Domain;
 using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -34,15 +35,18 @@ public class CategoryService
                 )
                 return new CategoryNameConflictException(names[langCode]);
         }
-        if (parentCategoryId.HasValue &&
-            !await context.Categories.AnyAsync(x => x.Id == parentCategoryId.Value))
+
+        Category? parentCategory = null;
+        if (parentCategoryId.HasValue)
         {
-            return new CategoryNotFoundException(parentCategoryId.Value);
+            parentCategory = await context.Categories.FirstOrDefaultAsync(x => x.Id == parentCategoryId.Value);
+            if (parentCategory == null)
+                return new CategoryNotFoundException(parentCategoryId.Value);
         }
 
         var category = Category.Create(
                 Order,
-                parentCategoryId
+                parentCategory
             );
         categoryRepository.Add(category);
         await context.SaveChangesAsync();

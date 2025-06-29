@@ -18,7 +18,7 @@ public class ProductItemOptions : Entity
             SpecificationId = specificationId,
             Value = value
         };
-        x.RaiseDomainEvent(new ProductItemOptionCreatedDomainEvent(x.Id));
+        x.RaiseDomainEvent(new ProductItemOptionCreatedDomainEvent(x.Id, specificationId, value));
         return x;
     }
 }

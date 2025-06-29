@@ -2,16 +2,21 @@ using Common.Application;
 using Common.Domain;
 using Common.Infrastructure.interceptors;
 using Common.Presentation.Endpoints;
+using Dapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Orders.Application.Abstractions;
+using Modules.Orders.Application.Repositories;
 using Modules.Orders.Application.Services;
 using Modules.Orders.Infrastructure.Config;
 using Modules.Orders.Infrastructure.Data;
 using Modules.Orders.Infrastructure.Elastic;
+using Modules.Orders.Infrastructure.OutBox;
+using Modules.Orders.Infrastructure.Repositories;
 using Modules.Orders.Infrastructure.Services;
 
 namespace Modules.Orders.Infrastructure;
@@ -27,13 +32,12 @@ public static class OrdersModule
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string DbConnectionString = configuration.GetConnectionString("ShopizawyDb")!;
-        // services.AddOptions<OutBoxOptions>()
-        //     .BindConfiguration("Users:OutboxOptions")
-        //     .ValidateDataAnnotations();
+        services.AddOptions<OutBoxOptions>()
+            .BindConfiguration("Orders:OutboxOptions")
+            .ValidateDataAnnotations();
 
-        // services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
-        // var GmailOptions = configuration.GetSection("Users:GmailConfig");
 
         services.AddDbContext<OrdersDbContext>((sp, options) =>
         {
@@ -48,10 +52,9 @@ public static class OrdersModule
                 }
             )
             .UseSnakeCaseNamingConvention()
-            .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptors>());
+            .AddInterceptors(sp.GetRequiredService<PublishOutboxMessagesInterceptor>());
         });
-
-        services.TryAddSingleton<PublishDomainEventsInterceptors>();
+        services.AddTransient<PublishOutboxMessagesInterceptor>();
 
         // registers all the repositorys in this assembly
         services.Scan(
@@ -66,10 +69,13 @@ public static class OrdersModule
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
         services.AddScoped<IElasticClientFactory, ElasticClientFactory>();
+        services.AddScoped<IOrdersDbContext, OrdersDbContext>();
+        services.AddScoped<IProductDocumentRepository, ProductDocumentRepositroy>();
 
         #region Elastic Options
         services.ConfigureOptions<ElasticOptionsSetup>();
-        #endregion 
+        #endregion
+
         // decorates all the notification handlers in the application layer only
         // services.Decorate(typeof(INotificationHandler<>)
         //     , (inner, serviceProvider) =>

@@ -9,7 +9,10 @@ public class SpecificationStatisticsConfig : IEntityTypeConfiguration<Specificat
     public void Configure(EntityTypeBuilder<SpecificationStatistics> builder)
     {
         builder.HasKey(x => new { x.Id, x.Value });
-        builder.HasIndex(x => x.CreatedOn);
+        builder.HasIndex(x => x.Id);
+        builder.HasIndex(x => x.Value);
+        builder.HasIndex(x => x.CreatedOnUtc);
+        builder.HasIndex(x => x.TotalProducts);
     }
 
 }

@@ -11,9 +11,10 @@ namespace Modules.Orders.Application.UseCases.ProductItems.CreateProductItem;
 
 public sealed class CreateProductItemCommandHandler(
     IProductRepository productRepository,
-    IProductItemRepository productItemRepository,
     ISpecRepository specRepository,
+    ICategoryRepository categoryRepository,
     ISpecOptionRepository specOptionRepository,
+    IProductItemRepository productItemRepository,
     IProductItemOptionsRepository productItemOptionsRepository,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<CreateProductItemCommand, ICollection<Guid>>
@@ -23,43 +24,51 @@ public sealed class CreateProductItemCommandHandler(
         var product = await productRepository.GetByIdAsync(request.ProductId);
         if (product is null)
             return new ProductNotFoundException(request.ProductId);
+        var category = await categoryRepository.GetByIdAsync(product.CategoryId);
+        if (category is null)
+            return new CategoryNotFoundException(product.CategoryId);
         var ProductItemIds = new List<Guid>();
-        foreach (var product_item in request.ProductItems)
+        foreach (var productItem in request.ProductItems)
         {
-            ProductItem productItem = ProductItem.Create(
-                product_item.StockKeepingUnit,
-                product_item.QuantityInStock,
-                product_item.Price,
-                product_item.Width,
-                product_item.Length,
-                product_item.Height,
-                product_item.Weight,
-                product.Id,
-                product_item.Urls);
-            productItemRepository.Add(productItem);
-            var specifications = await specRepository.GetByCategoryId(Language.en, product.CategoryId);
-            foreach (var specification in specifications)
+            ProductItem? ProductItem = await productItemRepository.GetByProductIdAndSku(request.ProductId, productItem.StockKeepingUnit);
+            if (ProductItem is not null)
+                return new ProductItemConflictException(productItem.StockKeepingUnit);
+            ProductItem = ProductItem.Create(
+               productItem.StockKeepingUnit,
+               productItem.QuantityInStock,
+               productItem.Price,
+               productItem.Width,
+               productItem.Length,
+               productItem.Height,
+               productItem.Weight,
+               product.Id,
+               productItem.Urls);
+            productItemRepository.Add(ProductItem);
+            var parentIds = (await categoryRepository.GetCategoryPath(product.CategoryId, Language.en)).Select(x => x.Key).ToArray();
+            var specifications = (await specRepository.GetByCategoryId(category.Id, [.. category.Path, category.Id], Language.en)).Select(x => x.Id);
+            foreach (var productSpec in productItem.SpecOptions)
             {
-                if (product_item.SpecOptions.ContainsKey(specification.Id)
-                    && specOptionRepository.GetBySpecIdAndValue(specification.Id, product_item.SpecOptions[specification.Id]) != null)
-                {
-                    ProductItemOptions productItemOptions = ProductItemOptions.Create(
-                        productItem.Id,
-                        specification.Id,
-                        product_item.SpecOptions[specification.Id]
-                    );
+                if (
+                    !specifications
+                        .Contains(productSpec.Key)
+                )
+                    return new SpecificationNotFoundException(productSpec.Key);
 
-                    productItemOptionsRepository.Add(productItemOptions);
-                }
-                else
-                {
-                    return new SpecificationNotFoundException(specification.Id);
-                }
+                if ((await specOptionRepository.GetBySpecIdAndValue(productSpec.Key, productSpec.Value)) == null)
+                    return new SpecificationOptionNotFoundException(productSpec.Key, productSpec.Value);
+
+                ProductItemOptions productItemOptions = ProductItemOptions.Create(
+                    ProductItem.Id,
+                    productSpec.Key,
+                    productSpec.Value
+                );
+
+                productItemOptionsRepository.Add(productItemOptions);
+
             }
             await unitOfWork.SaveChangesAsync(cancellationToken);
-            ProductItemIds.Add(productItem.Id);
+            ProductItemIds.Add(ProductItem.Id);
         }
-
         return ProductItemIds;
     }
 }

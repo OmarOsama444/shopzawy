@@ -87,7 +87,7 @@ public record ProductCreateRequest(
     LocalizedText ProductNames,
     LocalizedText LongDescriptions,
     LocalizedText ShortDescriptions,
-    ICollection<string> Tags,
+    List<string> Tags,
     WeightUnit WeightUnit,
     DimensionUnit DimensionUnit,
     Guid VendorId,

@@ -5,7 +5,7 @@
             "TimeSpanInSeconds": 5
         },
         "ElasticClientOptions": {
-            "ConnectionString": "http://localhost:9200"
+            "ConnectionString": ""
         }
     }
 }

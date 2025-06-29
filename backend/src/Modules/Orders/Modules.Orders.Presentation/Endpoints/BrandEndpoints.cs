@@ -23,9 +23,9 @@ public class BrandEndpoints : IEndpoint
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.BrandCreate);
 
-        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int page_number = 1, [FromQuery] int page_size = 10, [FromQuery] string? name_field = null, [FromQuery] Language lang_code = Language.en) =>
+        group.MapGet("", async ([FromServices] ISender sender, [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 10, [FromQuery] string? NameField = null, [FromQuery] Language LangCode = Language.en) =>
         {
-            var result = await sender.Send(new PaginateBrandsQuery(page_number, page_size, name_field, lang_code));
+            var result = await sender.Send(new PaginateBrandsQuery(PageNumber, PageSize, NameField, LangCode));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.BrandRead);
 
@@ -34,9 +34,13 @@ public class BrandEndpoints : IEndpoint
             var result = await sender.Send(
             new UpdateBrandCommand(id,
             request.LogoUrl,
-            request.Description,
             request.Featured,
-            request.Active));
+            request.Active,
+            request.Translations.Add.Names.translations,
+            request.Translations.Add.Descriptions.translations,
+            request.Translations.Update.Names.translations,
+            request.Translations.Update.Descriptions.translations,
+            request.Translations.Remove));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.BrandUpdate);
     }
@@ -45,6 +49,12 @@ public class BrandEndpoints : IEndpoint
     string? LogoUrl,
     string? Description,
     bool? Featured,
-    bool? Active);
+    bool? Active,
+    UpdateBrandRequestTranslations Translations);
+    public record UpdateBrandTranslationDto(LocalizedText Names, LocalizedText Descriptions);
+    public record UpdateBrandRequestTranslations(UpdateBrandTranslationDto Add, UpdateBrandTranslationDto Update, ICollection<Language> Remove);
+
+
+
 
 }

@@ -6,12 +6,12 @@ internal class UpdateProductCommandValidator : AbstractValidator<UpdateProductCo
 {
     public UpdateProductCommandValidator()
     {
-        RuleFor(c => c.product_id).NotEmpty();
-        RuleFor(c => c.weight_unit)
+        RuleFor(c => c.ProductId).NotEmpty();
+        RuleFor(c => c.WeightUnit)
             .NotEmpty()
-            .When(x => x.weight_unit != null);
-        RuleFor(c => c.dimension_unit)
+            .When(x => x.WeightUnit != null);
+        RuleFor(c => c.DimensionUnit)
             .NotEmpty()
-            .When(x => x.dimension_unit != null);
+            .When(x => x.DimensionUnit != null);
     }
 }

@@ -66,9 +66,13 @@ public class CategoryEndpoints : IEndpoint
                 request.Order,
                 request.Specs.Add,
                 request.Specs.Remove,
-                request.Names?.translations ?? new Dictionary<Language, string>(),
-                request.Descriptions?.translations ?? new Dictionary<Language, string>(),
-                request.ImageUrls?.translations ?? new Dictionary<Language, string>()));
+                request.Translations.Add.Names.translations,
+                    request.Translations.Add.Descriptions.translations,
+                    request.Translations.Add.ImageUrls.translations,
+                    request.Translations.Update.Names.translations,
+                    request.Translations.Update.Descriptions.translations,
+                    request.Translations.Update.ImageUrls.translations,
+                    request.Translations.Remove));
             return result.isSuccess ? Results.NoContent() : result.ExceptionToResult();
         }).RequireAuthorization(Permissions.CategoryUpdate);
 
@@ -84,8 +88,9 @@ public class CategoryEndpoints : IEndpoint
     public record UpdateCategoryRequestDto(
         int? Order,
         UpdateCategorySpecsDto Specs,
-        LocalizedText? Names,
-        LocalizedText? Descriptions,
-        LocalizedText? ImageUrls);
+        UpdateCategoryRequestTranslations Translations
+        );
+    public record UpdateCategoryRequestTranslations(CreateCategoryTranslationDto Add, CreateCategoryTranslationDto Update, ICollection<Language> Remove);
+    public record CreateCategoryTranslationDto(LocalizedText Names, LocalizedText Descriptions, LocalizedText ImageUrls);
     public record UpdateCategorySpecsDto(ICollection<Guid> Add, ICollection<Guid> Remove);
 }

@@ -32,13 +32,5 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId);
 
-        builder.Property(p => p.Tags)
-        .HasConversion(
-            v => string.Join(',', v),
-            v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-        )
-        .HasColumnName("Tags")
-        .HasColumnType("TEXT");
-
     }
 }

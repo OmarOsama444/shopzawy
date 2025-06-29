@@ -6,7 +6,7 @@ namespace Modules.Orders.Domain.Entities
 {
     public class BrandTranslation : Entity
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
         public Guid BrandId { get; private set; }
         public Language LangCode { get; private set; }
         public string Name { get; private set; } = string.Empty;
@@ -17,6 +17,7 @@ namespace Modules.Orders.Domain.Entities
         {
             var brandTranslation = new BrandTranslation
             {
+                Id = Guid.NewGuid(),
                 BrandId = brandId,
                 LangCode = langCode,
                 Name = name,
@@ -24,7 +25,7 @@ namespace Modules.Orders.Domain.Entities
             };
             return brandTranslation;
         }
-        public void Update(string name, string description)
+        public void Update(string? name, string? description)
         {
             if (!string.IsNullOrEmpty(name))
                 this.Name = name;

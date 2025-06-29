@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20250623020651_IntialCreate")]
-    partial class IntialCreate
+    [Migration("20250629080322_Added OutBox Inbox")]
+    partial class AddedOutBoxInbox
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,217 +159,217 @@ namespace Modules.Users.Infrastructure.Migrations
                             Name = "user:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "user:role:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "role:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "role:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "role:permission:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "permission:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "permission:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "permission:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "auth:login",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Users"
+                            Module = "users"
                         },
                         new
                         {
                             Name = "banner:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "banner:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "banner:delete",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "brand:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "brand:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "brand:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "category:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "category:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "category:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "category:delete",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "color:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "color:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "product:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "product:item:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "product:item:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "product:item:delete",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "spec:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "spec:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "spec:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "vendor:create",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "vendor:update",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         },
                         new
                         {
                             Name = "vendor:read",
                             Active = true,
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Module = "Orders"
+                            Module = "orders"
                         });
                 });
 
@@ -396,17 +396,17 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Name = "Guest",
+                            Name = "guest",
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
-                            Name = "Admin",
+                            Name = "admin",
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
-                            Name = "Default",
+                            Name = "default",
                             CreatedOnUtc = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
@@ -432,177 +432,217 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "banner:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "banner:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "banner:delete"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "brand:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "brand:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "brand:update"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "category:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "category:update"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "category:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "category:delete"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "color:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "color:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "product:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "product:item:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "product:item:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "product:item:delete"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "spec:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "spec:read"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "spec:update"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "vendor:create"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "vendor:update"
                         },
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             PermissionId = "vendor:read"
                         },
                         new
                         {
-                            RoleId = "Default",
-                            PermissionId = "banner:read"
+                            RoleId = "admin",
+                            PermissionId = "role:read"
                         },
                         new
                         {
-                            RoleId = "Default",
-                            PermissionId = "brand:read"
+                            RoleId = "admin",
+                            PermissionId = "role:create"
                         },
                         new
                         {
-                            RoleId = "Default",
-                            PermissionId = "category:read"
+                            RoleId = "admin",
+                            PermissionId = "role:permission:update"
                         },
                         new
                         {
-                            RoleId = "Default",
-                            PermissionId = "color:read"
-                        },
-                        new
-                        {
-                            RoleId = "Default",
-                            PermissionId = "product:item:read"
-                        },
-                        new
-                        {
-                            RoleId = "Default",
-                            PermissionId = "spec:read"
-                        },
-                        new
-                        {
-                            RoleId = "Default",
-                            PermissionId = "vendor:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "banner:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "brand:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "category:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
-                            PermissionId = "product:item:read"
-                        },
-                        new
-                        {
-                            RoleId = "Guest",
+                            RoleId = "admin",
                             PermissionId = "user:create"
                         },
                         new
                         {
-                            RoleId = "Guest",
+                            RoleId = "admin",
+                            PermissionId = "user:role:update"
+                        },
+                        new
+                        {
+                            RoleId = "admin",
+                            PermissionId = "permission:read"
+                        },
+                        new
+                        {
+                            RoleId = "admin",
+                            PermissionId = "permission:create"
+                        },
+                        new
+                        {
+                            RoleId = "admin",
+                            PermissionId = "permission:update"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "banner:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "brand:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "category:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "color:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "product:item:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "spec:read"
+                        },
+                        new
+                        {
+                            RoleId = "default",
+                            PermissionId = "vendor:read"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
+                            PermissionId = "banner:read"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
+                            PermissionId = "brand:read"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
+                            PermissionId = "category:read"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
+                            PermissionId = "product:item:read"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
+                            PermissionId = "user:create"
+                        },
+                        new
+                        {
+                            RoleId = "guest",
                             PermissionId = "auth:login"
                         });
                 });
@@ -734,7 +774,7 @@ namespace Modules.Users.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = "Admin",
+                            RoleId = "admin",
                             UserId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });

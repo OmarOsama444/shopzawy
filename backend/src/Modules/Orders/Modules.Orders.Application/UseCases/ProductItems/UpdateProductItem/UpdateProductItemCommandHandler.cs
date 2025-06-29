@@ -28,7 +28,7 @@ public sealed class UpdateProductItemCommandHandler(
             request.Weight,
             request.AddUrls,
             request.RemoveUrls);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return request.ProductItemId;
     }
 }

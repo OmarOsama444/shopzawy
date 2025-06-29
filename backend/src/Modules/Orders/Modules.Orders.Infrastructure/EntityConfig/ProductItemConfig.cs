@@ -10,13 +10,15 @@ public class ProductItemConfig : IEntityTypeConfiguration<ProductItem>
     {
         builder
             .HasKey(p => p.Id);
-
         builder
             .HasMany(p => p.ProductItemOptions)
             .WithOne(po => po.ProductItem)
             .HasForeignKey(po => po.Id);
         builder
             .HasIndex(p => p.StockKeepingUnit);
+        builder
+            .HasIndex(p => new { p.ProductId, p.StockKeepingUnit })
+            .IsUnique();
         builder
             .HasIndex(p => p.CreatedOn);
     }

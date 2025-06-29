@@ -54,6 +54,7 @@ public sealed class CreateProductCommandHandler(
             productTranslationsRepository.Add(productTranslation);
         }
 
+        var specifications = await specRepository.GetByCategoryId(category.Id, [.. category.Path, category.Id], Language.en);
         foreach (var product_item in request.ProductItems)
         {
             ProductItem productItem = ProductItem.Create(
@@ -67,23 +68,22 @@ public sealed class CreateProductCommandHandler(
                 product.Id,
                 product_item.Urls);
             productItemRepository.Add(productItem);
-            var specifications = await specRepository.GetByCategoryId(Language.en, request.CategoryId);
-            foreach (var specification in specifications)
+            foreach (var specOption in product_item.SpecOptions)
             {
-                if (product_item.SpecOptions.ContainsKey(specification.Id)
-                    && specOptionRepository.GetBySpecIdAndValue(specification.Id, product_item.SpecOptions[specification.Id]) != null)
+                if (specifications.Any(x => x.Id == specOption.Key)
+                    && specOptionRepository.GetBySpecIdAndValue(specOption.Key, specOption.Value) != null)
                 {
                     ProductItemOptions productItemOptions = ProductItemOptions.Create(
                         productItem.Id,
-                        specification.Id,
-                        product_item.SpecOptions[specification.Id]
+                        specOption.Key,
+                        specOption.Value
                     );
 
                     productItemOptionsRepository.Add(productItemOptions);
                 }
                 else
                 {
-                    return new SpecificationNotFoundException(specification.Id);
+                    return new SpecificationNotFoundException(specOption.Key);
                 }
             }
             await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -83,5 +83,6 @@ public class ProductItem : Entity
                     this.ImageUrls.Remove(url);
                 }
             }
+        this.RaiseDomainEvent(new ProductItemUpdatedDomainEvent(this.Id));
     }
 }

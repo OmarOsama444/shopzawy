@@ -7,8 +7,6 @@ using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Dtos;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Entities.Views;
-using Modules.Orders.Domain.ValueObjects;
 using Modules.Orders.Infrastructure.Data;
 
 namespace Modules.Orders.Infrastructure.Repositories;
@@ -30,6 +28,8 @@ public class CategoryRepository(
         $"""
         SELECT
             C.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            C.parent_category_id as {nameof(TranslatedCategoryResponseDto.parentCategoryId)} ,
+            ARRAY ( SELECT jsonb_array_elements_text(C.path)::uuid ) as {nameof(TranslatedCategoryResponseDto.Path)} ,
             CT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
             CT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
             C."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
@@ -94,6 +94,8 @@ public class CategoryRepository(
         $"""
         SELECT
             PC.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            C.parent_category_id as {nameof(TranslatedCategoryResponseDto.parentCategoryId)} ,
+            ARRAY ( SELECT jsonb_array_elements_text(C.path)::uuid ) as {nameof(TranslatedCategoryResponseDto.Path)} ,
             PCT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
             PCT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
             PC."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
@@ -108,12 +110,12 @@ public class CategoryRepository(
             C.id = @id AND PCT.lang_code = @lang_code;
         """;
 
-        var categories = await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new
+        return [.. await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new
         {
             id = Id,
             lang_code = langCode
-        });
-        return categories.ToList();
+        })];
+
 
     }
 
@@ -124,6 +126,8 @@ public class CategoryRepository(
         $"""
         SELECT
             PC.id as {nameof(TranslatedCategoryResponseDto.Id)} ,
+            PC.parent_category_id as {nameof(TranslatedCategoryResponseDto.parentCategoryId)} ,
+            ARRAY ( SELECT jsonb_array_elements_text(PC.path)::uuid ) as {nameof(TranslatedCategoryResponseDto.Path)} ,
             PCT.name as {nameof(TranslatedCategoryResponseDto.CategoryName)} ,
             PCT.description as {nameof(TranslatedCategoryResponseDto.Description)} ,
             PC."order" as {nameof(TranslatedCategoryResponseDto.Order)} ,
@@ -147,8 +151,11 @@ public class CategoryRepository(
 
     public async Task<ICollection<CategoryPaginationResponseDto>> Paginate(int pageNumber, int pageSize, string? nameFilter, Language langCode)
     {
-        if (nameFilter != null)
-            nameFilter = $"{nameFilter}%";
+        if (!String.IsNullOrEmpty(nameFilter))
+            nameFilter += "%";
+        else
+            nameFilter = null;
+
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         int offset = (pageNumber - 1) * pageSize;
         string Query =
@@ -172,8 +179,7 @@ public class CategoryRepository(
             {Schemas.Orders}.category_translation AS CTT
         ON
             CTT.category_id = CS.parent_category_id AND CTT.lang_code = @langCode
-        WHERE 
-            (@nameFilter IS NULL OR CT.name ILIKE @nameFilter )
+        {(string.IsNullOrWhiteSpace(nameFilter) ? "" : "WHERE CT.name ILIKE @nameFilter")}
         ORDER BY 
             CS.created_on DESC
         LIMIT 
@@ -190,13 +196,15 @@ public class CategoryRepository(
                     pageSize,
                     langCode
                 });
-        return results.ToList();
+        return [.. results];
     }
 
     public async Task<int> TotalCategories(string? nameFilter, Language langCode)
     {
-        if (!string.IsNullOrEmpty(nameFilter))
-            nameFilter = $"{nameFilter}%";
+        if (!String.IsNullOrEmpty(nameFilter))
+            nameFilter += "%";
+        else
+            nameFilter = null;
         await using DbConnection dbConnection = await dbConnectionFactory.CreateSqlConnection();
         string Query =
         $"""
@@ -206,8 +214,7 @@ public class CategoryRepository(
             {Schemas.Orders}.category_translation AS CT
         WHERE
             CT.lang_code = @langCode
-        AND
-            (@filter IS NULL OR CT.name ILIKE @filter )
+        {(string.IsNullOrWhiteSpace(nameFilter) ? "" : "AND CT.name ILIKE @nameFilter")}
         """;
         return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter, langCode });
     }
