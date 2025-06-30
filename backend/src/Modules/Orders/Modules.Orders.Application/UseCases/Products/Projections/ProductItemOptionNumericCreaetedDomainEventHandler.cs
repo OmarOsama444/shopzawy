@@ -15,10 +15,10 @@ public class ProductItemOptionNumericCreaetedDomainEventHandler(IDbConnectionFac
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
         string query =
         $"""
-        INSERT INTO {Schemas.Orders}.specification_statistics (id, value, data_type , total_products , created_on_utc )
-        VALUES (@Id, @Value , @DataType , 1 , @CreationDate )
+        INSERT INTO Orders.specification_statistics (id, value, data_type, total_products, created_on_utc)
+        VALUES (@Id, @Value, @DataType, 1, @CreationDate)
         ON CONFLICT (id, value)
-        DO UPDATE SET total_products = total_products + 1;
+        DO UPDATE SET total_products = Orders.specification_statistics.total_products + 1;
         """;
         await connection.ExecuteAsync(query, new { Id = notification.SpecificationId, Value = notification.NumericValue.ToString(), CreationDate = notification.CreatedOnUtc, DataType = SpecDataType.Number });
     }

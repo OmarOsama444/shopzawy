@@ -18,4 +18,13 @@ public class ProductDocumentRepositroy(IElasticClientFactory elasticClientFactor
             x.Index("products"));
     }
 
+    public async Task Update(ProductDocument productDocument)
+    {
+        var client = elasticClientFactory.CreateElasticClient();
+        await client
+            .UpdateAsync<ProductDocument>(
+                productDocument.Id,
+                x => x.Index("products")
+                .Doc(productDocument));
+    }
 }

@@ -1,6 +1,7 @@
 using Common.Application.Messaging;
 using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.DomainEvents;
@@ -11,23 +12,29 @@ using Modules.Orders.Domain.ValueObjects;
 namespace Modules.Orders.Application.UseCases.Products.Projections;
 
 public class ProductItemInStockDomainEventHandler(
-    IOrdersDbContext context,
-    ICategoryRepository categoryRepository,
-    IProductDocumentRepository productDocumentRepository
+    IServiceScopeFactory serviceScopeFactory
 ) : IDomainEventHandler<ProductItemInStockDomainEvent>
 {
     public async Task Handle(ProductItemInStockDomainEvent notification, CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<IOrdersDbContext>();
+        var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+        var productDocumentRepository = scope.ServiceProvider.GetRequiredService<IProductDocumentRepository>();
+
         var productItem = await context.ProductItems
           .Include(x => x.Product)
           .ThenInclude(x => x.ProductTranslations)
+          .Include(x => x.Product)
+          .ThenInclude(x => x.Category)
+          .Include(x => x.ProductItemOptionColors)
+          .Include(x => x.ProductItemOptionNumerics)
           .Include(x => x.ProductItemOptions)
-          .ThenInclude(x => x.SpecificationOptions)
-          .ThenInclude(x => x.Specification)
           .FirstOrDefaultAsync(x => x.Id == notification.ProductItemId, cancellationToken: cancellationToken) ??
        throw new ProductItemNotFoundException(notification.ProductItemId);
         var product = productItem.Product ?? throw new ProductNotFoundException(productItem.ProductId);
-        var CategoryIds = (await categoryRepository.GetCategoryPath(product.CategoryId, Language.en)).Select(x => x.Key).ToList();
+        List<Guid> CategoryIds = [.. product.Category.Path, product.Category.Id];
         var EnglishTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.en);
         var ArabicTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.ar);
         if (productItem.QuantityInStock > 0)
@@ -35,18 +42,19 @@ public class ProductItemInStockDomainEventHandler(
             List<Variation<string>> specStringVariations =
                 [.. productItem
                 .ProductItemOptions
-                    .Select(x => x.SpecificationOptions)
-                    .Where(x => x.Specification.DataType != SpecDataType.Number)
                     .Select(x => Variation<string>
-                    .Create(x.SpecificationId, x.Value))];
+                    .Create(x.SpecificationId, x.Value)) ,
+                ..
+                productItem
+                .ProductItemOptionColors
+                    .Select(x => Variation<string>
+                    .Create(x.SpecificationId , x.ColorCode ))];
 
             List<Variation<float>> specNumberVariations =
                 [.. productItem
-                .ProductItemOptions
-                    .Select(x => x.SpecificationOptions)
-                    .Where(x => x.Specification.DataType == SpecDataType.Number)
+                .ProductItemOptionNumerics
                     .Select(x => Variation<float>
-                    .Create(x.SpecificationId, float.Parse( x.Value ) ))];
+                    .Create(x.SpecificationId,x.Value))];
             var productDocument = ProductDocument.Create(
                 productItem.Id,
                 product.Id,

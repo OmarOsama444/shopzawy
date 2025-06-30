@@ -1,5 +1,6 @@
 using Common.Domain.Entities;
 using Common.Domain.ValueObjects;
+using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
@@ -37,11 +38,25 @@ public class ProductTranslation : Entity
         string? longDescription,
         string? shortDescription)
     {
-        if (!string.IsNullOrEmpty(productName))
+        bool updated = false;
+        if (!string.IsNullOrEmpty(productName) && this.ProductName != productName)
+        {
             this.ProductName = productName;
-        if (!string.IsNullOrEmpty(longDescription))
+            updated = true;
+        }
+        if (!string.IsNullOrEmpty(longDescription) && this.LongDescription != longDescription)
+        {
             this.LongDescription = longDescription;
-        if (!string.IsNullOrEmpty(shortDescription))
+            updated = true;
+        }
+        if (!string.IsNullOrEmpty(shortDescription) && this.ShortDescription != shortDescription)
+        {
             this.ShortDescription = shortDescription;
+            updated = true;
+        }
+        if (updated)
+        {
+            this.RaiseDomainEvent(new ProductTranslationUpdatedDomainEvent(ProductId));
+        }
     }
 }

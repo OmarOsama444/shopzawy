@@ -31,7 +31,6 @@ public class ProcessOutboxJob(
         await using DbTransaction dbTransaction = await dbConnection.BeginTransactionAsync();
         var outbox_messages = await GetOutboxMessagesAsync(dbConnection, dbTransaction);
         logger.LogInformation("{Module} - Beginning to process outbox messages", ModuleName);
-        logger.LogInformation($"options - value - {options.Value.BatchSize} - time - {options.Value.TimeSpanInSeconds}");
 
         foreach (OutboxMessage outboxMessage in outbox_messages)
         {

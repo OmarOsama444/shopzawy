@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Common.Application;
 using Common.Application.Messaging;
 using Common.Domain.Exceptions;
 using Dapper;
+using Microsoft.Extensions.DependencyInjection;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.DomainEvents;
@@ -10,17 +10,19 @@ using Modules.Orders.Domain.DomainEvents;
 namespace Modules.Orders.Application.UseCases.Categories.Projections;
 
 public class CategoryCreatedDomainEventHandler(
-    ICategoryRepository categoryRepository,
+    IServiceScopeFactory serviceScopeFactory,
     IDbConnectionFactory dbConnectionFactory) : IDomainEventHandler<CategoryCreatedDomainEvent>
 {
     public async Task Handle(CategoryCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        ICategoryRepository categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
         var category = await categoryRepository.GetByIdAsync(domainEvent.CategoryId);
         if (category is null)
             throw new SkillHiveException($"Product with ID {category?.Id} not found.");
 
         if (category.ParentCategoryId is null)
-            return; // No parent category, nothing to update
+            return;
 
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
         string UpdateQuery = $"""
@@ -31,7 +33,7 @@ public class CategoryCreatedDomainEventHandler(
         WHERE
             id = @categoryId;
         """;
-        _ = await
+        await
             connection
             .ExecuteAsync(UpdateQuery, new { categoryId = category.ParentCategoryId });
     }

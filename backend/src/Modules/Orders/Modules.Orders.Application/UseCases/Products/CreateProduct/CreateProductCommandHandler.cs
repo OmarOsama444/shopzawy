@@ -2,9 +2,7 @@ using Common.Application.Messaging;
 using Common.Domain;
 using Common.Domain.Exceptions;
 using Common.Domain.ValueObjects;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Application.Dtos;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;
@@ -79,7 +77,7 @@ public sealed class CreateProductCommandHandler(
             foreach (var specOption in product_item.StringOptions)
             {
                 if (specifications.Any(x => x.Id == specOption.Key && x.DataType == SpecDataType.String)
-                    && specOptionRepository.GetBySpecIdAndValue(specOption.Key, specOption.Value) != null)
+                    && await specOptionRepository.GetBySpecIdAndValue(specOption.Key, specOption.Value) != null)
                 {
                     ProductItemOptions productItemOptions = ProductItemOptions.Create(
                         productItem.Id,

@@ -11,6 +11,7 @@ using Common.Application.Extensions;
 using Common.Presentation.Endpoints;
 using Modules.Orders.Application.Services.Dtos;
 using Modules.Orders.Application.UseCases.Products.CreateProduct;
+using Modules.Orders.Application.UseCases.Products.PaginateProducts;
 
 
 namespace Modules.Orders.Presentation.Endpoints;
@@ -21,6 +22,15 @@ public class ProductEndpoints : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/products").WithTags("Products");
+
+        group.MapPost("filter", async ([FromBody] PaginateProductQuery request, [FromServices] ISender sender) =>
+        {
+            var result = await sender.Send(request);
+            return result.isSuccess ?
+                Results.Ok(result.Value) :
+                result.ExceptionToResult();
+        }).AllowAnonymous();
+
         group.MapPost("", async ([FromBody] ProductCreateRequest request, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateProductCommand(

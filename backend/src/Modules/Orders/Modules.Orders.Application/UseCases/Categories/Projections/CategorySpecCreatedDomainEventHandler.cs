@@ -4,6 +4,7 @@ using Common.Application.Messaging;
 using Common.Domain.DomainEvent;
 using Common.Domain.Exceptions;
 using Dapper;
+using Microsoft.Extensions.DependencyInjection;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.Repositories;
@@ -11,12 +12,14 @@ using Modules.Orders.Domain.Repositories;
 namespace Modules.Orders.Application.UseCases.Categories.Projections;
 
 public class CategorySpecCreatedDomainEventHandler(
-    ICategorySpecRepositroy categorySpecRepositroy,
-    IDbConnectionFactory dbConnectionFactory
+    IDbConnectionFactory dbConnectionFactory,
+    IServiceScopeFactory serviceScopeFactory
 ) : IDomainEventHandler<CategorySpecCreatedDomainEvent>
 {
     public async Task Handle(CategorySpecCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        ICategorySpecRepositroy categorySpecRepositroy = scope.ServiceProvider.GetRequiredService<ICategorySpecRepositroy>();
         var categorySpecId = notification.CategorySpecId;
         var categorySpec = await categorySpecRepositroy.GetByIdAsync(categorySpecId);
         if (categorySpec is null)
