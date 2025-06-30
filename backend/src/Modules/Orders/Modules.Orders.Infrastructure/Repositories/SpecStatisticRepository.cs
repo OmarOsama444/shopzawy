@@ -31,7 +31,7 @@ public class SpecStatisticRepository
         FROM
             {Schemas.Orders}.category_spec as cs
         LEFT JOIN
-            {Schemas.Orders}.specification_statistic as ss
+            {Schemas.Orders}.specification_statistics as ss
         ON
             cs.spec_id = ss.id
         LEFT JOIN

@@ -9,4 +9,6 @@ public record ProductItemDto(
         float Length,
         float Height,
         ICollection<string> Urls,
-        IDictionary<Guid, string> SpecOptions);
+        IDictionary<Guid, string> StringOptions,
+        IDictionary<Guid, float> NumericOptions,
+        IDictionary<Guid, string> ColorOptions);

@@ -7,11 +7,9 @@ using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Products.Projections;
 
-public class ProductItemOptionCreatedDomainEventHandler(
-    IDbConnectionFactory dbConnectionFactory)
-    : IDomainEventHandler<ProductItemOptionCreatedDomainEvent>
+public class ProductItemOptionColorCreaetedDomainEventHandler(IDbConnectionFactory dbConnectionFactory) : IDomainEventHandler<ProductItemOptionColorCreatedDomainEvent>
 {
-    public async Task Handle(ProductItemOptionCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(ProductItemOptionColorCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
 
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
@@ -22,7 +20,6 @@ public class ProductItemOptionCreatedDomainEventHandler(
         ON CONFLICT (id, value)
         DO UPDATE SET total_products = total_products + 1;
         """;
-        await connection.ExecuteAsync(query, new { Id = domainEvent.SpecificationId, Value = domainEvent.Value.ToString(), CreationDate = domainEvent.CreatedOnUtc, DataType = SpecDataType.String });
+        await connection.ExecuteAsync(query, new { Id = notification, Value = notification.ColorCode.ToString(), CreationDate = notification.CreatedOnUtc, DataType = SpecDataType.Color });
     }
 }
-

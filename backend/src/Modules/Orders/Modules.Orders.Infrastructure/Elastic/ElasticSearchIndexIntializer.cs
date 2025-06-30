@@ -24,6 +24,7 @@ public static class ElasticSearchIndexIntializer
                         .Keyword(x => x.Name(c => c.VendorId))
                         .Keyword(x => x.Name(c => c.BrandId))
                         .Keyword(x => x.Name(c => c.CategoryIds))
+                        .Keyword(x => x.Name(c => c.ImageUrls))
                         .Object<LocalizedField>(
                             o => o
                             .Name(d => d.Name)
@@ -45,23 +46,18 @@ public static class ElasticSearchIndexIntializer
                                 .Text(t => t.Name(x => x.En).Analyzer("standard"))
                                 .Text(t => t.Name(x => x.Ar).Analyzer("arabic")))
                         )
-                        .Nested<ProductItemDocument>(x => x
-                            .Name(c => c.ProductItemDocuments)
-                            .Properties(p => p
-                                .Keyword(k => k.Name(d => d.Id))
-                                .Number(k => k.Name(d => d.Price).Type(NumberType.Float))
-                                .Nested<Variation<string>>(n => n.Name(x => x.StringVariations)
-                                    .Properties(np => np
-                                        .Keyword(x => x.Name(s => s.SpecId))
-                                        .Keyword(x => x.Name(s => s.Value))
-                                    )
-                                )
-                                .Nested<Variation<float>>(n => n.Name(x => x.NumericVariations)
-                                    .Properties(np => np
-                                        .Keyword(x => x.Name(s => s.SpecId))
-                                        .Keyword(x => x.Name(s => s.Value))
-                                    )
-                                )
+                        .Keyword(k => k.Name(d => d.Id))
+                        .Number(k => k.Name(d => d.Price).Type(NumberType.Float))
+                        .Nested<Variation<string>>(n => n.Name(x => x.StringVariations)
+                            .Properties(np => np
+                                .Keyword(x => x.Name(s => s.SpecId))
+                                .Keyword(x => x.Name(s => s.Value))
+                            )
+                        )
+                        .Nested<Variation<float>>(n => n.Name(x => x.NumericVariations)
+                            .Properties(np => np
+                                .Keyword(x => x.Name(s => s.SpecId))
+                                .Keyword(x => x.Name(s => s.Value))
                             )
                         )
                     )

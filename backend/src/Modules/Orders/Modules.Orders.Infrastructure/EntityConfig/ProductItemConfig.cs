@@ -13,7 +13,7 @@ public class ProductItemConfig : IEntityTypeConfiguration<ProductItem>
         builder
             .HasMany(p => p.ProductItemOptions)
             .WithOne(po => po.ProductItem)
-            .HasForeignKey(po => po.Id);
+            .HasForeignKey(po => po.ProductItemId);
         builder
             .HasIndex(p => p.StockKeepingUnit);
         builder

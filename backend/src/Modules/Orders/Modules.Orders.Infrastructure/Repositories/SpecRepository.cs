@@ -84,9 +84,9 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
         $@"
         SELECT
             s.id as {nameof(TranslatedSpecResponseDto.Id)} , 
-            st.name {nameof(TranslatedSpecResponseDto.Name)} , 
+            st.name as {nameof(TranslatedSpecResponseDto.Name)} , 
             s.data_type as {nameof(TranslatedSpecResponseDto.DataType)} ,
-            array_agg(so.value) as {nameof(TranslatedSpecResponseDto.Options)} 
+            COALESCE(array_agg(so.value) FILTER (WHERE so.value IS NOT NULL), ARRAY[]::text[]) as {nameof(TranslatedSpecResponseDto.Options)} 
         FROM
             {Schemas.Orders}.category_spec as cs
         LEFT JOIN

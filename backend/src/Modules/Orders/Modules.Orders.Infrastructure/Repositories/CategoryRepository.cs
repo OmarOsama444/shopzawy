@@ -107,7 +107,7 @@ public class CategoryRepository(
         LEFT JOIN 
             {Schemas.Orders}.category_translation as PCT ON PC.id = PCT.Category_Id
         WHERE 
-            C.id = @id AND PCT.lang_code = @lang_code;
+            C.parent_category_id = @id AND PCT.lang_code = @lang_code;
         """;
 
         return [.. await connection.QueryAsync<TranslatedCategoryResponseDto>(Query, new
@@ -216,7 +216,7 @@ public class CategoryRepository(
             CT.lang_code = @langCode
         {(string.IsNullOrWhiteSpace(nameFilter) ? "" : "AND CT.name ILIKE @nameFilter")}
         """;
-        return await dbConnection.ExecuteScalarAsync<int>(Query, new { filter = nameFilter, langCode });
+        return await dbConnection.ExecuteScalarAsync<int>(Query, new { nameFilter, langCode });
     }
 
 }

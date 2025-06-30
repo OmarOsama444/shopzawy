@@ -1,10 +1,14 @@
 using Common.Application.Messaging;
 using Common.Domain;
+using Common.Domain.Exceptions;
 using Common.Domain.ValueObjects;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Modules.Orders.Application.Abstractions;
+using Modules.Orders.Application.Dtos;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
 using Modules.Orders.Domain.Exceptions;
+using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Application.UseCases.Products.CreateProduct;
 
@@ -16,6 +20,9 @@ public sealed class CreateProductCommandHandler(
     IProductTranslationsRepository productTranslationsRepository,
     ISpecRepository specRepository,
     ISpecOptionRepository specOptionRepository,
+    IProductItemOptionNumericRepository productItemOptionNumericRepository,
+    IProductItemOptionColorRepository productItemOptionColorRepository,
+    IColorRepository colorRepository,
     IProductItemOptionsRepository productItemOptionsRepository,
     IProductRepository productRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateProductCommand, Guid>
@@ -68,9 +75,10 @@ public sealed class CreateProductCommandHandler(
                 product.Id,
                 product_item.Urls);
             productItemRepository.Add(productItem);
-            foreach (var specOption in product_item.SpecOptions)
+
+            foreach (var specOption in product_item.StringOptions)
             {
-                if (specifications.Any(x => x.Id == specOption.Key)
+                if (specifications.Any(x => x.Id == specOption.Key && x.DataType == SpecDataType.String)
                     && specOptionRepository.GetBySpecIdAndValue(specOption.Key, specOption.Value) != null)
                 {
                     ProductItemOptions productItemOptions = ProductItemOptions.Create(
@@ -86,6 +94,47 @@ public sealed class CreateProductCommandHandler(
                     return new SpecificationNotFoundException(specOption.Key);
                 }
             }
+
+            foreach (var specOption in product_item.NumericOptions)
+            {
+                if (specifications.Any(x => x.Id == specOption.Key && x.DataType == SpecDataType.Number))
+                {
+                    ProductItemOptionNumeric productItemOptions = ProductItemOptionNumeric.Create(
+                        productItem.Id,
+                        specOption.Key,
+                        specOption.Value
+                    );
+
+                    productItemOptionNumericRepository.Add(productItemOptions);
+                }
+                else
+                {
+                    return new SpecificationNotFoundException(specOption.Key);
+                }
+            }
+
+            foreach (var specOption in product_item.ColorOptions)
+            {
+                if (await colorRepository.GetByIdAsync(specOption.Value) is null)
+                {
+                    return new NotFoundException("Color.NotFound", $"Color with code {specOption.Value} not found");
+                }
+                if (specifications.Any(x => x.Id == specOption.Key && x.DataType == SpecDataType.Color))
+                {
+                    ProductItemOptionColor productItemOptions = ProductItemOptionColor.Create(
+                        productItem.Id,
+                        specOption.Key,
+                        specOption.Value
+                    );
+
+                    productItemOptionColorRepository.Add(productItemOptions);
+                }
+                else
+                {
+                    return new SpecificationNotFoundException(specOption.Key);
+                }
+            }
+
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 

@@ -8,6 +8,7 @@ public class Color : Entity
     public string Code { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;
     public DateTime CreatedOn { get; private set; }
+    public virtual ICollection<ProductItemOptionColor> ProductItemOptionColors { get; set; } = [];
     public static Color Create(string code, string name)
     {
         var color = new Color { Code = code, Name = name, CreatedOn = DateTime.UtcNow };

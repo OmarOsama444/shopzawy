@@ -17,6 +17,8 @@ public class ProductItem : Entity
     public Guid ProductId { get; set; }
     public DateTime CreatedOn { get; set; }
     public virtual Product Product { get; set; } = default!;
+    public virtual ICollection<ProductItemOptionColor> ProductItemOptionColors { get; set; } = [];
+    public virtual ICollection<ProductItemOptionNumeric> ProductItemOptionNumerics { get; set; } = [];
     public virtual ICollection<ProductItemOptions> ProductItemOptions { get; set; } = [];
     public static ProductItem Create(
         string sku,
@@ -45,7 +47,20 @@ public class ProductItem : Entity
             CreatedOn = DateTime.UtcNow
         };
         productItem.RaiseDomainEvent(new ProductItemCreatedDomainEvent(productItem.Id));
+        if (QuantityInStock > 0)
+            productItem.RaiseDomainEvent(new ProductItemInStockDomainEvent(productItem.Id));
         return productItem;
+    }
+    public bool UpdateStock(int newStock)
+    {
+        if (newStock < 0)
+            return false;
+        if (this.QuantityInStock == 0 && newStock > 0)
+            this.RaiseDomainEvent(new ProductItemInStockDomainEvent(this.Id));
+        if (this.QuantityInStock > 0 && newStock == 0)
+            this.RaiseDomainEvent(new ProductItemOutOfStockDomainEvent(this.Id));
+        this.QuantityInStock = newStock;
+        return true;
     }
     public void Update(
         string? sku,
@@ -62,7 +77,13 @@ public class ProductItem : Entity
         if (sku != null)
             this.StockKeepingUnit = sku;
         if (QuantityInStock.HasValue)
+        {
+            if (this.QuantityInStock == 0 && QuantityInStock.Value > 0)
+                this.RaiseDomainEvent(new ProductItemInStockDomainEvent(this.Id));
+            if (this.QuantityInStock > 0 && QuantityInStock.Value == 0)
+                this.RaiseDomainEvent(new ProductItemOutOfStockDomainEvent(this.Id));
             this.QuantityInStock = QuantityInStock.Value;
+        }
         if (price.HasValue)
             this.Price = price.Value;
         if (width.HasValue)

@@ -10,7 +10,7 @@ public class ProductItemOptionsConfig : IEntityTypeConfiguration<ProductItemOpti
     {
         builder.HasKey(x => new
         {
-            x.Id,
+            x.ProductItemId,
             x.SpecificationId,
             x.Value
         });

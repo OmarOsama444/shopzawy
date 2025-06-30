@@ -23,6 +23,8 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
     public DbSet<Banner> banners { get; set; }
     public DbSet<ProductItem> ProductItems { get; set; }
     public DbSet<ProductItemOptions> ProductItemOptions { get; set; }
+    public DbSet<ProductItemOptionColor> ProductItemOptionColors { get; set; }
+    public DbSet<ProductItemOptionNumeric> ProductItemOptionNumerics { get; set; }
     public DbSet<Specification> Specifications { get; set; }
     public DbSet<SpecificationOption> SpecificationOptions { get; set; }
     public DbSet<CategorySpec> CategorySpecs { get; set; }
@@ -63,6 +65,8 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> Options) :
         modelBuilder.ApplyConfiguration<SpecificationTranslation>(new SpecificationTranslationConfig());
         modelBuilder.ApplyConfiguration<CategoryStatistics>(new CategoryStatisticsConfig());
         modelBuilder.ApplyConfiguration<SpecificationStatistics>(new SpecificationStatisticsConfig());
+        modelBuilder.ApplyConfiguration<ProductItemOptionNumeric>(new ProductItemOptionNumericConfig());
+        modelBuilder.ApplyConfiguration<ProductItemOptionColor>(new ProductItemOptionColorConfig());
         // outbox-inbox messages config
         modelBuilder.ApplyConfiguration<OutboxMessage>(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration<OutboxConsumerMessage>(new OutboxConsumerMessageConfiguration());

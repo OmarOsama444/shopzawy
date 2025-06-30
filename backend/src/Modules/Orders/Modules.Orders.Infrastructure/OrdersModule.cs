@@ -68,7 +68,8 @@ public static class OrdersModule
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDbConnectionFactory>(sp => new DbConnectionFactory(DbConnectionString));
-        services.AddScoped<IElasticClientFactory, ElasticClientFactory>();
+        services.AddSingleton<IElasticClientFactory, ElasticClientFactory>();
+        services.AddSingleton<IElasticSearchQueryService, ElasticSearchQueryService>();
         services.AddScoped<IOrdersDbContext, OrdersDbContext>();
         services.AddScoped<IProductDocumentRepository, ProductDocumentRepositroy>();
 

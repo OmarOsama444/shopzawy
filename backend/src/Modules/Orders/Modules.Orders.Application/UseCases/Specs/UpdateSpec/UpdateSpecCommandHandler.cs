@@ -4,7 +4,6 @@ using Common.Domain.Exceptions;
 using Modules.Orders.Application.Abstractions;
 using Modules.Orders.Application.Repositories;
 using Modules.Orders.Domain.Entities;
-using Modules.Orders.Domain.Entities.Views;
 using Modules.Orders.Domain.Exceptions;
 using Modules.Orders.Domain.ValueObjects;
 
@@ -13,7 +12,6 @@ namespace Modules.Orders.Application.UseCases.Specs.UpdateSpec;
 public sealed class UpdateSpecCommandHandler(
     ISpecRepository SpecRepository,
     ISpecOptionRepository SpecOptionRepository,
-    ISpecStatisticRepository specStatisticRepository,
     ISpecTranslationRepository specTranslationRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateSpecCommand>
@@ -23,25 +21,16 @@ public sealed class UpdateSpecCommandHandler(
         Specification? Specification = await SpecRepository.GetByIdAsync(request.Id);
         if (Specification is null)
             return new SpecificationNotFoundException(request.Id);
+        if (Specification.DataType != SpecDataType.String)
+            return new NotAuthorizedException("Spec.NotAuthorized", $"You can only add values for string type specs");
 
         foreach (var optionValue in request.Add)
         {
             var specOption = await SpecOptionRepository.GetBySpecIdAndValue(request.Id, optionValue);
             if (specOption is null)
             {
-                if (Specification.DataType == SpecDataType.Color)
-                    return new NotAuthorizedException("Spec.NotAuthorized", $"Category spec color options are handled by the system");
-
-                if (Specification.DataType == SpecDataType.Number && !float.TryParse(optionValue, out var xx))
-                    return new BadRequestException(new Dictionary<string, string[]>
-                    {
-                        { "Invalid.data.type", new[] { $"couldn't parse {optionValue} to a number" } }
-                    });
-
                 specOption = SpecificationOption.Create(optionValue, Specification.Id);
-                SpecificationStatistics stats = SpecificationStatistics.Create(Specification.Id, Specification.DataType, optionValue, 0);
                 SpecOptionRepository.Add(specOption);
-                specStatisticRepository.Add(stats);
             }
         }
 
@@ -64,6 +53,7 @@ public sealed class UpdateSpecCommandHandler(
             else
             {
                 specTranslation.Name = specName.Value;
+                specTranslationRepository.Update(specTranslation);
             }
         }
 

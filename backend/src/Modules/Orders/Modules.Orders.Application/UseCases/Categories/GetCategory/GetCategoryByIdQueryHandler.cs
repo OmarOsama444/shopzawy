@@ -8,6 +8,7 @@ namespace Modules.Orders.Application.UseCases.Categories.GetCategory;
 
 public sealed class GetCategoryByIdQueryHandler(
     ICategoryRepository categoryRepository,
+    ISpecStatisticRepository specStatisitcRepository,
     ISpecRepository specRepository) :
     IQueryHandler<GetCategoryByIdQuery, CategoryResponeDto>
 {
@@ -19,6 +20,7 @@ public sealed class GetCategoryByIdQueryHandler(
         var parent = await categoryRepository.GetParentById(request.Id, request.LangCode);
         var children = await categoryRepository.GetChildrenById(request.Id, request.LangCode);
         var categoryPath = await categoryRepository.GetCategoryPath(request.Id, request.LangCode);
+        var specsStat = await specStatisitcRepository.GetByCategoryId(category.Id, [.. category.Path, category.Id], request.LangCode);
         var specs = await specRepository.GetByCategoryId(category.Id, [.. category.Path, category.Id], request.LangCode);
         return new CategoryResponeDto()
         {
@@ -26,7 +28,8 @@ public sealed class GetCategoryByIdQueryHandler(
             CategoryPath = categoryPath,
             Parent = parent,
             Children = children,
-            Specifications = specs
+            Specifications = specs,
+            SpecificationsCount = specsStat
         };
     }
 }

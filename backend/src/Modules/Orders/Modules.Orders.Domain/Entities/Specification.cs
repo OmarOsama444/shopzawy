@@ -4,9 +4,7 @@ using Modules.Orders.Domain.DomainEvents;
 using Modules.Orders.Domain.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
-// TODO
-//when spec created it adds to all the children
-//when deleted it deletes from parents
+
 public class Specification : Entity
 {
     public Guid Id { get; private set; }
@@ -14,6 +12,8 @@ public class Specification : Entity
     public virtual ICollection<SpecificationOption> SpecificationOptions { get; set; } = [];
     public virtual ICollection<SpecificationTranslation> Translations { get; set; } = [];
     public virtual ICollection<CategorySpec> CategorySpecs { get; set; } = [];
+    public virtual ICollection<ProductItemOptionNumeric> ProductItemOptionNumerics { get; set; } = [];
+    public virtual ICollection<ProductItemOptionColor> ProductItemOptionColors { get; set; } = [];
     public static Specification Create(SpecDataType dataType)
     {
         var cat = new Specification() { Id = Guid.NewGuid(), DataType = dataType };

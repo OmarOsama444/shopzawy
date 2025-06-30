@@ -7,12 +7,22 @@ using Nest;
 namespace Modules.Orders.Infrastructure.Elastic
 {
 
-    public class ElasticClientFactory(IOptions<ElasticOptions> options) : IElasticClientFactory
+    public class ElasticClientFactory : IElasticClientFactory
     {
-        public IElasticClient CreateElasticClient()
+        private readonly IElasticClient _client;
+
+        public ElasticClientFactory(IOptions<ElasticOptions> options)
         {
-            return new ElasticClient(new Uri(options.Value.ConnectionString));
+            var uri = new Uri(options.Value.ConnectionString);
+            var settings = new ConnectionSettings(uri)
+                .DefaultIndex("products")
+                .EnableDebugMode()
+                .PrettyJson();
+
+            _client = new ElasticClient(settings);
         }
+
+        public IElasticClient CreateElasticClient() => _client;
     }
 
 }
