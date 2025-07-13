@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Modules.Orders.Application.Abstractions;
-using Modules.Orders.Infrastructure.Data;
-using Modules.Orders.Infrastructure.Elastic;
+using Modules.Catalog.Application.Abstractions;
+using Modules.Catalog.Infrastructure.Data;
+using Modules.Catalog.Infrastructure.Elastic;
 using Modules.Users.Infrastructure;
 using Nest;
 

@@ -4,6 +4,6 @@ namespace Common.Application;
 
 public static class Schemas
 {
-    public const string Orders = "orders";
+    public const string Catalog = "catalog";
     public const string Users = "users";
 }

@@ -16,22 +16,11 @@ public class UserService(
     IUserRoleRepository userRoleRepository,
     IUnitOfWork unitOfWork) : IUserService
 {
-    public async Task<LoginResponse> LoginGuest(Guid GuestId, CancellationToken cancellationToken = default)
-    {
-        string accessToken = await jwtProvider.GenerateGuestAccess(GuestId);
-        string refreshToken = jwtProvider.GenerateReferesh();
-        var token = Token.Create(TokenType.GuestRefresh, 24 * 60, GuestId, refreshToken);
-        tokenRepository.Add(token);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-        return new LoginResponse(AccessToken: accessToken, RefreshToken: refreshToken);
-    }
 
-    public async Task<LoginResponse> LoginUser(User user, Guid? guestId, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> LoginUser(User user, CancellationToken cancellationToken = default)
     {
         string accessToken = await jwtProvider.GenerateAccesss(user);
         string refreshToken = jwtProvider.GenerateReferesh();
-        if (guestId.HasValue)
-            user.UpdateLastLoginDate(guestId.Value);
         var token = Token.Create(TokenType.Refresh, 24 * 60, user.Id, refreshToken);
         tokenRepository.Add(token);
         await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -44,29 +33,6 @@ public class UserService(
         var PasswordHash = hasher.HashPassword(user, password);
         user.SetPassword(PasswordHash);
         userRepository.Add(user);
-        if (!string.IsNullOrEmpty(user.Email) && user.EmailConfirmed == false)
-        {
-            var token = Token
-                .Create(
-                    TokenType.Email,
-                    24 * 60,
-                    user.Id,
-                    jwtProvider.GenerateReferesh()
-                );
-
-            tokenRepository.Add(token);
-        }
-        if (!string.IsNullOrEmpty(user.PhoneNumber) && user.PhoneNumberConfirmed == false)
-        {
-            var token = Token
-                .Create(
-                    TokenType.Phone,
-                    5,
-                    user.Id,
-                    jwtProvider.GenerateReferesh()
-                );
-            tokenRepository.Add(token);
-        }
         userRoleRepository.Add(new UserRole { RoleId = "Default", UserId = user.Id });
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return user;

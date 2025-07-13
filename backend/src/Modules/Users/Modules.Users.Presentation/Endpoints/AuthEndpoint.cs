@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Modules.Users.Application.Abstractions;
 using Modules.Users.Application.UseCases.Auth.ExternalLogin;
-using Modules.Users.Application.UseCases.Auth.LoginGuestUser;
 using Modules.Users.Application.UseCases.Auth.LoginUser;
 using Modules.Users.Application.UseCases.Auth.LoginWithRefresh;
 using Modules.Users.Application.UseCases.VerifyEmail;
+using Modules.Users.Domain.ValueObjects;
 
 namespace Modules.Users.Presentation.Endpoints;
 
@@ -26,34 +26,60 @@ public class AuthEndpoint : IEndpoint
 
         group.MapGet("/google", (HttpContext httpContext) =>
         {
-            var redirectUrl = $"/external-callback/{httpContext.User.GetUserId()}";
+            var redirectUrl = $"/external-callback/google";
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Results.Challenge(properties, new[] { "Google" });
         })
-        .RequireAuthorization(Permissions.LoginUser);
+        .AllowAnonymous();
 
         group.MapGet("/facebook", (HttpContext httpContext) =>
         {
-            var redirectUrl = $"/external-callback/{httpContext.User.GetUserId()}";
+            var redirectUrl = $"/external-callback/facebook";
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Results.Challenge(properties, new[] { "Facebook" });
         })
-        .RequireAuthorization(Permissions.LoginUser);
+        .AllowAnonymous();
 
-        group.MapGet("/external-callback/{GuestId}",
+        group.MapGet("/external-callback/google",
+                    async (
+                        [FromRoute] Guid GuestId,
+                        HttpContext httpContext,
+                        [FromServices] IJwtProvider jwtProvider,
+                        [FromServices] ISender sender) =>
+                {
+                    var email = httpContext.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value ?? null;
+                    var firstName = httpContext.User.FindFirst(ClaimTypes.GivenName)?.Value ?? null;
+                    var lastName = httpContext.User.FindFirst(ClaimTypes.Surname)?.Value ?? null;
+                    var id = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (id == null)
+                    {
+                        throw new Exception("Authentication Failed");
+                    }
+
+                    var result = await sender.Send(new ExternalLoginCommand(id, email, firstName, lastName, TokenType.GoogleProvider));
+
+                    return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
+                })
+                .RequireAuthorization(new AuthorizeAttribute { AuthenticationSchemes = "External" });
+
+
+        group.MapGet("/external-callback/facebook",
             async (
                 [FromRoute] Guid GuestId,
                 HttpContext httpContext,
                 [FromServices] IJwtProvider jwtProvider,
                 [FromServices] ISender sender) =>
         {
-            var email = httpContext.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            var firstName = httpContext.User.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
-            var lastName = httpContext.User.FindFirst(ClaimTypes.Surname)?.Value;
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(firstName))
-                return Results.BadRequest("External login information is incomplete.");
+            var email = httpContext.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value ?? null;
+            var firstName = httpContext.User.FindFirst(ClaimTypes.GivenName)?.Value ?? null;
+            var lastName = httpContext.User.FindFirst(ClaimTypes.Surname)?.Value ?? null;
+            var id = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (id == null)
+            {
+                throw new Exception("Authentication Failed");
+            }
 
-            var result = await sender.Send(new ExternalLoginCommand(GuestId, email, firstName, lastName));
+            var result = await sender.Send(new ExternalLoginCommand(id, email, firstName, lastName, TokenType.FaceBookProvider));
 
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         })
@@ -70,29 +96,20 @@ public class AuthEndpoint : IEndpoint
         {
             var result = await sender.Send(new LoginUserCommand(
                 request.Email,
-                request.PhoneNumber,
-                request.CountryCode,
-                request.Password,
-                httpContext.User.GetUserId()));
+                request.Password
+            ));
             return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
         })
-        .RequireAuthorization(Permissions.LoginUser);
+        .AllowAnonymous();
 
         group.MapGet("/email/{token}", async ([FromRoute] string token, ISender sender) =>
         {
-            token = Uri.UnescapeDataString(token); ;
+            token = Uri.UnescapeDataString(token);
             var result = await sender.Send(new VerifyEmailCommand(token));
             return result.isSuccess ? Results.Redirect("/home") : result.ExceptionToResult();
         })
         .AllowAnonymous();
-
-        group.MapGet("/guest", async ([FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(new LoginGuestUserCommand());
-            return result.isSuccess ? Results.Ok(result.Value) : result.ExceptionToResult();
-        })
-        .AllowAnonymous();
     }
 
-    public record LoginUserDto(string Email, string PhoneNumber, string CountryCode, string Password);
+    public record LoginUserDto(string Email, string Password);
 }

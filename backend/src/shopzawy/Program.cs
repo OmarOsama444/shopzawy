@@ -1,14 +1,13 @@
 using Modules.Users.Infrastructure;
-using Modules.Orders.Infrastructure;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using shopzawy.Extensions;
 using shopzawy.Middleware;
 using shopzawy.Swagger;
-using DotNetEnv;
 using Common.Application;
 using Common.Infrastructure;
 using Common.Presentation.Endpoints;
+using Modules.Catalog.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -37,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
 // to use mediatr and fluent validation 
 builder.Services.AddApplication(
     Modules.Users.Application.AssemblyRefrence.Assembly,
-    Modules.Orders.Application.AssemblyRefrence.Assembly
+    Modules.Catalog.Application.AssemblyRefrence.Assembly
     );
 // pass the presentation layer assemblies here
 // pass the Configuration Methods for masstransit if available in case of consuming events 
@@ -47,7 +46,7 @@ builder.Services.AddInfrastructure([], builder.Configuration);
 builder.Configuration.AddModuleConfiguration("users", "orders");
 // adding modules infrastructure
 builder.Services.AddUsersModule(builder.Configuration);
-builder.Services.AddOrdersModule(builder.Configuration);
+builder.Services.AddCatalogModule(builder.Configuration);
 
 var app = builder.Build();
 

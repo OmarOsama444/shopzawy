@@ -18,18 +18,13 @@ namespace Modules.Users.Application.UseCases.Users.CreateUser
             if (request.Email is not null &&
                 await userRepository.GetByConfirmedEmail(request.Email) is not null)
                 return new UserConflictEmail(request.Email);
-            if (request.PhoneNumber is not null &&
-                await userRepository.GetByConfirmedPhone(request.PhoneNumber) is not null)
-                return new UserConflictPhone(request.PhoneNumber);
+
             var user = User.Create(
-                            request.GuestId,
                             request.FirstName,
                             request.LastName,
-                            request.Email,
-                            request.PhoneNumber,
-                            request.CountryCode);
+                            request.Email);
 
-            user = await userService.RegisterUser(user, request.Password);
+            user = await userService.RegisterUser(user, request.Password, cancellationToken);
             return user.Id;
         }
     }

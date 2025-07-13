@@ -11,18 +11,9 @@ public class User : Entity
     public string? LastName { get; set; } = string.Empty;
     public DateTime DateOfCreation { get; set; }
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
-    public string? CountryCode { get; set; }
     public string? Email { get; set; }
     public bool EmailConfirmed { get; set; } = false;
-    public string? PhoneNumber { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
-    public bool PhoneNumberConfirmed { get; set; } = false;
-    public DateTime? LastLoginDate { get; set; } = null;
-    public void UpdateLastLoginDate(Guid GuestId)
-    {
-        this.LastLoginDate = DateTime.UtcNow;
-        this.RaiseDomainEvent(new UserLoggedDomainEvent(this.Id, GuestId));
-    }
     public static User AdminSeed()
     {
         return new User()
@@ -36,12 +27,9 @@ public class User : Entity
         };
     }
     public static User Create(
-        Guid GuestId,
         string FirstName,
         string LastName,
-        string? Email,
-        string? PhoneNumber,
-        string? CountryCode)
+        string? Email)
     {
         var user = new User()
         {
@@ -55,35 +43,9 @@ public class User : Entity
         ,
             EmailConfirmed = false
         ,
-            PhoneNumber = PhoneNumber
-        ,
-            PhoneNumberConfirmed = false
-        ,
-            DateOfCreation = DateTime.UtcNow
-        ,
-            CountryCode = CountryCode
-        };
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, GuestId));
-        return user;
-    }
-
-    public static User Create(Guid GuestId, string Email, string FirstName, string? LastName)
-    {
-        var user = new User()
-        {
-            Id = Guid.NewGuid()
-                ,
-            FirstName = FirstName
-                ,
-            LastName = LastName
-                ,
-            Email = Email
-                ,
-            EmailConfirmed = true
-                ,
             DateOfCreation = DateTime.UtcNow
         };
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, GuestId));
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
         return user;
     }
 
@@ -97,8 +59,4 @@ public class User : Entity
         this.EmailConfirmed = true;
     }
 
-    public void ConfirmPhoneNumber()
-    {
-        this.PhoneNumberConfirmed = true;
-    }
 }

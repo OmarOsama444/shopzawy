@@ -1,0 +1,9 @@
+using Common.Domain;
+using Modules.Catalog.Domain.Entities;
+
+namespace Modules.Catalog.Application.Repositories;
+
+public interface ICategorySpecRepositroy : IRepository<CategorySpec>
+{
+    public Task<CategorySpec?> GetByCategoryIdAndSpecId(Guid categoryId, Guid specId);
+}
