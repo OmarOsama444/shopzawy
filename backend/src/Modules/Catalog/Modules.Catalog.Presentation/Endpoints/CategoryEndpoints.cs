@@ -24,7 +24,7 @@ public class CategoryEndpoints : IEndpoint
         {
             var result = await sender.Send(new CreateCategoryCommand(
                 request.Order,
-                request.ParentCategoryId ?? Guid.Empty,
+                request.ParentCategoryId,
                 request.SpecIds,
                 request.Names.translations,
                 request.Descriptions.translations,
@@ -49,7 +49,7 @@ public class CategoryEndpoints : IEndpoint
         }).RequireAuthorization(Permissions.CategoryRead);
 
         group.MapGet("{Id}", async (
-            [FromRoute] Guid Id,
+            [FromRoute] int Id,
             [FromServices] ISender sender,
             [FromQuery] Language LangCode = Language.en) =>
         {
@@ -59,7 +59,7 @@ public class CategoryEndpoints : IEndpoint
 
         group.MapPut("{Id}", async (
             [FromServices] ISender sender,
-            [FromRoute] Guid Id,
+            [FromRoute] int Id,
             [FromBody] UpdateCategoryRequestDto request) =>
         {
             var result = await sender.Send(new UpdateCategoryCommand(
@@ -80,7 +80,7 @@ public class CategoryEndpoints : IEndpoint
     }
     public record CreateCategoryRequestDto(
         int Order,
-        Guid? ParentCategoryId,
+        int? ParentCategoryId,
         ICollection<Guid> SpecIds,
         LocalizedText Names,
         LocalizedText Descriptions,

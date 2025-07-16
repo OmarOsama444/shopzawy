@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Common.Application.Extensions;
-using Common.Infrastructure.Authentication;
 using Common.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -42,7 +41,6 @@ public class AuthEndpoint : IEndpoint
 
         group.MapGet("/external-callback/google",
                     async (
-                        [FromRoute] Guid GuestId,
                         HttpContext httpContext,
                         [FromServices] IJwtProvider jwtProvider,
                         [FromServices] ISender sender) =>
@@ -65,7 +63,7 @@ public class AuthEndpoint : IEndpoint
 
         group.MapGet("/external-callback/facebook",
             async (
-                [FromRoute] Guid GuestId,
+
                 HttpContext httpContext,
                 [FromServices] IJwtProvider jwtProvider,
                 [FromServices] ISender sender) =>

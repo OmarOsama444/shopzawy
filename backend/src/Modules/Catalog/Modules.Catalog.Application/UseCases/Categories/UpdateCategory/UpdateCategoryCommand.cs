@@ -4,7 +4,7 @@ using Common.Domain.ValueObjects;
 namespace Modules.Catalog.Application.UseCases.Categories.UpdateCategory;
 
 public record UpdateCategoryCommand(
-    Guid Id,
+    int Id,
     int? Order,
     ICollection<Guid> Add,
     ICollection<Guid> Remove,

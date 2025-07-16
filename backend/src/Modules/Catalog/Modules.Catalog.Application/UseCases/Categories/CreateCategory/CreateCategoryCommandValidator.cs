@@ -19,7 +19,6 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
         RuleFor(c => c)
             .Must(x => ConsistentKeysValidator.Must(x.Names, x.Descriptions, x.ImageUrls))
             .WithMessage(ConsistentKeysValidator.Message);
-
     }
 
 }

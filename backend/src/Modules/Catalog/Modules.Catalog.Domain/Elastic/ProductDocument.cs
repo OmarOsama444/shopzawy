@@ -9,7 +9,7 @@ public class ProductDocument
     public string VendorId { get; set; } = string.Empty;
     public string BrandId { get; set; } = string.Empty;
     public List<string> ImageUrls { get; set; } = [];
-    public List<string> CategoryIds { get; set; } = [];
+    public List<int> CategoryIds { get; set; } = [];
     public LocalizedField Name { get; set; } = default!;
     public LocalizedField LongDescription { get; set; } = default!;
     public LocalizedField ShortDescription { get; set; } = default!;
@@ -23,7 +23,7 @@ public class ProductDocument
         Guid ProductId,
         Guid VendorId,
         Guid BrandId,
-        List<Guid> CategoryIds,
+        List<int> CategoryIds,
         LocalizedField Name,
         LocalizedField LongDescription,
         LocalizedField ShortDescription,
@@ -37,7 +37,7 @@ public class ProductDocument
             Id = Id.ToString(),
             VendorId = VendorId.ToString(),
             BrandId = BrandId.ToString(),
-            CategoryIds = [.. CategoryIds.Select(x => x.ToString())],
+            CategoryIds = CategoryIds,
             Name = Name,
             LongDescription = LongDescription,
             ShortDescription = ShortDescription,

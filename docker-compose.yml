@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
     shopzawy.api:
-        container_name: shopizawy.Api
+        container_name: shopzawy.Api
         build:
             context: ./backend
             dockerfile: Dockerfile
@@ -18,7 +18,7 @@ services:
             - .env
     shopzawy.database:
         image: postgres:latest
-        container_name: shopizawy.Database
+        container_name: shopzawy.Database
         environment:
             - POSTGRES_DB=ShopizawyDb
             - POSTGRES_USER=postgres
@@ -33,7 +33,7 @@ services:
         environment:
             - discovery.type=single-node
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
-            - xpack.security.enabled=false # optional: disables built-in security
+            - xpack.security.enabled=false
         ports:
             - 9200:9200
             - 9300:9300
@@ -49,3 +49,15 @@ services:
             - ELASTICSEARCH_HOSTS=http://shopzawy.elastic:9200
         depends_on:
             - shopzawy.elastic
+    shopzawy.pgadmin:
+        image: dpage/pgadmin4
+        container_name: shopzawy.pgadmin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@shopzawy.com
+            PGADMIN_DEFAULT_PASSWORD: admin123
+        ports:
+            - "5050:80"
+        depends_on:
+            - shopzawy.database
+        volumes:
+            - ./pgadmin-data:/var/lib/pgadmin

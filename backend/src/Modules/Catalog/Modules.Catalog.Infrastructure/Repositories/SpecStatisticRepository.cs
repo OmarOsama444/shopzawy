@@ -17,7 +17,7 @@ public class SpecStatisticRepository
     (OrdersDbContext ordersDbContext, IDbConnectionFactory dbConnectionFactory) :
     Repository<SpecificationStatistics, OrdersDbContext>(ordersDbContext), ISpecStatisticRepository
 {
-    public async Task<ICollection<TranslatedSpecStatisticsDto>> GetByCategoryId(Guid Id, Guid[] Path, Language langCode)
+    public async Task<ICollection<TranslatedSpecStatisticsDto>> GetByCategoryId(int Id, int[] Path, Language langCode)
     {
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
         string query =

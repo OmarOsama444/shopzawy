@@ -7,13 +7,13 @@ namespace Modules.Catalog.Domain.Entities.Translation;
 
 public class CategoryTranslation : Entity
 {
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public Language LangCode { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
     public virtual Category Category { get; set; } = default!;
-    public static CategoryTranslation Create(Guid categoryId, Language langCode, string name, string Description, string ImageUrl)
+    public static CategoryTranslation Create(int categoryId, Language langCode, string name, string Description, string ImageUrl)
     {
         return new CategoryTranslation
         {
@@ -28,7 +28,7 @@ public class CategoryTranslation : Entity
     {
         return new CategoryTranslation
         {
-            CategoryId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            CategoryId = 1,
             LangCode = Language.en,
             Name = "",
             Description = "",

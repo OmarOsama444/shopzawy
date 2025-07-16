@@ -20,19 +20,15 @@ public sealed class LoginWithRefreshHandler(
     {
         Token? token = await tokenRepository.GetByTokenTypeAndValue(
             request.Token,
-            TokenType.Refresh,
-            TokenType.GuestRefresh
+            TokenType.Refresh
         );
-
         if (token is null)
             return new TokenNotFound(request.Token);
         if (token.ExpireDateUtc < DateTime.UtcNow)
             return new TokenExpired(request.Token);
-        if (token.TokenType == TokenType.GuestRefresh)
-            return await userService.LoginGuest(token.UserId);
         User? user = await userRepository.GetByIdAsync(token.UserId);
         if (user == null)
             return new UserNotFound(token.UserId);
-        return await userService.LoginUser(user, null, cancellationToken);
+        return await userService.LoginUser(user, cancellationToken);
     }
 }

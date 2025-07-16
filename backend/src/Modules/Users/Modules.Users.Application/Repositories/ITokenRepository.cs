@@ -6,5 +6,5 @@ namespace Modules.Users.Application.Repositories;
 
 public interface ITokenRepository : IRepository<Token>
 {
-    public Task<Token?> GetByTokenTypeAndValue(string value, params TokenType[] types);
+    public Task<Token?> GetByTokenTypeAndValue(string value, TokenType type);
 }

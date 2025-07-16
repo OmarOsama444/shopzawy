@@ -6,11 +6,11 @@ namespace Modules.Catalog.Domain.Entities;
 
 public class Category : Entity
 {
-    public Guid Id { get; set; } = Guid.Empty;
-    public Guid? ParentCategoryId { get; set; } = null;
+    public int Id { get; set; } 
+    public int? ParentCategoryId { get; set; } = null;
     public int Order { get; set; } = int.MaxValue;
     public DateTime CreatedOn { get; set; }
-    public List<Guid> Path { get; set; } = [];
+    public List<int> Path { get; set; } = [];
     public virtual Category ParentCategory { get; set; } = default!;
     public virtual ICollection<Category> ChilrenCategories { get; set; } = [];
     public virtual ICollection<Product> Products { get; set; } = [];
@@ -22,7 +22,7 @@ public class Category : Entity
     {
         var category = new Category()
         {
-            Id = Guid.NewGuid(),
+            Id = 0,
             Order = order,
             CreatedOn = DateTime.UtcNow,
             ParentCategoryId = parentCategory?.Id,
@@ -40,7 +40,7 @@ public class Category : Entity
     {
         return new Category()
         {
-            Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            Id = 1,
             Order = int.MaxValue,
             CreatedOn = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             ParentCategoryId = null,

@@ -1,3 +1,5 @@
+using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 using Modules.Catalog.Application.Abstractions;
 
 namespace Modules.Catalog.Infrastructure.Data;
@@ -9,18 +11,8 @@ public class UnitOfWork(OrdersDbContext ordersDbContext) : IUnitOfWork
         return await ordersDbContext.SaveChangesAsync(token);
     }
 
-    public async Task BeginTransactionAsync()
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
     {
-        await ordersDbContext.Database.BeginTransactionAsync();
-    }
-
-    public async Task CommitTransactionAsync()
-    {
-        await ordersDbContext.Database.CommitTransactionAsync();
-    }
-
-    public async Task RollBackTransactionAsync()
-    {
-        await ordersDbContext.Database.RollbackTransactionAsync();
+        return await ordersDbContext.Database.BeginTransactionAsync();
     }
 }

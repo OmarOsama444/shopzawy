@@ -14,7 +14,7 @@ public class Product : Entity
     public DimensionUnit DimensionUnit { get; set; }
     public Guid VendorId { get; private set; }
     public Guid BrandId { get; set; }
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public virtual Vendor Vendor { get; set; } = default!;
     public virtual Brand Brand { get; private set; } = default!;
     public virtual Category Category { get; set; } = default!;
@@ -26,7 +26,7 @@ public class Product : Entity
     List<string> tags,
     Guid vendorId,
     Guid brandId,
-    Guid categoryId)
+    int categoryId)
     {
         var product = new Product
         {

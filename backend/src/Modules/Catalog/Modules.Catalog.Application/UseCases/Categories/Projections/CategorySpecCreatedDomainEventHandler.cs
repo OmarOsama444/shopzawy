@@ -12,20 +12,11 @@ using Modules.Catalog.Domain.DomainEvents;
 namespace Modules.Catalog.Application.UseCases.Categories.Projections;
 
 public class CategorySpecCreatedDomainEventHandler(
-    IDbConnectionFactory dbConnectionFactory,
-    IServiceScopeFactory serviceScopeFactory
+    IDbConnectionFactory dbConnectionFactory
 ) : IDomainEventHandler<CategorySpecCreatedDomainEvent>
 {
     public async Task Handle(CategorySpecCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        using var scope = serviceScopeFactory.CreateScope();
-        ICategorySpecRepositroy categorySpecRepositroy = scope.ServiceProvider.GetRequiredService<ICategorySpecRepositroy>();
-        var categorySpecId = notification.CategorySpecId;
-        var categorySpec = await categorySpecRepositroy.GetByIdAsync(categorySpecId);
-        if (categorySpec is null)
-        {
-            throw new SkillHiveException($"Product with ID {categorySpecId} not found.");
-        }
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
         string UpdateQuery = $"""
         UPDATE
@@ -37,7 +28,7 @@ public class CategorySpecCreatedDomainEventHandler(
         """;
         _ = await
             connection
-            .ExecuteAsync(UpdateQuery, new { categoryId = categorySpec.CategoryId });
+            .ExecuteAsync(UpdateQuery, new { categoryId = notification.CategoryId });
     }
 
 }

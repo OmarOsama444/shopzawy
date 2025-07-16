@@ -4,17 +4,17 @@ namespace Modules.Catalog.Domain.Entities.Views;
 
 public class CategoryStatistics : Entity
 {
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public int Order { get; set; }
-    public Guid? ParentCategoryId { get; private set; }
+    public int? ParentCategoryId { get; private set; }
     public List<Guid> ChildCategoryIds { get; private set; } = [];
     public int TotalChildren { get; private set; }
     public int TotalProducts { get; private set; }
     public int TotalSpecs { get; private set; }
     public DateTime CreatedOn { get; private set; }
     public static CategoryStatistics Create(
-        Guid id,
-        Guid? parentCategoryId,
+        int id,
+        int? parentCategoryId,
         List<Guid> childCategoryIds,
         int totalChildren,
         int totalProducts,

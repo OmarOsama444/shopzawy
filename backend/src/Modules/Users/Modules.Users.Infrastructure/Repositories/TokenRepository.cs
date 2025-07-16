@@ -10,12 +10,12 @@ namespace Modules.Users.Infrastructure.Repositories;
 public class TokenRepository(UsersDbContext usersDbContext)
     : Repository<Token, UsersDbContext>(usersDbContext), ITokenRepository
 {
-    public async Task<Token?> GetByTokenTypeAndValue(string value, params TokenType[] types)
+    public async Task<Token?> GetByTokenTypeAndValue(string value, TokenType type)
     {
         var token = await context
             .tokens
             .FirstOrDefaultAsync(
-                x => types.Contains(x.TokenType) &&
+                x => x.TokenType == type &&
                 x.Value == value
             );
         return token;

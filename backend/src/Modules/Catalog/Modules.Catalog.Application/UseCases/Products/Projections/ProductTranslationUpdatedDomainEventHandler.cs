@@ -28,7 +28,7 @@ public class ProductTranslationUpdatedDomainEventHandler(IServiceScopeFactory se
             .ThenInclude(x => x.ProductItemOptionColors)
         .FirstOrDefaultAsync(x => x.Id == notification.ProductId, cancellationToken);
         var productItems = product!.ProductItems;
-        List<Guid> CategoryIds = [.. product.Category.Path, product.Category.Id];
+        List<int> CategoryIds = [.. product.Category.Path, product.Category.Id];
         var EnglishTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.en);
         var ArabicTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.ar);
         foreach (var productItem in productItems)

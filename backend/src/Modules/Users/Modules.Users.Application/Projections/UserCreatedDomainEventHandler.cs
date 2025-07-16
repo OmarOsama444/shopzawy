@@ -18,11 +18,9 @@ namespace Modules.Users.Application.Projections
             var user = await userRepository.GetByIdAsync(notification.UserId) ?? throw new SkillHiveException($"User with id {notification.UserId} not found");
             UserCreatedIntegrationEvent userCreatedIntegrationEvent = UserCreatedIntegrationEvent.Create(
                 notification.UserId,
-                user.LastName,
                 user.FirstName,
-                user.CountryCode,
-                user.EmailConfirmed ? user.Email : null,
-                user.PhoneNumberConfirmed ? user.PhoneNumber : null
+                user.LastName,
+                user.Email
             );
             await eventBus.PublishAsync<UserCreatedIntegrationEvent>(userCreatedIntegrationEvent, cancellationToken);
         }

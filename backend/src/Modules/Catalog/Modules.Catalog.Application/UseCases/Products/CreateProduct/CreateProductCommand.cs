@@ -14,5 +14,5 @@ public record CreateProductCommand(
     DimensionUnit DimensionUnit,
     Guid VendorId,
     Guid BrandId,
-    Guid CategoryId,
+    int CategoryId,
     ICollection<ProductItemDto> ProductItems) : ICommand<Guid>;

@@ -9,7 +9,7 @@ public class CategorySpecConfig : IEntityTypeConfiguration<CategorySpec>
     public void Configure(EntityTypeBuilder<CategorySpec> builder)
     {
         builder
-            .HasKey(x => x.Id);
+            .HasKey(x => new { x.CategoryId , x.SpecId });
         builder
             .HasOne(x => x.Category)
             .WithMany(x => x.CategorySpecs)

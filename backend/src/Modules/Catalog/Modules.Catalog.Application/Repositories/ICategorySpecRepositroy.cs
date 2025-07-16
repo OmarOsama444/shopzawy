@@ -5,5 +5,5 @@ namespace Modules.Catalog.Application.Repositories;
 
 public interface ICategorySpecRepositroy : IRepository<CategorySpec>
 {
-    public Task<CategorySpec?> GetByCategoryIdAndSpecId(Guid categoryId, Guid specId);
+    public Task<CategorySpec?> GetByCategoryIdAndSpecId(int categoryId, Guid specId);
 }

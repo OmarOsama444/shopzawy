@@ -11,7 +11,7 @@ public class CategoryTranslationRepository(OrdersDbContext ordersDbContext)
     : Repository<CategoryTranslation, OrdersDbContext>(ordersDbContext),
     ICategoryTranslationRepository
 {
-    public async Task<CategoryTranslation?> GetByIdAndLang(Guid id, Language langCode)
+    public async Task<CategoryTranslation?> GetByIdAndLang(int id, Language langCode)
     {
         return
             await
@@ -23,4 +23,6 @@ public class CategoryTranslationRepository(OrdersDbContext ordersDbContext)
                             ct.LangCode == langCode
                         );
     }
+
+
 }

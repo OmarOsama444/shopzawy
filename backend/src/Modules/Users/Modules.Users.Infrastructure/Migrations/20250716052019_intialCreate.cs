@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Users.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCreate : Migration
+    public partial class intialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -129,13 +129,9 @@ namespace Modules.Users.Infrastructure.Migrations
                     first_name = table.Column<string>(type: "text", nullable: false),
                     last_name = table.Column<string>(type: "text", nullable: false),
                     date_of_creation = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    country_code = table.Column<string>(type: "text", nullable: true),
                     email = table.Column<string>(type: "text", nullable: true),
                     email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    phone_number = table.Column<string>(type: "text", nullable: true),
-                    password_hash = table.Column<string>(type: "text", nullable: false),
-                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    last_login_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    password_hash = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,8 +245,8 @@ namespace Modules.Users.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 schema: "users",
                 table: "user",
-                columns: new[] { "id", "country_code", "date_of_creation", "email", "email_confirmed", "first_name", "last_login_date", "last_name", "password_hash", "phone_number", "phone_number_confirmed" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@gmail.com", true, "Admin", null, "User", "AQAAAAIAAYagAAAAEJOqYyDPiMJFm1mVQx3qEAyLF9qqYyRZQamJuHF11binnXBQGuCSBJu+8T4lDkxPxg==", null, false });
+                columns: new[] { "id", "date_of_creation", "email", "email_confirmed", "first_name", "last_name", "password_hash" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@gmail.com", true, "Admin", "User", "AQAAAAIAAYagAAAAEJOqYyDPiMJFm1mVQx3qEAyLF9qqYyRZQamJuHF11binnXBQGuCSBJu+8T4lDkxPxg==" });
 
             migrationBuilder.InsertData(
                 schema: "users",

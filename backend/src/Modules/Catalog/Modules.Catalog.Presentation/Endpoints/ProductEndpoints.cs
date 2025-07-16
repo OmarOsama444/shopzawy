@@ -104,7 +104,7 @@ public record ProductCreateRequest(
     DimensionUnit DimensionUnit,
     Guid VendorId,
     Guid BrandId,
-    Guid CategoryId,
+    int CategoryId,
     ICollection<ProductItemDto> ProductItems);
 public record ProductItemRequest(
     string? StockKeepingUnit,

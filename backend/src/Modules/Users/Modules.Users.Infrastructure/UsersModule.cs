@@ -24,15 +24,12 @@ public static class UsersModule
         services.AddEndpoints(Presentation.AssemblyRefrence.Assembly);
         services.AddInfrastructure(configuration);
     }
-
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string DbConnectionString = configuration.GetConnectionString("ShopizawyDb")!;
-
         services.AddOptions<GmailSmtpOptions>()
             .BindConfiguration("Users:GmailConfig")
             .ValidateDataAnnotations();
-
         services.AddOptions<OutBoxOptions>()
             .BindConfiguration("Users:OutboxOptions")
             .ValidateDataAnnotations();
@@ -78,7 +75,6 @@ public static class UsersModule
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IUserService, UserService>();
-
     }
 }
 

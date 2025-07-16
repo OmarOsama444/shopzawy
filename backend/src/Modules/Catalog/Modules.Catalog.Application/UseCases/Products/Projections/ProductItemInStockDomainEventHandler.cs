@@ -33,7 +33,7 @@ public class ProductItemInStockDomainEventHandler(
           .FirstOrDefaultAsync(x => x.Id == notification.ProductItemId, cancellationToken: cancellationToken) ??
        throw new ProductItemNotFoundException(notification.ProductItemId);
         var product = productItem.Product ?? throw new ProductNotFoundException(productItem.ProductId);
-        List<Guid> CategoryIds = [.. product.Category.Path, product.Category.Id];
+        List<int> CategoryIds = [.. product.Category.Path, product.Category.Id];
         var EnglishTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.en);
         var ArabicTranslation = product.ProductTranslations.FirstOrDefault(x => x.LangCode == Language.ar);
         if (productItem.QuantityInStock > 0)

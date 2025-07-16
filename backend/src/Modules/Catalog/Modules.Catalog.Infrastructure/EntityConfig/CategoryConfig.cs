@@ -26,10 +26,10 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         builder
         .Property(c => c.Path)
         .HasConversion(
-            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null) ?? "[]",
-            v => JsonSerializer.Deserialize<List<Guid>>(v, (JsonSerializerOptions)null) ?? new List<Guid>()
+            v =>  string.Join("." , v )  ,
+            v => v.Split('.', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
         )
-        .HasColumnType("jsonb");
+        .HasColumnType("TEXT");
         builder
             .HasData(
                 Category.Seed()

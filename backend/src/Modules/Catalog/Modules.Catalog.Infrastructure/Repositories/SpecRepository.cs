@@ -4,7 +4,6 @@ using Common.Domain.ValueObjects;
 using Common.Infrastructure;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Dtos;
 using Modules.Catalog.Application.Repositories;
@@ -76,7 +75,7 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
         return await connection.ExecuteScalarAsync<int>(query, new { name, lang_code });
     }
 
-    public async Task<ICollection<TranslatedSpecResponseDto>> GetByCategoryId(Guid categoryId, Guid[] Path, Language langCode)
+    public async Task<ICollection<TranslatedSpecResponseDto>> GetByCategoryId(int categoryId, int[] Path, Language langCode)
     {
         // TODO CACHE THE PATH USING THE CATEGORY ID 
         await using DbConnection connection = await dbConnectionFactory.CreateSqlConnection();
@@ -112,4 +111,6 @@ public class SpecRepository(OrdersDbContext ordersDbContext, IDbConnectionFactor
 
 
     }
+
+
 }

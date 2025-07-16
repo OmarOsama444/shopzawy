@@ -13,10 +13,4 @@ public class UserRepository(UsersDbContext usersDbContext) : Repository<User, Us
                 .FirstOrDefaultAsync(x => x.Email == Email && x.EmailConfirmed == true);
     }
 
-    public async Task<User?> GetByConfirmedPhone(string PhoneNumber)
-    {
-        return await context.users
-                .FirstOrDefaultAsync(x => x.PhoneNumber == PhoneNumber && x.PhoneNumberConfirmed == true);
-    }
-
 }

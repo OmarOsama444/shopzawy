@@ -5,10 +5,10 @@ namespace Modules.Catalog.Application.Services;
 
 public interface ICategoryService
 {
-    public Task<Result<Guid>> CreateCategory(
+    public Task<Result<int>> CreateCategory(
         int Order,
-        Guid? parentCategoryId,
-        ICollection<Guid> Ids,
+        int? parentCategoryId,
+        ICollection<Guid> SpecIds,
         IDictionary<Language, string> names,
         IDictionary<Language, string> descriptions,
         IDictionary<Language, string> imageUrls

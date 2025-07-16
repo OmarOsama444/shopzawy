@@ -6,20 +6,18 @@ namespace Modules.Catalog.Domain.Entities;
 
 public class CategorySpec : Entity
 {
-    public Guid Id { get; private set; }
-    public Guid CategoryId { get; private set; }
+    public int CategoryId { get; private set; }
     public Guid SpecId { get; private set; }
     public virtual Category Category { get; set; } = default!;
     public virtual Specification Specification { get; set; } = default!;
-    public static CategorySpec Create(Guid CategoryId, Guid specId)
+    public static CategorySpec Create(int categoryId, Guid specId)
     {
         var categorySpec = new CategorySpec()
         {
-            Id = Guid.NewGuid(),
             SpecId = specId,
-            CategoryId = CategoryId
+            CategoryId = categoryId
         };
-        categorySpec.RaiseDomainEvent(new CategorySpecCreatedDomainEvent(categorySpec.Id));
+        categorySpec.RaiseDomainEvent(new CategorySpecCreatedDomainEvent( categoryId , specId ));
         return categorySpec;
     }
 }

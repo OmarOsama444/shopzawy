@@ -19,15 +19,11 @@ public class LoginUserCommandHandler(
     {
         var user = await userRepository.GetByConfirmedEmail(request.Email);
         if (user is null)
-            user = await userRepository.GetByConfirmedPhone(request.PhoneNumber);
-        if (user is null)
             return new UserNotFound(Guid.Empty);
         var hasher = new PasswordHasher<User>();
         var result = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
-
         if (result == PasswordVerificationResult.Failed)
             return new NotAuthorizedException("User.NotAuthorized", "False credintials");
-
-        return await userService.LoginUser(user, request.GuestId, cancellationToken);
+        return await userService.LoginUser(user, cancellationToken);
     }
 }

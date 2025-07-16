@@ -1,8 +1,6 @@
 using Common.Domain.Entities;
 using Modules.Catalog.Domain.Entities.Translation;
-
 namespace Modules.Catalog.Domain.Entities;
-
 public class Brand : Entity
 {
     public Guid Id { get; set; }

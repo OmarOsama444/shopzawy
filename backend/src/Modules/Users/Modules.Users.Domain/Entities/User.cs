@@ -27,15 +27,15 @@ public class User : Entity
         };
     }
     public static User Create(
-        string FirstName,
-        string LastName,
+        string? FirstName,
+        string? LastName,
         string? Email)
     {
         var user = new User()
         {
             Id = Guid.NewGuid()
         ,
-            FirstName = FirstName
+            FirstName = FirstName ?? "None"
         ,
             LastName = LastName
         ,

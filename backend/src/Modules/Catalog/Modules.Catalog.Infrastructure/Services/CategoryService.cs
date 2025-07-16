@@ -1,7 +1,7 @@
-using System.Xml.Serialization;
 using Common.Domain;
 using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Application.Services;
 using Modules.Catalog.Domain.Entities;
@@ -16,13 +16,14 @@ public class CategoryService
     OrdersDbContext context,
     ICategoryRepository categoryRepository,
     ICategoryTranslationRepository categoryTranslationRepository,
-    ICategoryStatisticsRepository categoryStatisticsRepository
+    ICategoryStatisticsRepository categoryStatisticsRepository,
+    IUnitOfWork unitOfWork
 ) : ICategoryService
 {
-    public async Task<Result<Guid>> CreateCategory(
+    public async Task<Result<int>> CreateCategory(
         int Order,
-        Guid? parentCategoryId,
-        ICollection<Guid> Ids,
+        int? parentCategoryId,
+        ICollection<Guid> SpecIds,
         IDictionary<Language, string> names,
         IDictionary<Language, string> descriptions,
         IDictionary<Language, string> imageUrls)
@@ -49,31 +50,49 @@ public class CategoryService
                 Order,
                 parentCategory
             );
-        categoryRepository.Add(category);
-        await context.SaveChangesAsync();
-        foreach (Language langCode in names.Keys)
+
+        await using var transaction = await unitOfWork.BeginTransactionAsync();
+        try
         {
-            var categoryTranslation = CategoryTranslation.Create(
-                category.Id,
-                langCode,
-                names[langCode],
-                descriptions[langCode],
-                imageUrls[langCode]);
-            categoryTranslationRepository.Add(categoryTranslation);
+            await unitOfWork.BeginTransactionAsync();
+            categoryRepository.Add(category);
+            await context.SaveChangesAsync();
+
+            category.Path.Add(category.Id);
+            await context.SaveChangesAsync();
+
+            foreach (Language langCode in names.Keys)
+            {
+                var categoryTranslation = CategoryTranslation.Create(
+                    category.Id,
+                    langCode,
+                    names[langCode],
+                    descriptions[langCode],
+                    imageUrls[langCode]);
+                categoryTranslationRepository.Add(categoryTranslation);
+            }
+
+            categoryStatisticsRepository.Add(
+                CategoryStatistics.Create(
+                    category.Id,
+                    parentCategoryId,
+                    [],
+                    0,
+                    0,
+                    0,
+                    category.Order,
+                    category.CreatedOn
+                )
+            );
+            await context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
         }
-        categoryStatisticsRepository.Add(
-            CategoryStatistics.Create(
-                category.Id,
-                parentCategoryId,
-                [],
-                0,
-                0,
-                0,
-                category.Order,
-                category.CreatedOn
-            )
-        );
-        await context.SaveChangesAsync();
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
         return category.Id;
     }
 

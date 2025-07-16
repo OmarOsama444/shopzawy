@@ -4,10 +4,12 @@ namespace Modules.Catalog.Domain.DomainEvents;
 
 public class CategorySpecCreatedDomainEvent : DomainEvent
 {
-    public Guid CategorySpecId { get; init; }
+    public int CategoryId { get; init; }
+    public Guid SpecId { get; init;  }
 
-    public CategorySpecCreatedDomainEvent(Guid categorySpecId)
+    public CategorySpecCreatedDomainEvent(int categoryId, Guid specId)
     {
-        CategorySpecId = categorySpecId;
+        this.CategoryId = categoryId;
+        this.SpecId = specId; 
     }
 }
