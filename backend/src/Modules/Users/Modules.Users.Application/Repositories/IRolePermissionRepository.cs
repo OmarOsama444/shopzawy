@@ -1,4 +1,4 @@
-using Common.Domain;
+using Common.Application;
 using Modules.Users.Domain.Entities;
 
 namespace Modules.Users.Application.Repositories;

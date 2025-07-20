@@ -1,3 +1,4 @@
+using Common.Application.InjectionLifeTime;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Services;
 using Modules.Catalog.Domain.Elastic;
@@ -6,7 +7,7 @@ using Nest;
 namespace Modules.Catalog.Infrastructure.Services;
 
 
-public class ElasticSearchQueryService : IElasticSearchQueryService
+public class ElasticSearchQueryService : IElasticSearchQueryService, ISingleton
 {
     private readonly IElasticClient _elasticClient;
     private const string IndexName = "products";

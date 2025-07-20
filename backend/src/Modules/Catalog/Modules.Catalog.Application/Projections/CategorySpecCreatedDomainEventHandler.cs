@@ -1,15 +1,10 @@
-using System.Data;
 using Common.Application;
 using Common.Application.Messaging;
-using Common.Domain.DomainEvent;
-using Common.Domain.Exceptions;
 using Dapper;
-using Microsoft.Extensions.DependencyInjection;
 using Modules.Catalog.Application.Abstractions;
-using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.DomainEvents;
 
-namespace Modules.Catalog.Application.UseCases.Categories.Projections;
+namespace Modules.Catalog.Application.Projections;
 
 public class CategorySpecCreatedDomainEventHandler(
     IDbConnectionFactory dbConnectionFactory

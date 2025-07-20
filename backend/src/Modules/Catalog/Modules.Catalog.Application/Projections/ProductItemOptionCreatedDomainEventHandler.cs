@@ -1,17 +1,18 @@
-using Common.Application;
 using Common.Application.Messaging;
 using Dapper;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Domain.DomainEvents;
 using Modules.Catalog.Domain.ValueObjects;
-using Nest;
 
-namespace Modules.Catalog.Application.UseCases.Products.Projections;
+namespace Modules.Catalog.Application.Projections;
 
-public class ProductItemOptionNumericCreaetedDomainEventHandler(IDbConnectionFactory dbConnectionFactory) : IDomainEventHandler<ProductItemIdOptionNumericCreatedDomainEvent>
+public class ProductItemOptionCreatedDomainEventHandler(
+    IDbConnectionFactory dbConnectionFactory)
+    : IDomainEventHandler<ProductItemOptionCreatedDomainEvent>
 {
-    public async Task Handle(ProductItemIdOptionNumericCreatedDomainEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(ProductItemOptionCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
+
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
         string query =
         $"""
@@ -20,6 +21,7 @@ public class ProductItemOptionNumericCreaetedDomainEventHandler(IDbConnectionFac
         ON CONFLICT (id, value)
         DO UPDATE SET total_products = Orders.specification_statistics.total_products + 1;
         """;
-        await connection.ExecuteAsync(query, new { Id = notification.SpecificationId, Value = notification.NumericValue.ToString(), CreationDate = notification.CreatedOnUtc, DataType = SpecDataType.Number });
+        await connection.ExecuteAsync(query, new { Id = domainEvent.SpecificationId, Value = domainEvent.Value.ToString(), CreationDate = domainEvent.CreatedOnUtc, DataType = SpecDataType.String });
     }
 }
+

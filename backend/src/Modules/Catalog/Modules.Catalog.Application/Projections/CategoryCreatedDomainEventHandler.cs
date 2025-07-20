@@ -2,21 +2,18 @@ using Common.Application;
 using Common.Application.Messaging;
 using Common.Domain.Exceptions;
 using Dapper;
-using Microsoft.Extensions.DependencyInjection;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.DomainEvents;
 
-namespace Modules.Catalog.Application.UseCases.Categories.Projections;
+namespace Modules.Catalog.Application.Projections;
 
 public class CategoryCreatedDomainEventHandler(
-    IServiceScopeFactory serviceScopeFactory,
+     ICategoryRepository categoryRepository,
     IDbConnectionFactory dbConnectionFactory) : IDomainEventHandler<CategoryCreatedDomainEvent>
 {
     public async Task Handle(CategoryCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        using var scope = serviceScopeFactory.CreateScope();
-        ICategoryRepository categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
         var category = await categoryRepository.GetByIdAsync(domainEvent.CategoryId);
         if (category is null)
             throw new SkillHiveException($"Product with ID {category?.Id} not found.");

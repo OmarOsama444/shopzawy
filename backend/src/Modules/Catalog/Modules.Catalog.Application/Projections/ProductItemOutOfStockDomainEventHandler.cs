@@ -6,7 +6,7 @@ using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.DomainEvents;
 
-namespace Modules.Catalog.Application.UseCases.Products.Projections;
+namespace Modules.Catalog.Application.Projections;
 
 public class ProductItemOutOfStockDomainEventHandler(
     IServiceScopeFactory serviceScopeFactory

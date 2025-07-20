@@ -1,17 +1,14 @@
-using Common.Application;
 using Common.Application.Messaging;
 using Dapper;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Domain.DomainEvents;
 using Modules.Catalog.Domain.ValueObjects;
 
-namespace Modules.Catalog.Application.UseCases.Products.Projections;
+namespace Modules.Catalog.Application.Projections;
 
-public class ProductItemOptionCreatedDomainEventHandler(
-    IDbConnectionFactory dbConnectionFactory)
-    : IDomainEventHandler<ProductItemOptionCreatedDomainEvent>
+public class ProductItemOptionColorCreaetedDomainEventHandler(IDbConnectionFactory dbConnectionFactory) : IDomainEventHandler<ProductItemOptionColorCreatedDomainEvent>
 {
-    public async Task Handle(ProductItemOptionCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(ProductItemOptionColorCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
 
         await using var connection = await dbConnectionFactory.CreateSqlConnection();
@@ -22,7 +19,6 @@ public class ProductItemOptionCreatedDomainEventHandler(
         ON CONFLICT (id, value)
         DO UPDATE SET total_products = Orders.specification_statistics.total_products + 1;
         """;
-        await connection.ExecuteAsync(query, new { Id = domainEvent.SpecificationId, Value = domainEvent.Value.ToString(), CreationDate = domainEvent.CreatedOnUtc, DataType = SpecDataType.String });
+        await connection.ExecuteAsync(query, new { Id = notification.SpecificationId, Value = notification.ColorCode, CreationDate = notification.CreatedOnUtc, DataType = SpecDataType.Color });
     }
 }
-

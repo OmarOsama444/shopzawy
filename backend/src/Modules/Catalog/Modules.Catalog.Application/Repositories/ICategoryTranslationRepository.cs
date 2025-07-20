@@ -1,4 +1,4 @@
-using Common.Domain;
+using Common.Application;
 using Common.Domain.ValueObjects;
 using Modules.Catalog.Domain.Entities.Translation;
 namespace Modules.Catalog.Application.Repositories;

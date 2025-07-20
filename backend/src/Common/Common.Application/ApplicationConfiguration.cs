@@ -21,6 +21,7 @@ namespace Common.Application
                 cfg.AddOpenBehavior(typeof(CachingPiplineBehaviour<,>));
             });
             services.AddValidatorsFromAssemblies(assemblies, includeInternalTypes: true);
+
             // dapper global sql mappers 
             // SqlMapper.AddTypeHandler(new ListSqlMapperHandler<Guid>());
             return services;

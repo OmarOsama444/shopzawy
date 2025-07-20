@@ -17,7 +17,6 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 // Configure the environment variables
 // Load environment variables from .env file if it exists
-DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddCors(option =>

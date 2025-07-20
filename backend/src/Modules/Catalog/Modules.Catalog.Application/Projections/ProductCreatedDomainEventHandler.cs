@@ -1,13 +1,12 @@
 using Common.Application;
 using Common.Application.Messaging;
 using Common.Domain.Exceptions;
-using Common.Domain.ValueObjects;
 using Dapper;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.DomainEvents;
 
-namespace Modules.Catalog.Application.UseCases.Categories.Projections;
+namespace Modules.Catalog.Application.Projections;
 
 public class ProductCreatedDomainEventHandler(
     IDbConnectionFactory dbConnectionFactory

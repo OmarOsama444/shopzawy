@@ -1,27 +1,21 @@
 using Common.Application.Messaging;
 using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.DomainEvents;
 using Modules.Catalog.Domain.Elastic;
 using Modules.Catalog.Domain.Exceptions;
 
-namespace Modules.Catalog.Application.UseCases.Products.Projections;
+namespace Modules.Catalog.Application.Projections;
 
 public class ProductItemInStockDomainEventHandler(
-    IServiceScopeFactory serviceScopeFactory
+   IOrdersDbContext context,
+   IProductDocumentRepository productDocumentRepository
 ) : IDomainEventHandler<ProductItemInStockDomainEvent>
 {
     public async Task Handle(ProductItemInStockDomainEvent notification, CancellationToken cancellationToken)
     {
-        using var scope = serviceScopeFactory.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<IOrdersDbContext>();
-        var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
-        var productDocumentRepository = scope.ServiceProvider.GetRequiredService<IProductDocumentRepository>();
-
         var productItem = await context.ProductItems
           .Include(x => x.Product)
           .ThenInclude(x => x.ProductTranslations)

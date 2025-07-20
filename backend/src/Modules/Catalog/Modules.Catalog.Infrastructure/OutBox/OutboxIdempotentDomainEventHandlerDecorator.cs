@@ -12,7 +12,7 @@ namespace Modules.Catalog.Infrastructure.OutBox;
 public class OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>(
     INotificationHandler<TDomainEvent> innerHandler,
     IDbConnectionFactory dbConnectionFactory,
-    ILogger<OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>> logger) : INotificationHandler<TDomainEvent>
+    ILogger<OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>> logger) : IIdempotentDomainEventHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent
 {
     public const string ModuleName = Schemas.Catalog;
@@ -27,12 +27,8 @@ public class OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>(
             HandlerName = innerHandler.GetType().Name
         };
 
-        const string query = $"SELECT COUNT(1) FROM {ModuleName}.Outbox_ConsumerMessages WHERE id = @Id AND HandlerName = @HandlerName";
-        var exists = await connection.ExecuteScalarAsync<int>(query, new
-        {
-            Id = outboxConsumerMessage.id,
-            HandlerName = outboxConsumerMessage.HandlerName
-        });
+        const string query = $"SELECT COUNT(1) FROM {ModuleName}.outbox_consumer_message WHERE id = @id AND handler_name = @HandlerName";
+        var exists = await connection.ExecuteScalarAsync<int>(query, outboxConsumerMessage);
 
         if (exists > 0)
         {
@@ -43,7 +39,7 @@ public class OutboxIdempotentDomainEventHandlerDecorator<TDomainEvent>(
         logger.LogInformation("Processing event {EventType} with ID {EventId}.", typeof(TDomainEvent).Name, outboxConsumerMessage.id);
         await innerHandler.Handle(notification, cancellationToken);
 
-        const string insertQuery = $"INSERT INTO {ModuleName}.OutboxConsumerMessages (id, HandlerName) VALUES (@Id, @HandlerName)";
+        const string insertQuery = $"INSERT INTO {ModuleName}.outbox_consumer_message (id, handler_name) VALUES (@Id, @HandlerName)";
         await connection.ExecuteAsync(insertQuery, outboxConsumerMessage);
 
         logger.LogInformation("Stored event {EventType} with ID {EventId} in OutboxConsumerMessages.", typeof(TDomainEvent).Name, outboxConsumerMessage.id);

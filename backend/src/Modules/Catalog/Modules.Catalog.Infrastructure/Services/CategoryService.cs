@@ -1,3 +1,4 @@
+using Common.Application.InjectionLifeTime;
 using Common.Domain;
 using Common.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ public class CategoryService
     ICategoryTranslationRepository categoryTranslationRepository,
     ICategoryStatisticsRepository categoryStatisticsRepository,
     IUnitOfWork unitOfWork
-) : ICategoryService
+) : ICategoryService, IScopped
 {
     public async Task<Result<int>> CreateCategory(
         int Order,

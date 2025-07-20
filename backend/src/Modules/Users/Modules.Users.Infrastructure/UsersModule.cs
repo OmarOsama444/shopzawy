@@ -1,4 +1,4 @@
-using Common.Domain;
+using Common.Application;
 using Common.Infrastructure.interceptors;
 using Common.Presentation.Endpoints;
 using MassTransit;

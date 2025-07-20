@@ -1,3 +1,4 @@
+using Common.Application.InjectionLifeTime;
 using MassTransit.Configuration;
 using Microsoft.Extensions.Options;
 using Modules.Catalog.Application.Abstractions;
@@ -7,7 +8,7 @@ using Nest;
 namespace Modules.Catalog.Infrastructure.Elastic;
 
 
-public class ElasticClientFactory : IElasticClientFactory
+public class ElasticClientFactory : IElasticClientFactory, ISingleton
 {
     private readonly IElasticClient _client;
 

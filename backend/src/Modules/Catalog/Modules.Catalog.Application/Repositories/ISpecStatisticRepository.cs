@@ -1,4 +1,4 @@
-using Common.Domain;
+using Common.Application;
 using Common.Domain.ValueObjects;
 using Modules.Catalog.Application.Dtos;
 using Modules.Catalog.Domain.Entities.Views;

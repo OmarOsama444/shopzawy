@@ -1,10 +1,11 @@
+using Common.Application.InjectionLifeTime;
 using Modules.Catalog.Application.Abstractions;
 using Modules.Catalog.Application.Repositories;
 using Modules.Catalog.Domain.Elastic;
 
 namespace Modules.Catalog.Infrastructure.Repositories;
 
-public class ProductDocumentRepositroy(IElasticClientFactory elasticClientFactory) : IProductDocumentRepository
+public class ProductDocumentRepositroy(IElasticClientFactory elasticClientFactory) : IProductDocumentRepository, IScopped
 {
     public async Task Add(ProductDocument productDocument)
     {

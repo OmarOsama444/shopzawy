@@ -1,4 +1,4 @@
-using Common.Domain;
+using Common.Application;
 using Common.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +31,7 @@ public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity>
         return await context.Set<TEntity>().ToListAsync();
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(object id)
+    public virtual async Task<TEntity?> GetByIdAsync(params object[] id)
     {
         return await context.Set<TEntity>().FindAsync(id);
     }
